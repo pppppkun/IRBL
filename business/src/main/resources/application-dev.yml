@@ -3,16 +3,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://124.70.84.12:3306/irbl?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: pgd
-    password: piguda
+    password: PiGUDa2@21
     bySearch:
       testWhileIdle: true
       validationQuery: SELECT 1
       timeBestweenEvictionRunsMillis: 3600000 #每个小时确认连接是否可用
   redis:
     database: 10
-    host: 106.15.248.13
+    host: 124.70.84.12
     port: 6379
-    password: citicup
+    password: PiGUDa2@21
     timeout: 1000
     pool:
       max-active: 8
