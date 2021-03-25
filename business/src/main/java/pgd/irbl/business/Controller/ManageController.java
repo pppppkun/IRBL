@@ -20,7 +20,7 @@ public class ManageController {
 
     @PostMapping("/register")
     @ApiOperation(value = "simple message resource")
-    public ResponseVO registerRepo(@ApiParam(name = "registerRepoVO", value = "Message to send", required = true) @RequestBody RegisterRepoVO registerRepoVO){
+    public ResponseVO registerRepo(@RequestBody RegisterRepoVO registerRepoVO){
         return ResponseVO.buildSuccess();
     }
 
