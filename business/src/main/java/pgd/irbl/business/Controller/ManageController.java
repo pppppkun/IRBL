@@ -40,5 +40,7 @@ public class ManageController {
     }
 
     @PostMapping("/webhooks")
-    public ResponseVO webhooks(@)
+    public ResponseVO webhooks(@RequestBody Object o){
+        return ResponseVO.buildSuccess();
+    }
 }
