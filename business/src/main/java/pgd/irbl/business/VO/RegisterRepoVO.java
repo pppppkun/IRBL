@@ -13,5 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @ApiModel(description = "注册项目所需要的VO")
 public class RegisterRepoVO {
-    private String gitUrl;
+    String gitUrl;
+    String description;
 }

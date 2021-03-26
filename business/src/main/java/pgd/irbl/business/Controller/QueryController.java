@@ -1,8 +1,14 @@
 package pgd.irbl.business.Controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.VO.ResponseVO;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @Author: pkun
@@ -18,12 +24,14 @@ public class QueryController {
     }
 
     @PostMapping("/uploadRegister")
-    public ResponseVO uploadRegister(@RequestParam("bugReport") MultipartFile bugReport, @RequestParam("commitID") String commitID ){
+    @ApiOperation(value = "上传的报告属于已注册的项目", response = FileScore.class, notes = "这个方法的返回值是List FileScore")
+    public ResponseVO uploadRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("commitID") String commitID ){
         return ResponseVO.buildSuccess();
     }
 
     @PostMapping("/uploadUnRegister")
-    public ResponseVO uploadUnRegister(@RequestParam("bugReport") MultipartFile bugReport, @RequestParam("sourceCode") MultipartFile sourceCode){
+    @ApiOperation(value = "上传的报告属于未注册的项目", response = FileScore.class, notes = "这个方法的返回值是List FileScore")
+    public ResponseVO uploadUnRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("sourceCode") MultipartFile sourceCode){
         return ResponseVO.buildSuccess();
     }
 }

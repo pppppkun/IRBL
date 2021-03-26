@@ -1,5 +1,6 @@
 package pgd.irbl.business.VO;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  * @CreateTime: 2021-03-24 20:48
  */
 @Slf4j
+@Data
 public class ResponseVO {
 
     /**
