@@ -20,3 +20,6 @@ spring:
       max-idle: 8
       min-idle: 0
       timeout: 5000
+
+mybatis:
+  mapper-locations: classpath:dataImpl/*/*Mapper.xml

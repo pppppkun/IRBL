@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pgd.irbl.business.Dao.RepoMapper">
+
+    <select id="selectAllRepo" resultMap="Repo">
+        select * from Repo;
+    </select>
+
+    <insert id="insertRepo" useGeneratedKeys="true" keyProperty="Id">
+        insert into Repo(description, gitUrl, status, startTime, endTime) VALUES
+            (#{description}, #{gitUrl}, #{status}, #{startTime}, #{endTime})
+    </insert>
+
+    <delete id="deleteRepo">
+        delete from Repo where id=#{repoId}
+    </delete>
+
+
+    <resultMap id="Repo" type="pgd.irbl.business.PO.Repository">
+        <id column="Id" property="Id"/>
+        <result column="gitUrl" property="gitUrl"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="startTime" property="startTime"/>
+        <result column="endTime" property="endTime"/>
+    </resultMap>
+
+</mapper>
