@@ -19,7 +19,7 @@ pipeline {
                 echo '打印信息'
                 echo "workspace: ${WORKSPACE}"
                 echo "registryUrl: ${registryUrl}"
-                echo "image_repository: ${registryUrl}/${Project_name}"
+                echo "image_repository: ${registryUrl}"
            }
         }
         stage('Maven Build and Test') {
