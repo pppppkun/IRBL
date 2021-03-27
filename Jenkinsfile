@@ -9,7 +9,7 @@ pipeline {
     options {
         timestamps()    //设置在项目打印日志时带上对应时间
         disableConcurrentBuilds()   //不允许同时执行流水线，被用来防止同时访问共享资源等
-        timeout(time: 5, unit: 'MINUTES')   // 设置流水线运行超过n分钟，Jenkins将中止流水线
+        timeout(time: 10, unit: 'MINUTES')   // 设置流水线运行超过n分钟，Jenkins将中止流水线
 //         buildDiscarder(logRotator(numToKeepStr: '20'))   // 表示保留n次构建历史
     }
 
