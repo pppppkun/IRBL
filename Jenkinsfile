@@ -41,8 +41,7 @@ pipeline {
             }
             steps{
                 echo 'Image Build Stage'
-                sh 'cd business'
-                sh "docker build . -t ${registryUrl}/irbl-business:${BUILD_ID}"
+                sh "cd business && docker build . -t ${registryUrl}/irbl-business:${BUILD_ID}"
             }
         }
         stage('Image Push'){
