@@ -38,6 +38,10 @@
         </dependencies>
     </dependencyManagement>
 
+    <modules>
+        <module>business</module>
+    </modules>
+
     <repositories>
         <repository>
             <id>spring-milestones</id>
