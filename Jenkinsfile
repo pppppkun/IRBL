@@ -42,7 +42,7 @@ pipeline {
             }
             steps{
                 echo 'Image Build Stage'
-                sh "cd business && docker build . -t ${registryUrl}/${irbl}/irbl-business:${BUILD_ID}"
+                sh "cd business && docker build . -t ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
             }
         }
         stage('Image Push'){
@@ -52,7 +52,7 @@ pipeline {
             steps{
                 echo 'Image Push Stage'
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
-                sh "docker push ${registryUrl}/${irbl}/irbl-business:${BUILD_ID}"
+                sh "docker push ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
             }
         }
         stage('deploy'){
@@ -61,7 +61,7 @@ pipeline {
             }
             steps{
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
-                sh 'docker pull ${registryUrl}/${irbl}/irbl-business:${BUILD_ID}'
+                sh 'docker pull ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}'
                 sh "if (ps -ef| grep java|grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
                 sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -d ${registryUrl}/irbl-business:${BUILD_ID}"
             }
