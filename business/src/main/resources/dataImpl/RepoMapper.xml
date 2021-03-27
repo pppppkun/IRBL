@@ -17,10 +17,11 @@
 
 
     <resultMap id="Repo" type="pgd.irbl.business.PO.Repository">
-        <id column="Id" property="Id"/>
+        <id column="id" property="id"/>
         <result column="gitUrl" property="gitUrl"/>
         <result column="description" property="description"/>
         <result column="status" property="status"/>
+        <result column="queryNum" property="queryNum"/>
         <result column="startTime" property="startTime"/>
         <result column="endTime" property="endTime"/>
     </resultMap>

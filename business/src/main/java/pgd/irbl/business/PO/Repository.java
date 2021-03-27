@@ -10,10 +10,11 @@ import java.sql.Timestamp;
  */
 @Data
 public class Repository {
-    Long Id;
+    Long id;
     String gitUrl;
     String description;
     String status;
+    Long queryNum;
     Timestamp startTime;
     Timestamp endTime;
 }
