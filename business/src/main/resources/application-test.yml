@@ -24,3 +24,5 @@ spring:
 
 mybatis:
   mapper-locations: classpath:dataImpl/*/*Mapper.xml
+
+Token: nmsl
