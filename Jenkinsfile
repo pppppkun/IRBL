@@ -4,8 +4,7 @@ pipeline {
         registryUrl= "swr.cn-north-4.myhuaweicloud.com"       //搭建docker私有仓库（Harbor）或者 用DockerHub 又或者用云平台的“容器镜像服务”
         registry_user= "cn-north-4@YRBK3MFZ6D5CBRR0ALEK"
         registry_pass= "62fc1c853cd95cb8e1de855ab492bbb43106f62696b9c9ab3b25dc34b8855d55"
-        irbl_business="irbl-business"
-        irbl_algorithm="irbl-algorithm"
+        repo_url="irbl"
 //         docker login -u cn-north-4@YRBK3MFZ6D5CBRR0ALEK -p 62fc1c853cd95cb8e1de855ab492bbb43106f62696b9c9ab3b25dc34b8855d55 swr.cn-north-4.myhuaweicloud.com
     }
     options {
@@ -43,7 +42,7 @@ pipeline {
             }
             steps{
                 echo 'Image Build Stage'
-                sh "cd business && docker build . -t ${registryUrl}/${irbl_business}/${irbl_business}:${BUILD_ID}"
+                sh "cd business && docker build . -t ${registryUrl}/${irbl}/irbl-business:${BUILD_ID}"
             }
         }
         stage('Image Push'){
@@ -53,7 +52,7 @@ pipeline {
             steps{
                 echo 'Image Push Stage'
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
-                sh "docker push ${registryUrl}/${irbl_business}/${irbl_business}:${BUILD_ID}"
+                sh "docker push ${registryUrl}/${irbl}/irbl-business:${BUILD_ID}"
             }
         }
         stage('deploy'){
@@ -62,7 +61,7 @@ pipeline {
             }
             steps{
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
-                sh 'docker pull ${registryUrl}/irbl-business:${BUILD_ID}'
+                sh 'docker pull ${registryUrl}/${irbl}/irbl-business:${BUILD_ID}'
                 sh "if (ps -ef| grep java|grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
                 sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -d ${registryUrl}/irbl-business:${BUILD_ID}"
             }
