@@ -63,7 +63,7 @@ pipeline {
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh 'docker pull ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}'
                 sh "if (ps -ef| grep java|grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
-                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -d ${registryUrl}/irbl-business:${BUILD_ID}"
+                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
             }
         }
     }
