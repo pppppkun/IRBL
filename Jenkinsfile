@@ -21,6 +21,10 @@ pipeline {
                 echo "workspace: ${WORKSPACE}"
                 echo "registryUrl: ${registryUrl}"
                 echo "image_repository: ${registryUrl}"
+                def arr = ref.split("refs/heads/") as List
+                def currentBranch = arr[1]
+                println ${currentBranch}
+
            }
         }
         stage('Maven Build and Test') {
