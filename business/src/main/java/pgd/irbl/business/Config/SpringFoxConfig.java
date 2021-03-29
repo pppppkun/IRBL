@@ -33,7 +33,7 @@ public class SpringFoxConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("IRBL Bug Report Localization") //  可以用来自定义API的主标题
-                .description("IRBL Bug Report Localization Description") // 可以用来描述整体的API
+                .description("IRBL Bug Report Localization API Description") // 可以用来描述整体的API
                 .termsOfServiceUrl("no~") // 用于定义服务的域名
                 .version("0.01") // 可以用来定义版本。
                 .build(); //
