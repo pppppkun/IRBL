@@ -5,6 +5,7 @@ pipeline {
         registry_user= "ppppppkun"
         registry_pass= "Li2000chun"
         repo_url="irbl"
+        branch="${env.gitlabSourceBranch}"
 // docker login -u cn-north-4@1PZSKW0PC8JVZYFUWSAO -p 853fb78e727c6005a959510a44a45e81b9cab78395c8b89ee7f6e17944444563 swr.cn-north-4.myhuaweicloud.com
     }
     options {
@@ -21,6 +22,7 @@ pipeline {
                 echo "workspace: ${WORKSPACE}"
                 echo "registryUrl: ${registryUrl}"
                 echo "image_repository: ${registryUrl}"
+                echo "${branch}"
            }
         }
         stage('Maven Build and Test') {
