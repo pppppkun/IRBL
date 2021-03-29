@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        registryUrl= "swr.cn-north-4.myhuaweicloud.com"       //搭建docker私有仓库（Harbor）或者 用DockerHub 又或者用云平台的“容器镜像服务”
-        registry_user= "cn-north-4@1PZSKW0PC8JVZYFUWSAO"
-        registry_pass= "853fb78e727c6005a959510a44a45e81b9cab78395c8b89ee7f6e17944444563"
+        registryUrl= "registry.cn-hangzhou.aliyuncs.com"       //搭建docker私有仓库（Harbor）或者 用DockerHub 又或者用云平台的“容器镜像服务”
+        registry_user= "ppppppkun"
+        registry_pass= "Li2000chun"
         repo_url="irbl"
 // docker login -u cn-north-4@1PZSKW0PC8JVZYFUWSAO -p 853fb78e727c6005a959510a44a45e81b9cab78395c8b89ee7f6e17944444563 swr.cn-north-4.myhuaweicloud.com
     }
