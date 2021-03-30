@@ -34,8 +34,8 @@ pipeline {
             }
             steps{
                 echo 'Business Module Test And Build'
-                sh 'mvn -pl business -Ptest test'
-                sh 'mvn -pl business package -Dmaven.test.skip=true'
+                sh 'mvn -pl business package'
+//                 sh 'mvn -pl business package -Dmaven.test.skip=true'
             }
 	    }
         stage('Image Build'){
