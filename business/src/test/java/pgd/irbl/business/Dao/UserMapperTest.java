@@ -66,12 +66,6 @@ public class UserMapperTest {
         Long id = userMapper.findUserByUsername("admin");
         Assert.assertEquals(admin.getId(), id);
     }
-
-    @Test
-    public void test(){
-        System.out.println(token);
-        Assert.assertTrue(false);
-    }
 //    int register(User user);
 //    String login(String username);
 //    Long findUserByUsername(String username);

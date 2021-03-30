@@ -84,7 +84,29 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <project.environment>dev</project.environment>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <project.environment>test</project.environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>product</id>
+            <properties>
+                <project.environment>prod</project.environment>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <finalName>irbl-business</finalName>
         <plugins>
@@ -102,13 +124,27 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <!--这里定义需要处理的配置资源路径-->
+                <directory>src/main/resources</directory>
+                <!--启用过滤-->
+                <includes>
+                    <include>application-${project.environment}.yml</include>
+                    <include>*.sql</include>
+                    <include>dataImpl/*</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <testResources>
             <testResource>
-                <directory>src/test/resources</directory>
+                <directory>src/main/resources</directory>
                 <includes>
                     <include>application-test.yml</include>
+                    <include>*.sql</include>
+                    <include>dataImpl/*</include>
                 </includes>
-                <filtering>true</filtering>
             </testResource>
         </testResources>
     </build>
