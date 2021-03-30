@@ -9,7 +9,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pgd.irbl.business.PO.User;
@@ -66,6 +65,12 @@ public class UserMapperTest {
     public void Test3FindUserByUsername(){
         Long id = userMapper.findUserByUsername("admin");
         Assert.assertEquals(admin.getId(), id);
+    }
+
+    @Test
+    public void test(){
+        System.out.println(token);
+        Assert.assertTrue(false);
     }
 //    int register(User user);
 //    String login(String username);

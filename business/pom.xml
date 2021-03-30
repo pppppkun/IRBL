@@ -98,6 +98,15 @@
                 </configuration>
             </plugin>
         </plugins>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>application-test.yml</include>
+                </includes>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
     </build>
 
 </project>

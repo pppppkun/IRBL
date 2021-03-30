@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:Hotel;MODE=MySQL
+    username: Allen
+    password: qweasd
+    driver-class-name: org.h2.Driver
+    initialization-mode: ALWAYS
+    schema: classpath:irbl-test.sql
+  h2:
+    console:
+      enabled: true
+  redis:
+    database: 10
+    host: 124.70.84.12
+    port: 6379
+    password: PiGUDa2@21
+    timeout: 1000
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+      timeout: 5000
+
+mybatis:
+  mapper-locations: classpath:dataImpl/*Mapper.xml
+
+token: nmsl
