@@ -22,4 +22,4 @@ spring:
       timeout: 5000
 
 mybatis:
-  mapper-locations: classpath:dataImpl/*/*Mapper.xml
+  mapper-locations: classpath:dataImpl/*Mapper.xml

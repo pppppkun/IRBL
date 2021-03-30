@@ -4,10 +4,12 @@ import lombok.Data;
 
 /**
  * @Author: pkun
- * @CreateTime: 2021-03-29 13:41
+ * @CreateTime: 2021-03-29 13:44
  */
 @Data
-public class LoginVO {
+public class LoginRegisterVO {
+
     String username;
     String password;
+
 }

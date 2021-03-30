@@ -13,7 +13,7 @@ public class Repository {
     Long id;
     String gitUrl;
     String description;
-    String status;
+    String state;
     Long queryNum;
     Timestamp startTime;
     Timestamp endTime;

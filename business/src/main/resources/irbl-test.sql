@@ -1,4 +1,5 @@
-use irbl;
+SET MODE MYSQL;
+
 
 drop table if exists `Repo`;
 
@@ -27,9 +28,7 @@ create table `User`
 ) engine = InnoDB
   default charset = utf8;
 
-drop table if exists `CommitRepo`;
-
-drop table if exists `UserRepo`;
+insert into `User`(id, username, password, role, queryNum) VALUES (1, 'admin', 'password', 'Admin', '1');
 
 drop table if exists `CommitPreprocess`;
 

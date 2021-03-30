@@ -13,4 +13,5 @@ public class User {
     String username;
     String password;
     UserRole role;
+    Integer queryNum;
 }
