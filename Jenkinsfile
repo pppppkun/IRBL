@@ -57,6 +57,12 @@ pipeline {
             }
         }
         stage('Image Push'){
+            when {
+                anyOf {
+                    environment name: 'branch', value: 'dev'
+                    environment name: 'branch', value: 'master'
+                }
+            }
             agent{
                 label 'master'
             }
