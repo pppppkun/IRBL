@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pgd.irbl.business.PO.Repository;
 import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.VO.ResponseVO;
 
 import java.io.File;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -15,12 +17,17 @@ import java.util.List;
  * @CreateTime: 2021-03-24 17:38
  */
 @RestController
-@RequestMapping("/query")
+@RequestMapping("/queryDefects")
 public class QueryController {
 
     @GetMapping("/test")
-    public String test(){
-        return "Hello World";
+    public Object test(){
+        Repository repository = new Repository();
+        repository.setDescription("123");
+        repository.setQueryNum(123L);
+        repository.setGitUrl("111");
+        repository.setStartTime(new Date(System.currentTimeMillis()));
+        return repository;
     }
 
     @PostMapping("/uploadRegister")

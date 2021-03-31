@@ -16,7 +16,7 @@ import pgd.irbl.business.VO.ResponseVO;
  * @CreateTime: 2021-03-24 20:47
  */
 @RestController
-@RequestMapping("/manage")
+@RequestMapping("/manageRepo")
 public class ManageController {
 
     @PostMapping("/register")
