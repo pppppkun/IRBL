@@ -38,6 +38,7 @@ pipeline {
             steps{
                 echo 'Business Module Test And Build'
                 sh 'mvn -pl business package jacoco:report'
+                jacoco()
 //                 sh 'mvn -pl business package -Dmaven.test.skip=true'
             }
 	    }
