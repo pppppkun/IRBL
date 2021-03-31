@@ -8,6 +8,6 @@ import lombok.Data;
  */
 @Data
 public class ModifyRepoVO {
-    String gitUrl;
+    Long id;
     String description;
 }
