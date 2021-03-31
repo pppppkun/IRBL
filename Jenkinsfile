@@ -26,6 +26,9 @@ pipeline {
            }
         }
         stage('Maven Build and Test') {
+            when {
+                environment name: 'branch', value: 'dev'
+            }
             agent{
                 docker {
                     image 'maven:3-alpine'
@@ -39,6 +42,12 @@ pipeline {
             }
 	    }
         stage('Image Build'){
+            when {
+                anyOf {
+                    environment name: 'branch', value: 'dev'
+                    environment name: 'branch', value: 'master'
+                }
+            }
             agent{
                 label 'master'
             }
