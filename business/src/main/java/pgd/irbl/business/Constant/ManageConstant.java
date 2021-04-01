@@ -1,9 +1,12 @@
 package pgd.irbl.business.Constant;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @Author: pkun
  * @CreateTime: 2021-04-01 19:25
  */
+@Component
 public class ManageConstant {
     public static final String REPO_EXISTS = "仓库已经注册";
     public static final String REPO_NO_EXISTS = "仓库未注册";
