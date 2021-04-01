@@ -7,7 +7,7 @@ create table `Repo`
     `id`          int(11) not null auto_increment,
     `description` varchar(255) default null,
     `gitUrl`      varchar(255) default null,
-    `state`      int(11)      default null,
+    `state`      varchar(15)      default null,
     `queryNum`    int(11)      default null,
     `startTime`   datetime     default null,
     `endTime`     datetime     default null,
@@ -37,6 +37,17 @@ create table `CommitPreprocess`
     `repoCommitId`    varchar(255) default null,
     `processCommitId` varchar(255) default null,
     `filePath`         varchar(255) default null,
+    primary key (`id`)
+) engine = InnoDB
+  default charset = utf8;
+
+drop table if exists `RepoCommit`;
+
+create table `RepoCommit`
+(
+    `id`          int(11) not null auto_increment,
+    `gitUrl`      varchar(255) default null,
+    `commit`      varchar(255) default null,
     primary key (`id`)
 ) engine = InnoDB
   default charset = utf8;

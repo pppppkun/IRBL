@@ -21,6 +21,13 @@ spring:
       max-idle: 8
       min-idle: 0
       timeout: 5000
+  data:
+    mongodb:
+      host: 124.70.84.12
+      port: 27017
+      database: IRBL
+      username: pgd
+      password: PiGUDa2@21
 
 mybatis:
   mapper-locations: classpath:dataImpl/*Mapper.xml

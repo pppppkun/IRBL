@@ -63,7 +63,7 @@ public class UserMapperTest {
 
     @Test
     public void Test3FindUserByUsername(){
-        Long id = userMapper.findUserByUsername("admin");
+        Long id = userMapper.findUserIdByUsername("admin");
         Assert.assertEquals(admin.getId(), id);
     }
 //    int register(User user);

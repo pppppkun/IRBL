@@ -6,7 +6,7 @@
         select password from User where username=#{username}
     </select>
 
-    <select id="findUserByUsername" resultType="java.lang.Long">
+    <select id="findUserIdByUsername" resultType="java.lang.Long">
         select id from User where username=#{username};
     </select>
 

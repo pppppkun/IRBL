@@ -3,24 +3,44 @@
 <mapper namespace="pgd.irbl.business.Dao.RepoMapper">
 
     <select id="selectAllRepo" resultMap="Repo">
-        select * from Repo;
+        select *
+        from Repo;
     </select>
 
-    <insert id="insertRepo" useGeneratedKeys="true" keyProperty="Id">
-        insert into Repo(description, gitUrl, state, startTime, endTime) VALUES
-            (#{description}, #{gitUrl}, #{state}, #{startTime}, #{endTime})
+    <insert id="insertRepo" useGeneratedKeys="true" keyProperty="id">
+        insert into Repo(description, gitUrl, state, startTime, endTime)
+        VALUES (#{description}, #{gitUrl}, #{state}, #{startTime}, #{endTime})
     </insert>
 
     <delete id="deleteRepo">
-        delete from Repo where id=#{repoId}
+        delete
+        from Repo
+        where id = #{repoId}
     </delete>
 
+    <select id="findRepoIdByGitUrl" resultType="java.lang.Long">
+        select id
+        from Repo
+        where gitUrl = #{gitUrl}
+    </select>
+
+    <update id="updateDescription">
+        update Repo
+        set description=#{description}
+        where id = #{repoId}
+    </update>
+
+    <select id="findRepoById" resultMap="Repo">
+        select *
+        from Repo
+        where id = #{repoId}
+    </select>
 
     <resultMap id="Repo" type="pgd.irbl.business.PO.Repository">
         <id column="id" property="id"/>
         <result column="gitUrl" property="gitUrl"/>
         <result column="description" property="description"/>
-        <result column="status" property="status"/>
+        <result column="state" property="state"/>
         <result column="queryNum" property="queryNum"/>
         <result column="startTime" property="startTime"/>
         <result column="endTime" property="endTime"/>

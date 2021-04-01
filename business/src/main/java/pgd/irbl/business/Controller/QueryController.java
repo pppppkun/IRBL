@@ -20,15 +20,6 @@ import java.util.List;
 @RequestMapping("/queryDefects")
 public class QueryController {
 
-    @GetMapping("/test")
-    public Object test(){
-        Repository repository = new Repository();
-        repository.setDescription("123");
-        repository.setQueryNum(123L);
-        repository.setGitUrl("111");
-        repository.setStartTime(new Date(System.currentTimeMillis()));
-        return repository;
-    }
 
     @PostMapping("/uploadRegister")
     @ApiOperation(value = "上传的报告属于已注册的项目", response = FileScore.class, notes = "这个方法的返回值是List FileScore")

@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pgd.irbl.business.VO.LoginRegisterVO;
-
+import static pgd.irbl.business.Constant.UserConstant.*;
 /**
  * @Author: pkun
  * @CreateTime: 2021-03-30 18:34
@@ -37,6 +37,7 @@ public class UserServiceTest {
     public void Test1Register(){
         userService.register(loginRegisterVO);
         Assert.assertTrue(userService.login(loginRegisterVO).getSuccess());
+        Assert.assertEquals(USER_EXISTS ,userService.register(loginRegisterVO).getMessage());
     }
 
     @Test

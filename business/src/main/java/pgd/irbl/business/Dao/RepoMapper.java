@@ -13,7 +13,10 @@ import java.util.List;
 public interface RepoMapper {
 
     List<Repository> selectAllRepo();
-    int deleteRepo(int repoId);
+    int deleteRepo(Long repoId);
     int insertRepo(Repository repository);
+    Long findRepoIdByGitUrl(String gitUrl);
+    int updateDescription(Long repoId, String description);
+    Repository findRepoById(Long repoId);
 
 }
