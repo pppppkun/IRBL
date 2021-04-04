@@ -74,10 +74,10 @@ public class ManageServiceTest {
     @Test
     public void Test4modifyRepo(){
         ModifyRepoVO modifyRepoVO = new ModifyRepoVO();
-        modifyRepoVO.setId(2L);
+        modifyRepoVO.setRepoId(2L);
         modifyRepoVO.setDescription("TestTest");
         Assert.assertEquals(MODIFY_SUCCESS, manageService.modifyRepo(modifyRepoVO).getContent());
-        modifyRepoVO.setId(1L);
+        modifyRepoVO.setRepoId(1L);
         Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
     }
 
