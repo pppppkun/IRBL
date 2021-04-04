@@ -22,13 +22,13 @@ public class QueryController {
 
 
     @PostMapping("/uploadRegister")
-    @ApiOperation(value = "上传的报告属于已注册的项目", response = FileScore.class, notes = "这个方法的返回值是List FileScore")
+    @ApiOperation(value = "上传的报告属于已注册的项目", response = FileScore.class, notes = "这个方法的返回值是List queryRecord")
     public ResponseVO uploadRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("commitID") String commitID ){
         return ResponseVO.buildSuccess();
     }
 
     @PostMapping("/uploadUnRegister")
-    @ApiOperation(value = "上传的报告属于未注册的项目", response = FileScore.class, notes = "这个方法的返回值是List FileScore")
+    @ApiOperation(value = "上传的报告属于未注册的项目", response = FileScore.class, notes = "这个方法的返回值是List queroRecord")
     public ResponseVO uploadUnRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("sourceCode") MultipartFile sourceCode){
         return ResponseVO.buildSuccess();
     }
