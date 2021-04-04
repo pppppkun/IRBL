@@ -64,7 +64,7 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO modifyRepo(ModifyRepoVO modifyRepoVO) {
-        int ret = repoMapper.updateDescription(modifyRepoVO.getId(), modifyRepoVO.getDescription());
+        int ret = repoMapper.updateDescription(modifyRepoVO.getRepoId(), modifyRepoVO.getDescription());
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(MODIFY_SUCCESS);
     }
