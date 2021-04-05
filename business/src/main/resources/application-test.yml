@@ -25,9 +25,9 @@ spring:
     mongodb:
       host: 124.70.84.12
       port: 27017
-      database: IRBL
+      database: IRBL_Test
       username: pgd
-      password: PiGUDa2@21
+      password: pgdTest
 
 mybatis:
   mapper-locations: classpath:dataImpl/*Mapper.xml

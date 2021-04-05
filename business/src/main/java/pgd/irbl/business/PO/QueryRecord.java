@@ -3,6 +3,7 @@ package pgd.irbl.business.PO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.enums.QueryRecordState;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @ApiModel("每次查询返回的对象")
 public class QueryRecord {
+    @Id
     @ApiModelProperty("id标记了每一个唯一的queryRecord")
     Long id;
     @ApiModelProperty("repoCommitId是你查询的时候输入的commitId，如果查询的项目没有注册，或者注册的项目不是Dev状态，这个字段会被设置成\"未设置commitId\"")
