@@ -18,5 +18,6 @@ public interface ManageService {
     ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO);
     List<Repository> getAllRepo();
     ResponseVO modifyRepo(ModifyRepoVO modifyRepoVO);
+    ResponseVO dealWebhook();
 
 }

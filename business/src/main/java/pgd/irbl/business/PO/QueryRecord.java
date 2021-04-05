@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import pgd.irbl.business.VO.FileScore;
+import pgd.irbl.business.enums.QueryRecordState;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Data
 @ApiModel("每次查询返回的对象")
-public class queryRecord {
+public class QueryRecord {
     @ApiModelProperty("id标记了每一个唯一的queryRecord")
     Long id;
     @ApiModelProperty("repoCommitId是你查询的时候输入的commitId，如果查询的项目没有注册，或者注册的项目不是Dev状态，这个字段会被设置成\"未设置commitId\"")
@@ -25,4 +26,7 @@ public class queryRecord {
     List<FileScore> fileScoreList;
     @ApiModelProperty("查询的时间，返回的时候是字符串")
     Timestamp queryTime;
+    @ApiModelProperty("queryRecord的状态，目前有三种")
+    QueryRecordState queryRecordState;
+
 }

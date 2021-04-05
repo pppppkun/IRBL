@@ -75,4 +75,9 @@ public class ManageServiceImpl implements ManageService {
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(DELETE_SUCCESS);
     }
+
+    @Override
+    public ResponseVO dealWebhook() {
+        return null;
+    }
 }
