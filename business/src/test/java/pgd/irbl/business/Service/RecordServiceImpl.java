@@ -2,7 +2,6 @@ package pgd.irbl.business.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.result.InsertOneResult;
-import io.swagger.models.auth.In;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +16,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pgd.irbl.business.PO.QueryRecord;
-import pgd.irbl.business.VO.GetUserAllRecordVO;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.enums.QueryRecordState;
@@ -63,9 +61,7 @@ public class RecordServiceImpl {
 
     @Test
     public void Test1(){
-        GetUserAllRecordVO getUserAllRecordVO = new GetUserAllRecordVO();
-        getUserAllRecordVO.setUserId(2L);
-        ResponseVO responseVO = recordService.getUserAllRecord(getUserAllRecordVO);
+        ResponseVO responseVO = recordService.getUserAllRecord(2L);
         Assert.assertTrue(responseVO.getSuccess());
         Assert.assertEquals(2, ((List)responseVO.getContent()).size());
     }

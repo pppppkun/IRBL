@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pgd.irbl.business.Service.RecordService;
-import pgd.irbl.business.VO.GetUserAllRecordVO;
+import pgd.irbl.business.Utils.JwtUtil;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Author: pkun
@@ -22,8 +24,10 @@ public class RecordController {
     RecordService recordService;
 
     @PostMapping("/getUserAllRecord")
-    public ResponseVO getUserAllRecord(@RequestBody GetUserAllRecordVO getUserAllRecordVO){
-        return recordService.getUserAllRecord(getUserAllRecordVO);
+    public ResponseVO getUserAllRecord(HttpServletRequest request){
+        String token = request.getHeader("irbl-token");
+        Long userId = JwtUtil.verifyTokenAndGetUserId(token);
+        return recordService.getUserAllRecord(userId);
     }
 
     @PostMapping("/queryRecord")

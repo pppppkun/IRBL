@@ -1,4 +1,4 @@
-package com.example.hotel.util;
+package pgd.irbl.business.Utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -57,7 +57,7 @@ public class JwtUtil {
         return null;
     }
 
-    public static Integer verifyTokenAndGetUserId(String token) {
+    public static Long verifyTokenAndGetUserId(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -66,7 +66,7 @@ public class JwtUtil {
             DecodedJWT jwt = verifier.verify(token);
             Map<String, Claim> claims = jwt.getClaims();
             Claim claim = claims.get("userId");
-            return claim.asInt();
+            return claim.asLong();
         } catch (JWTVerificationException exception){
             log.error(exception.getMessage());
         }

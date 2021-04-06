@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pgd.irbl.business.Dao.UserMapper;
 import pgd.irbl.business.PO.User;
 import pgd.irbl.business.Service.UserService;
+import pgd.irbl.business.Utils.JwtUtil;
 import pgd.irbl.business.Utils.MD5Encryption;
 import pgd.irbl.business.VO.LoginRegisterVO;
 import pgd.irbl.business.VO.ResponseVO;
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
             userVO.setUsername(user.getUsername());
             userVO.setRole(user.getRole());
             userVO.setQueryNum(user.getQueryNum());
-            userVO.setToken(com.example.hotel.util.JwtUtil.createToken(user.getId(), tokenTime));
+            userVO.setToken(JwtUtil.createToken(user.getId(), tokenTime));
             return ResponseVO.buildSuccess(userVO);
         }
         else return ResponseVO.buildFailure(PASSWORD_ERROR);

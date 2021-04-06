@@ -1,7 +1,6 @@
 package pgd.irbl.business.Service;
 
 import pgd.irbl.business.PO.QueryRecord;
-import pgd.irbl.business.VO.GetUserAllRecordVO;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
 
@@ -11,7 +10,7 @@ import pgd.irbl.business.VO.ResponseVO;
  */
 public interface RecordService {
 
-    ResponseVO getUserAllRecord(GetUserAllRecordVO getUserAllRecordVO);
+    ResponseVO getUserAllRecord(Long userId);
     QueryRecord getQueryRecordById(QueryRecordVO queryRecordVO);
 
 }
