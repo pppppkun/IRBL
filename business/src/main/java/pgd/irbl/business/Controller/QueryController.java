@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.PO.QueryRecord;
 import pgd.irbl.business.Service.QueryService;
+import pgd.irbl.business.Utils.MyFileUtil;
 import pgd.irbl.business.VO.ResponseVO;
 
 /**

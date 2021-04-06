@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+
+
+
+file:
+  path:
+    code: "E:\\code-test\\"
+    report: "E:\\code-test\\"

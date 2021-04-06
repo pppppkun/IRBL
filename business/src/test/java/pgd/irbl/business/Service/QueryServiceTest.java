@@ -34,6 +34,8 @@ public class QueryServiceTest {
 
     @Autowired
     MongoTemplate mongoTemplate;
+    @Autowired
+    QueryService queryService;
 
     @Test
     public void test(){
@@ -57,5 +59,10 @@ public class QueryServiceTest {
 
     }
 
+    @Test
+    public void queryNotRegisterTest(){
+
+        queryService.queryNotRegister(null,null);
+    }
 
 }
