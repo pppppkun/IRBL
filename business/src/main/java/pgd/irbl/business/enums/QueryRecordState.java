@@ -6,7 +6,7 @@ package pgd.irbl.business.enums;
  */
 public enum QueryRecordState {
 
-    create("initializing"),
+    initializing("initializing"),
     querying("querying"),
     complete("complete");
 

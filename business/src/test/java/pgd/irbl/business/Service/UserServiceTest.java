@@ -37,7 +37,7 @@ public class UserServiceTest {
     public void Test1Register(){
         userService.register(loginRegisterVO);
         Assert.assertTrue(userService.login(loginRegisterVO).getSuccess());
-        Assert.assertEquals(USER_EXISTS ,userService.register(loginRegisterVO).getMessage());
+        Assert.assertEquals(USER_EXISTS ,userService.register(loginRegisterVO).getContent());
     }
 
     @Test

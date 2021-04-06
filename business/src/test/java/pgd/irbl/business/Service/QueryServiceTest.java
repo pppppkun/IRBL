@@ -37,23 +37,23 @@ public class QueryServiceTest {
 
     @Test
     public void test(){
-        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
-        QueryRecord queryRecord1 = new QueryRecord();
-        queryRecord1.setQueryRecordState(QueryRecordState.querying);
-        queryRecord1.setQueryTime(new Timestamp(System.currentTimeMillis()));
-        queryRecord1.setFileScoreList(null);
-        queryRecord1.setRepoCommitId("askldjaklsj`123");
-        queryRecord1.setGitUrl("TESTMONGODB");
-        System.out.println(JSONObject.toJSONString(queryRecord1));
-        Document document = Document.parse(JSONObject.toJSONString(queryRecord1));
-        InsertOneResult insertOneResult = queryRecord.insertOne(document);
-
-        ObjectId objectId = insertOneResult.getInsertedId().asObjectId().getValue();
-        BasicDBObject query = new BasicDBObject();
-        query.put("_id", objectId);
-        Document document1 = queryRecord.find(query).first();
-
-        System.out.println(document1);
+//        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+//        QueryRecord queryRecord1 = new QueryRecord();
+//        queryRecord1.setQueryRecordState(QueryRecordState.querying);
+//        queryRecord1.setQueryTime(new Timestamp(System.currentTimeMillis()));
+//        queryRecord1.setFileScoreList(null);
+//        queryRecord1.setRepoCommitId("askldjaklsj`123");
+//        queryRecord1.setGitUrl("TESTMONGODB");
+//        System.out.println(JSONObject.toJSONString(queryRecord1));
+//        Document document = Document.parse(JSONObject.toJSONString(queryRecord1));
+//        InsertOneResult insertOneResult = queryRecord.insertOne(document);
+//
+//        ObjectId objectId = insertOneResult.getInsertedId().asObjectId().getValue();
+//        BasicDBObject query = new BasicDBObject();
+//        query.put("_id", objectId);
+//        Document document1 = queryRecord.find(query).first();
+//
+//        System.out.println(document1);
 
     }
 

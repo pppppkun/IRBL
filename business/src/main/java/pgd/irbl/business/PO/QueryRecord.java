@@ -3,6 +3,7 @@ package pgd.irbl.business.PO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.bson.Document;
 import org.springframework.data.annotation.Id;
 import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.enums.QueryRecordState;
@@ -19,7 +20,7 @@ import java.util.List;
 public class QueryRecord {
     @Id
     @ApiModelProperty("id标记了每一个唯一的queryRecord")
-    Long id;
+    String id;
     @ApiModelProperty("repoCommitId是你查询的时候输入的commitId，如果查询的项目没有注册，或者注册的项目不是Dev状态，这个字段会被设置成\"未设置commitId\"")
     String repoCommitId;
     Long userId;
@@ -31,5 +32,18 @@ public class QueryRecord {
     Timestamp queryTime;
     @ApiModelProperty("queryRecord的状态，目前有三种")
     QueryRecordState queryRecordState;
+
+    public QueryRecord() {
+    }
+
+    public QueryRecord(Document document) {
+        id = document.getObjectId("_id").toString();
+        repoCommitId = document.getString("repoCommitId");
+        userId = ((Number) document.get("userId")).longValue();
+        gitUrl = document.getString("gitUrl");
+        fileScoreList = document.getList("fileScoreList", FileScore.class);
+        queryTime = new Timestamp(document.getLong("queryTime"));
+        queryRecordState = QueryRecordState.valueOf(document.getString("queryRecordState"));
+    }
 
 }
