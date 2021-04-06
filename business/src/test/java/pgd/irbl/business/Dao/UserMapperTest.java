@@ -55,10 +55,10 @@ public class UserMapperTest {
 
     @Test
     public void Test2Login(){
-        String password = userMapper.login(dev.getUsername());
-        Assert.assertEquals(dev.getPassword(), password);
-        password = userMapper.login("Test");
-        Assert.assertNull(password);
+        User user = userMapper.login(dev.getUsername());
+        Assert.assertEquals(dev.getPassword(), user.getPassword());
+        User user1 = userMapper.login("Test");
+        Assert.assertNull(user1);
     }
 
     @Test
