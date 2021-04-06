@@ -80,5 +80,13 @@ public class RecordServiceImpl {
 
     }
 
+    @Test
+    public void Test3(){
+        QueryRecordVO queryRecordVO = new QueryRecordVO();
+        queryRecordVO.setRecordId("alksdjk");
+        QueryRecord record = recordService.getQueryRecordById(queryRecordVO);
+        Assert.assertNull(record);
+    }
+
 
 }
