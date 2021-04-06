@@ -60,7 +60,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void Test1(){
+    public void Test1getUserAllRecord(){
         ResponseVO responseVO = recordService.getUserAllRecord(2L);
         Assert.assertTrue(responseVO.getSuccess());
         Assert.assertEquals(2, ((List)responseVO.getContent()).size());
@@ -68,7 +68,7 @@ public class RecordServiceTest {
 
 
     @Test
-    public void Test2(){
+    public void Test2queryRecord(){
         QueryRecordVO queryRecordVO = new QueryRecordVO();
         queryRecordVO.setRecordId(oneResult.getInsertedId().asObjectId().getValue().toString());
         QueryRecord record = recordService.getQueryRecordById(queryRecordVO);
@@ -77,7 +77,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void Test3(){
+    public void Test3queryRecord(){
         QueryRecordVO queryRecordVO = new QueryRecordVO();
         queryRecordVO.setRecordId("alksdjk");
         QueryRecord record = recordService.getQueryRecordById(queryRecordVO);
