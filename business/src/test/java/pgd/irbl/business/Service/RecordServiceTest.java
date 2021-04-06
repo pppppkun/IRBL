@@ -31,7 +31,7 @@ import java.util.List;
 @SpringBootTest
 @ActiveProfiles("test")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RecordServiceImpl {
+public class RecordServiceTest {
 
     @Autowired
     RecordService recordService;
