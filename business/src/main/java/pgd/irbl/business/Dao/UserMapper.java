@@ -11,6 +11,6 @@ import pgd.irbl.business.PO.User;
 public interface UserMapper {
 
     int register(User user);
-    String login(String username);
+    User login(String username);
     Long findUserIdByUsername(String username);
 }

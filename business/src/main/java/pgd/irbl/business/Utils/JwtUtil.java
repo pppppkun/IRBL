@@ -19,15 +19,15 @@ import java.util.*;
 public class JwtUtil {
     public static final String TOKEN_NAME = "irbl-token";
     // 秘钥
-    static final String SECRET = "irbl-business-Token";
+    static final String SECRET = "PGD";
     // 签名是有谁生成
     static final String ISSUSER = "IRBL";
     // 签名的主题
-    static final String SUBJECT = "this is irbl business token";
+    static final String SUBJECT = "this is irbl token";
     // 签名的观众
     static final String AUDIENCE = "WEB";
 
-    public static String createToken(Integer userId,Integer expireMin) {
+    public static String createToken(Long userId,Integer expireMin) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             Map<String, Object> map = new HashMap<>();

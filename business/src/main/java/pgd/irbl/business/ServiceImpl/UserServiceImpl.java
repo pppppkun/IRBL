@@ -9,6 +9,7 @@ import pgd.irbl.business.Service.UserService;
 import pgd.irbl.business.Utils.MD5Encryption;
 import pgd.irbl.business.VO.LoginRegisterVO;
 import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.VO.UserVO;
 import pgd.irbl.business.enums.UserRole;
 import static pgd.irbl.business.Constant.UserConstant.*;
 
@@ -32,10 +33,16 @@ public class UserServiceImpl implements UserService {
     public ResponseVO login(LoginRegisterVO loginVO){
 //        if(MD5Encryption.encrypt(loginVO.getPassword()).equals(userMapper.login(loginVO.getUsername()))) return ResponseVO.buildSuccess();
         if(userMapper.findUserIdByUsername(loginVO.getUsername())==null) return ResponseVO.buildFailure(USER_NO_EXISTS);
-
-        if(MD5Encryption.encrypt(loginVO.getPassword()).equals(userMapper.login(loginVO.getUsername()))) return ResponseVO.buildSuccess();
+        User user = userMapper.login(loginVO.getUsername());
+        if(MD5Encryption.encrypt(loginVO.getPassword()).equals(user.getPassword())) {
+            UserVO userVO = new UserVO();
+            userVO.setUsername(user.getUsername());
+            userVO.setRole(user.getRole());
+            userVO.setQueryNum(user.getQueryNum());
+            userVO.setToken(com.example.hotel.util.JwtUtil.createToken(user.getId(), tokenTime));
+            return ResponseVO.buildSuccess(userVO);
+        }
         else return ResponseVO.buildFailure(PASSWORD_ERROR);
-
     }
 
     @Override
@@ -47,10 +54,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(UserRole.Developer);
         user.setQueryNum(0);
         int ret = userMapper.register(user);
-        if(ret == 1) return ResponseVO.buildSuccess();
-        else{
-            log.warn(REGISTER_ERROR, user);
-            return ResponseVO.buildFailure(REGISTER_ERROR);
-        }
+        if(ret == 1) return ResponseVO.buildSuccess(REGISTER_OK);
+        else return ResponseVO.buildFailure(REGISTER_ERROR);
     }
 }
