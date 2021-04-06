@@ -44,6 +44,7 @@ public class RecordServiceImpl implements RecordService {
         MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
 //        queryRecord.find(eq("userId", getUserAllRecordVO.getUserId())).projection(Projections.include("_id")).forEach(document -> result.add(document.getObjectId("_id").toString()));
         Document document = queryRecord.find(eq("_id", new ObjectId(queryRecordVO.getRecordId()))).first();
+        if(document == null) return null;
         return new QueryRecord(document);
     }
 }
