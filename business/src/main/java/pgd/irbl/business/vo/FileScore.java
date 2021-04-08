@@ -10,5 +10,5 @@ import lombok.Data;
 public class FileScore {
     Double score;
     // this field contain name
-    String filepath;
+    String filePath;
 }
