@@ -6,7 +6,6 @@ pipeline {
         registry_pass= "Li2000chun"
         repo_url="irbl"
         branch="${env.gitlabSourceBranch}"
-// docker login -u cn-north-4@1PZSKW0PC8JVZYFUWSAO -p 853fb78e727c6005a959510a44a45e81b9cab78395c8b89ee7f6e17944444563 swr.cn-north-4.myhuaweicloud.com
     }
     options {
         timestamps()    //设置在项目打印日志时带上对应时间
@@ -26,6 +25,9 @@ pipeline {
            }
         }
         stage('Maven Build and Test') {
+            when {
+                environment name: 'branch', value: 'dev'
+            }
             agent{
                 docker {
                     image 'maven:3-alpine'
@@ -34,11 +36,18 @@ pipeline {
             }
             steps{
                 echo 'Business Module Test And Build'
-                sh 'mvn -pl business -Ptest test'
-                sh 'mvn -pl business package -Dmaven.test.skip=true'
+                sh 'mvn -pl business clean package jacoco:report -Dmaven.test.failure.ignore=true'
+                jacoco()
+//                 sh 'mvn -pl business package -Dmaven.test.skip=true'
             }
 	    }
         stage('Image Build'){
+            when {
+                anyOf {
+                    environment name: 'branch', value: 'dev'
+                    environment name: 'branch', value: 'master'
+                }
+            }
             agent{
                 label 'master'
             }
@@ -48,6 +57,12 @@ pipeline {
             }
         }
         stage('Image Push'){
+            when {
+                anyOf {
+                    environment name: 'branch', value: 'dev'
+                    environment name: 'branch', value: 'master'
+                }
+            }
             agent{
                 label 'master'
             }
@@ -58,6 +73,12 @@ pipeline {
             }
         }
         stage('deploy'){
+            when {
+                anyOf {
+                    environment name: 'branch', value: 'dev'
+                    environment name: 'branch', value: 'master'
+                }
+            }
             agent{
                 label 'irbl'
             }
