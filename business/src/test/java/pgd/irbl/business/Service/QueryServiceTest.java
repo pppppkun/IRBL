@@ -1,6 +1,7 @@
 package pgd.irbl.business.Service;
 
 
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import pgd.irbl.business.VO.ResponseVO;
 
 
 /**
- * @Author: pkun
- * @CreateTime: 2021-04-05 16:58
+ * @Author: qin
+ * @CreateTime: 2021-04-11 16:58
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -50,9 +52,9 @@ public class QueryServiceTest {
     }
 
     @Test
-    public void queryNotRegisterTest(){
-
-        queryService.queryNotRegister(null,null);
+    public void queryNotRegisterTest1(){
+        ResponseVO responseVO = queryService.queryNotRegister(null, null);
+        Assert.assertFalse(responseVO.getSuccess());
     }
 
 }

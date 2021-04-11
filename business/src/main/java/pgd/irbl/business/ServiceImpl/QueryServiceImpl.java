@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static pgd.irbl.business.Constant.ManageConstant.QUERY_FAIL;
+import static pgd.irbl.business.Constant.ManageConstant.QUERY_NULL_FAIL;
 
 /**
  * @Author: qin
@@ -37,6 +38,9 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode) {
+        if(bugReport==null || sourceCode==null){
+            return ResponseVO.buildFailure(QUERY_NULL_FAIL);
+        }
         String bugReportFullPath, codeFullPath;
         try {
             bugReportFullPath = MyFileUtil.saveFile(reportPath, bugReport);
