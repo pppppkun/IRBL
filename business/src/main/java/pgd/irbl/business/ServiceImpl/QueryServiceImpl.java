@@ -43,6 +43,7 @@ public class QueryServiceImpl implements QueryService {
         }
         //todo call gRPC
 
+
         return null;
     }
 }
