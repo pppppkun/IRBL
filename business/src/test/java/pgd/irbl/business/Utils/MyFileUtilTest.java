@@ -15,11 +15,12 @@ import static org.junit.Assert.*;
  */
 public class MyFileUtilTest {
 
+    private final String ROOT_PATH  = "E:\\code-test\\";
     @Test
     public void saveFileTest() throws IOException {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("files", "filename.txt", "text/plain", "hello".getBytes(StandardCharsets.UTF_8));
-        String fileFullPath = MyFileUtil.saveFile("E:\\code-test\\", mockMultipartFile, "hello.txt");
-        assertEquals(fileFullPath, "E:\\code-test\\hello.txt");
+        String fileFullPath = MyFileUtil.saveFile(ROOT_PATH , mockMultipartFile, "hello.txt");
+        assertEquals(fileFullPath, ROOT_PATH+"hello.txt");
 
     }
 }

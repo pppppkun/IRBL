@@ -1,13 +1,6 @@
 package pgd.irbl.business.Service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.InsertOneResult;
-import jdk.nashorn.internal.parser.JSONParser;
-import org.bson.BsonDocument;
-import org.bson.Document;
-import org.bson.types.ObjectId;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import pgd.irbl.business.PO.QueryRecord;
-import pgd.irbl.business.enums.QueryRecordState;
 
-import java.sql.Timestamp;
 
 /**
  * @Author: pkun

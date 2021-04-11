@@ -6,6 +6,12 @@ option java_outer_classname = "CalcMsgProto";
 
 package ServiceImpl;
 
+// 缺陷报告查询服务定义
+service Calculator {
+  // Sends a greeting
+  rpc calculate (CalcRequest) returns (CalcReply) {}
+}
+
 // 请求计算时的参数
 message CalcRequest {
   string file_path = 1;         // project root file path
