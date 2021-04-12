@@ -44,7 +44,7 @@ public class QueryServiceImpl implements QueryService {
         String bugReportFullPath, codeFullPath;
         try {
             bugReportFullPath = MyFileUtil.saveFile(reportPath, bugReport);
-            codeFullPath = MyFileUtil.saveFile(codePath, bugReport);
+            codeFullPath = MyFileUtil.saveFile(codePath, sourceCode);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseVO.buildFailure(e);

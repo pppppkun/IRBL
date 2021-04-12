@@ -9,9 +9,17 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.VO.ResponseVO;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -28,6 +36,8 @@ public class QueryServiceTest {
     MongoTemplate mongoTemplate;
     @Autowired
     QueryService queryService;
+
+    private final String ROOT_PATH  = "E:\\code-test\\";
 
     @Test
     public void test(){
@@ -56,5 +66,15 @@ public class QueryServiceTest {
         ResponseVO responseVO = queryService.queryNotRegister(null, null);
         Assert.assertFalse(responseVO.getSuccess());
     }
+    @Test
+    public void queryNotRegisterTest2(){
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("files", "filename.txt", "text/plain", "hello1".getBytes(StandardCharsets.UTF_8));
 
+        ResponseVO responseVO = queryService.queryNotRegister(mockMultipartFile, mockMultipartFile);
+//        ArrayList<FileScore> content = (ArrayList<FileScore>) responseVO.getContent();
+//        System.out.println(content.get(0).getFilepath());
+//        System.out.println(content.get(0).getScore());
+
+//        Assert.assertTrue(responseVO.getSuccess());
+    }
 }
