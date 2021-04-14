@@ -53,6 +53,11 @@ public class QueryServiceImpl implements QueryService {
         }
 
         //todo set gRPC server port
+        String targetPreProcessor = "localhost:50053";
+        ManagedChannel channelPreProcessor = ManagedChannelBuilder.forTarget(targetPreProcessor)
+                .usePlaintext()
+                .build();
+
         String target = "localhost:50051";
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse
@@ -62,10 +67,10 @@ public class QueryServiceImpl implements QueryService {
                 // needing certificates.
                 .usePlaintext()
                 .build();
-        List<FileScore> fileScoreList = null;
+        List<FileScore> fileScoreList;
+
         try {
-            //todo check preprocess
-            PreProcessorClient preProcessorClient  = new PreProcessorClient(channel);
+            PreProcessorClient preProcessorClient  = new PreProcessorClient(channelPreProcessor);
             int res = preProcessorClient.preprocess(codeFullPath);
             if(res!=1){
                 return ResponseVO.buildFailure(PREPROCESS_NULL_FAIL);
