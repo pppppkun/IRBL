@@ -1,4 +1,4 @@
-package pgd.irbl.business.Utils;
+package pgd.irbl.business.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 

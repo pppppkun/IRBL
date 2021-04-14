@@ -1,4 +1,4 @@
-package pgd.irbl.business.ServiceImpl;
+package pgd.irbl.business.serviceImpl;
 
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.MongoCollection;
@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.DTO.RecordWithTime;
 import pgd.irbl.business.PO.QueryRecord;
-import pgd.irbl.business.Service.RecordService;
+import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
 

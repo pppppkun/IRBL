@@ -1,4 +1,4 @@
-package pgd.irbl.business.Utils;
+package pgd.irbl.business.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;

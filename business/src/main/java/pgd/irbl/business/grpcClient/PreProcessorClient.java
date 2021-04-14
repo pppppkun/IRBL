@@ -2,9 +2,9 @@ package pgd.irbl.business.grpcClient;
 
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
-import pgd.irbl.business.ServiceImpl.PreProcessReply;
-import pgd.irbl.business.ServiceImpl.PreProcessRequest;
-import pgd.irbl.business.ServiceImpl.PreProcessorGrpc;
+import pgd.irbl.business.serviceImpl.PreProcessReply;
+import pgd.irbl.business.serviceImpl.PreProcessRequest;
+import pgd.irbl.business.serviceImpl.PreProcessorGrpc;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

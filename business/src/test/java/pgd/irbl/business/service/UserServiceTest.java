@@ -1,4 +1,4 @@
-package pgd.irbl.business.Service;
+package pgd.irbl.business.service;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pgd.irbl.business.VO.LoginRegisterVO;
-import static pgd.irbl.business.Constant.UserConstant.*;
+import static pgd.irbl.business.constant.UserConstant.*;
 /**
  * @Author: pkun
  * @CreateTime: 2021-03-30 18:34

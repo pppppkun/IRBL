@@ -1,4 +1,4 @@
-package pgd.irbl.business.Service;
+package pgd.irbl.business.service;
 
 
 import org.junit.Assert;
@@ -13,11 +13,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.VO.ResponseVO;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 

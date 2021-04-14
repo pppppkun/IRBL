@@ -1,4 +1,4 @@
-package pgd.irbl.business.Service;
+package pgd.irbl.business.service;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import pgd.irbl.business.VO.ModifyRepoVO;
 import pgd.irbl.business.VO.RegisterRepoVO;
 import pgd.irbl.business.enums.RepoState;
 
-import static pgd.irbl.business.Constant.ManageConstant.*;
+import static pgd.irbl.business.constant.ManageConstant.*;
 
 import java.sql.Date;
 

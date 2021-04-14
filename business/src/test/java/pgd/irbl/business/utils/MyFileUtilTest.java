@@ -1,4 +1,4 @@
-package pgd.irbl.business.Utils;
+package pgd.irbl.business.utils;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;

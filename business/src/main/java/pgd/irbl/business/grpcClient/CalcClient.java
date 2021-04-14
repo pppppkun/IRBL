@@ -2,10 +2,10 @@ package pgd.irbl.business.grpcClient;
 
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
-import pgd.irbl.business.ServiceImpl.CalcReply;
-import pgd.irbl.business.ServiceImpl.CalcRequest;
-import pgd.irbl.business.ServiceImpl.CalculatorGrpc;
-import pgd.irbl.business.ServiceImpl.FileScore;
+import pgd.irbl.business.serviceImpl.CalcReply;
+import pgd.irbl.business.serviceImpl.CalcRequest;
+import pgd.irbl.business.serviceImpl.CalculatorGrpc;
+import pgd.irbl.business.serviceImpl.FileScore;
 
 import java.util.List;
 import java.util.logging.Level;

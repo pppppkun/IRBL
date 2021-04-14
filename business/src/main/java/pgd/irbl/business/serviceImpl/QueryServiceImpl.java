@@ -1,21 +1,20 @@
-package pgd.irbl.business.ServiceImpl;
+package pgd.irbl.business.serviceImpl;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pgd.irbl.business.Service.QueryService;
-import pgd.irbl.business.Utils.MyFileUtil;
+import pgd.irbl.business.service.QueryService;
+import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
+import pgd.irbl.business.grpcClient.PreProcessorClient;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static pgd.irbl.business.Constant.ManageConstant.QUERY_FAIL;
-import static pgd.irbl.business.Constant.ManageConstant.QUERY_NULL_FAIL;
+import static pgd.irbl.business.constant.ManageConstant.*;
 
 /**
  * @Author: qin
@@ -54,6 +53,11 @@ public class QueryServiceImpl implements QueryService {
         }
 
         //todo set gRPC server port
+        String targetPreProcessor = "localhost:50053";
+        ManagedChannel channelPreProcessor = ManagedChannelBuilder.forTarget(targetPreProcessor)
+                .usePlaintext()
+                .build();
+
         String target = "localhost:50051";
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse
@@ -63,8 +67,14 @@ public class QueryServiceImpl implements QueryService {
                 // needing certificates.
                 .usePlaintext()
                 .build();
-        List<FileScore> fileScoreList = null;
+        List<FileScore> fileScoreList;
+
         try {
+            PreProcessorClient preProcessorClient  = new PreProcessorClient(channelPreProcessor);
+            int res = preProcessorClient.preprocess(codeFullPath);
+            if(res!=1){
+                return ResponseVO.buildFailure(PREPROCESS_NULL_FAIL);
+            }
             CalcClient client = new CalcClient(channel);
             fileScoreList = client.calc(bugReportFullPath, codeFullPath);
         } finally {

@@ -1,4 +1,4 @@
-package pgd.irbl.business.Service;
+package pgd.irbl.business.service;
 
 import pgd.irbl.business.PO.QueryRecord;
 import pgd.irbl.business.VO.QueryRecordVO;

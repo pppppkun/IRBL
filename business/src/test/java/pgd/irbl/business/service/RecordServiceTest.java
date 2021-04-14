@@ -1,4 +1,4 @@
-package pgd.irbl.business.Service;
+package pgd.irbl.business.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.result.InsertOneResult;

@@ -1,12 +1,12 @@
-package pgd.irbl.business.Controller;
+package pgd.irbl.business.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pgd.irbl.business.Service.RecordService;
-import pgd.irbl.business.Utils.JwtUtil;
+import pgd.irbl.business.service.RecordService;
+import pgd.irbl.business.utils.JwtUtil;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
 

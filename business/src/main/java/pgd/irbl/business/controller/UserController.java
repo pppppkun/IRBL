@@ -1,4 +1,4 @@
-package pgd.irbl.business.Controller;
+package pgd.irbl.business.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pgd.irbl.business.Service.UserService;
+import pgd.irbl.business.service.UserService;
 import pgd.irbl.business.VO.LoginRegisterVO;
 import pgd.irbl.business.VO.ResponseVO;
 

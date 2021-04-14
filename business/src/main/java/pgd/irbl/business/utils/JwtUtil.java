@@ -1,4 +1,4 @@
-package pgd.irbl.business.Utils;
+package pgd.irbl.business.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

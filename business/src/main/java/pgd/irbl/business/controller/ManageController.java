@@ -1,13 +1,10 @@
-package pgd.irbl.business.Controller;
+package pgd.irbl.business.controller;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pgd.irbl.business.PO.Repository;
-import pgd.irbl.business.Service.ManageService;
+import pgd.irbl.business.service.ManageService;
 import pgd.irbl.business.VO.DeleteRepoVO;
 import pgd.irbl.business.VO.ModifyRepoVO;
 import pgd.irbl.business.VO.RegisterRepoVO;

@@ -1,4 +1,4 @@
-package pgd.irbl.business.Service;
+package pgd.irbl.business.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.VO.ResponseVO;

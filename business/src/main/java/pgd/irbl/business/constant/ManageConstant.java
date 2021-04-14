@@ -1,4 +1,4 @@
-package pgd.irbl.business.Constant;
+package pgd.irbl.business.constant;
 
 import org.springframework.stereotype.Component;
 

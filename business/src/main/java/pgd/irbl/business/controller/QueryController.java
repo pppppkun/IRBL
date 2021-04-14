@@ -1,4 +1,4 @@
-package pgd.irbl.business.Controller;
+package pgd.irbl.business.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.PO.QueryRecord;
-import pgd.irbl.business.Service.QueryService;
-import pgd.irbl.business.Utils.MyFileUtil;
+import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.VO.ResponseVO;
 
 /**
