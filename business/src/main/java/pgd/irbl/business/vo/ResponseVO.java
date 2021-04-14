@@ -16,6 +16,10 @@ public class ResponseVO {
      */
     private Boolean success;
 
+    /**
+     * 返回的提示信息
+     */
+    private String message;
 
     /**
      * 内容
@@ -35,12 +39,12 @@ public class ResponseVO {
         return response;
     }
 
-    public static ResponseVO buildFailure(Object content){
+    public static ResponseVO buildFailure(String message){
         ResponseVO response=new ResponseVO();
         response.setSuccess(false);
-        response.setContent(content);
+        response.setMessage(message);
 //        System.out.println(message);
-        log.info(content.toString());
+        log.info(message);
         return response;
     }
 
@@ -50,6 +54,14 @@ public class ResponseVO {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Object getContent() {

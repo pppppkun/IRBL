@@ -55,7 +55,7 @@ public class ManageServiceTest {
         registerRepoVO.setDescription("xxxxxxx");
         registerRepoVO.setGitUrl("xxx.xxx.xxx");
         Assert.assertEquals(REGISTER_SUCCESS, manageService.registerRepo(registerRepoVO).getContent());
-        Assert.assertEquals(REPO_EXISTS, manageService.registerRepo(registerRepoVO).getContent());
+        Assert.assertEquals(REPO_EXISTS, manageService.registerRepo(registerRepoVO).getMessage());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ManageServiceTest {
         DeleteRepoVO deleteRepoVO = new DeleteRepoVO();
         deleteRepoVO.setRepoId(4L);
         Assert.assertEquals(DELETE_SUCCESS, manageService.deleteRepo(deleteRepoVO).getContent());
-        Assert.assertEquals(REPO_NO_EXISTS, manageService.deleteRepo(deleteRepoVO).getContent());
+        Assert.assertEquals(REPO_NO_EXISTS, manageService.deleteRepo(deleteRepoVO).getMessage());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class ManageServiceTest {
         modifyRepoVO.setDescription("TestTest");
         Assert.assertEquals(MODIFY_SUCCESS, manageService.modifyRepo(modifyRepoVO).getContent());
         modifyRepoVO.setRepoId(1L);
-        Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getContent());
+        Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
     }
 
 }
