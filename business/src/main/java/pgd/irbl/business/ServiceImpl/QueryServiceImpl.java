@@ -9,13 +9,12 @@ import pgd.irbl.business.Service.QueryService;
 import pgd.irbl.business.Utils.MyFileUtil;
 import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
+import pgd.irbl.business.grpcClient.PreProcessorClient;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static pgd.irbl.business.Constant.ManageConstant.QUERY_FAIL;
-import static pgd.irbl.business.Constant.ManageConstant.QUERY_NULL_FAIL;
+import static pgd.irbl.business.Constant.ManageConstant.*;
 
 /**
  * @Author: qin
@@ -65,6 +64,12 @@ public class QueryServiceImpl implements QueryService {
                 .build();
         List<FileScore> fileScoreList = null;
         try {
+            //todo check preprocess
+            PreProcessorClient preProcessorClient  = new PreProcessorClient(channel);
+            int res = preProcessorClient.preprocess(codeFullPath);
+            if(res!=1){
+                return ResponseVO.buildFailure(PREPROCESS_NULL_FAIL);
+            }
             CalcClient client = new CalcClient(channel);
             fileScoreList = client.calc(bugReportFullPath, codeFullPath);
         } finally {
