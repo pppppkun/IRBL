@@ -23,9 +23,11 @@ public class CalcClientTest {
                 .usePlaintext()
                 .build();
         CalcClient calcClient = new CalcClient(channelPreProcessor);
-        List<FileScore> fileScores = calcClient.calc("C:\\Users\\10444\\Desktop\\se3\\algorithm-irbl\\data\\fuck.txt", "swt");
-//        for (int i = 0; i < fileScores.size(); i++) {
-//            System.out.println(fileScores.get(i).getFilePath() + "   " + fileScores.get(i).getScore());
+//        List<FileScore> fileScores = calcClient.calc("C:\\Users\\10444\\Desktop\\se3\\algorithm-irbl\\data\\fuck.txt", "swt");
+//        if(fileScores!=null){
+//            for (FileScore fileScore : fileScores) {
+//                System.out.println(fileScore.getFilePath() + "   " + fileScore.getScore());
+//            }
 //        }
 
     }
