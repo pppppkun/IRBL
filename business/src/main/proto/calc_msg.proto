@@ -4,7 +4,7 @@ option java_multiple_files = true;
 option java_package = "pgd.irbl.business.serviceImpl";
 option java_outer_classname = "CalcMsgProto";
 
-package ServiceImpl;
+package serviceImpl;
 
 // 缺陷报告查询服务定义
 service Calculator {
