@@ -26,10 +26,10 @@ public class MyFileUtilTest {
 
     @Test
     public void unzipJar() {
-        try {
-            MyFileUtil.unZip("C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\irbl-business","C:\\Users\\10444\\Desktop\\se3\\data\\irbl-business.jar");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            MyFileUtil.unZip("C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\","C:\\Users\\10444\\Desktop\\se3\\data\\test.zip");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
