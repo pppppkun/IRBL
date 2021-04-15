@@ -107,6 +107,10 @@
             <version>6.0.53</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

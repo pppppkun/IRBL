@@ -1,8 +1,13 @@
 package pgd.irbl.business.utils;
 
+import org.apache.http.entity.ContentType;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -26,10 +31,24 @@ public class MyFileUtilTest {
 
     @Test
     public void unzipJar() {
+        String codePath = "C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\";
+        String zipName = "C:\\Users\\10444\\Desktop\\se3\\data\\test.zip";
 //        try {
-//            MyFileUtil.unZip("C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\","C:\\Users\\10444\\Desktop\\se3\\data\\test.zip");
+//            MyFileUtil.unZip(codePath ,);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    @Test
+    public void unZipAndSaveDir() throws IOException {
+//        String codePath = "C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\";
+//        String zipName = "C:\\Users\\10444\\Desktop\\se3\\data\\test.zip";
+//        File file = new File(zipName);
+//        FileInputStream fileInputStream = null;
+//        fileInputStream = new FileInputStream(file);
+//        MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+//                ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+//        MyFileUtil.unZipAndSaveDir(codePath, multipartFile);
     }
 }

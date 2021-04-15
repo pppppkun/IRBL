@@ -41,10 +41,11 @@ public class MyFileUtil {
     }
 
     public static String unZipAndSaveDir(String codePath, MultipartFile multipartFile) throws IOException {
-        String fileName = multipartFile.getName() + System.currentTimeMillis()%1000;
+        // 有重名的可能会出现 bug
+        String fileName = multipartFile.getName();
         File file= new File(codePath + fileName);
         multipartFile.transferTo(file);
-
+        unZip(codePath ,codePath + fileName);
         return fileName;
     }
 
