@@ -6,5 +6,5 @@ spring:
 
 file:
   path:
-    code: "E:\\code-test\\"
-    report: "E:\\code-test\\"
+    code: "C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\"
+    report: "C:\\Users\\10444\\Desktop\\se3\\data\\report\\"

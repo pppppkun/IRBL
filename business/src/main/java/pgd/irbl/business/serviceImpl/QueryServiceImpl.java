@@ -40,15 +40,16 @@ public class QueryServiceImpl implements QueryService {
         if(bugReport==null || sourceCode==null){
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
-        String bugReportFullPath, codeFullPath;
+        String bugReportFileName, codeDir;
         try {
-            bugReportFullPath = MyFileUtil.saveFile(reportPath, bugReport);
-            codeFullPath = MyFileUtil.saveFile(codePath, sourceCode);
+            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport);
+//            codeDir = MyFileUtil.saveFile(codePath, sourceCode);
+            codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseVO.buildFailure(e);
         }
-        if(bugReportFullPath==null || codeFullPath==null){
+        if(bugReportFileName==null || codeDir==null){
             return ResponseVO.buildFailure(null);
         }
 
@@ -71,12 +72,12 @@ public class QueryServiceImpl implements QueryService {
 
         try {
             PreProcessorClient preProcessorClient  = new PreProcessorClient(channelPreProcessor);
-            int res = preProcessorClient.preprocess(codeFullPath);
+            int res = preProcessorClient.preprocess(codeDir);
             if(res!=1){
                 return ResponseVO.buildFailure(PREPROCESS_NULL_FAIL);
             }
             CalcClient client = new CalcClient(channel);
-            fileScoreList = client.calc(bugReportFullPath, codeFullPath);
+            fileScoreList = client.calc(bugReportFileName, codeDir);
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
             // resources the channel should be shut down when it will no longer be used. If it may be used
@@ -84,6 +85,8 @@ public class QueryServiceImpl implements QueryService {
 
 //            channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
             channel.shutdownNow();
+            channelPreProcessor.shutdownNow();
+
         }
 
         if(fileScoreList!=null){
