@@ -47,7 +47,7 @@ public class MyFileUtil {
         File file= new File(codePath + fileName);
         multipartFile.transferTo(file);
         unZip(codePath ,codePath + fileName);
-        return fileName;
+        return fileName.substring(0,fileName.length()-4);
     }
 
 //    public static void unZip(String destinationDir, String jarPath) throws IOException {
