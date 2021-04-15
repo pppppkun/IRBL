@@ -1,6 +1,7 @@
 package pgd.irbl.business.service;
 
 
+import org.apache.http.entity.ContentType;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -13,8 +14,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.VO.ResponseVO;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
@@ -68,11 +73,28 @@ public class QueryServiceTest {
     public void queryNotRegisterTest2(){
         MockMultipartFile mockMultipartFile = new MockMultipartFile("files", "filename.txt", "text/plain", "hello1".getBytes(StandardCharsets.UTF_8));
 
-        ResponseVO responseVO = queryService.queryNotRegister(mockMultipartFile, mockMultipartFile);
+//        ResponseVO responseVO = queryService.queryNotRegister(mockMultipartFile, mockMultipartFile);
 //        ArrayList<FileScore> content = (ArrayList<FileScore>) responseVO.getContent();
 //        System.out.println(content.get(0).getFilepath());
 //        System.out.println(content.get(0).getScore());
 
 //        Assert.assertTrue(responseVO.getSuccess());
     }
+
+    @Test
+    public void queryNotRegisterTest3() throws IOException {
+        String codePath = "C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\";
+        String zipName = "C:\\Users\\10444\\Desktop\\se3\\data\\test.zip";
+        File file = new File(zipName);
+        FileInputStream fileInputStream = null;
+        fileInputStream = new FileInputStream(file);
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("filename.txt", "filename.txt", "text/plain", "report test query not register".getBytes(StandardCharsets.UTF_8));
+
+        MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+        ResponseVO responseVO = queryService.queryNotRegister(mockMultipartFile, multipartFile);
+        Assert.assertTrue(responseVO.getSuccess());
+
+    }
+
 }

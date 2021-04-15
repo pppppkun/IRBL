@@ -20,7 +20,7 @@ public class PreProcessorClientTest {
                 .usePlaintext()
                 .build();
         PreProcessorClient preProcessorClient = new PreProcessorClient(channelPreProcessor);
-//        int res = preProcessorClient.preprocess("swt");
+        int res = preProcessorClient.preprocess("test");
 //        System.out.println(res);
     }
 }

@@ -42,8 +42,8 @@ public class MyFileUtilTest {
 
     @Test
     public void unZipAndSaveDir() throws IOException {
-//        String codePath = "C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\";
-//        String zipName = "C:\\Users\\10444\\Desktop\\se3\\data\\test.zip";
+        String codePath = "C:\\Users\\10444\\Desktop\\se3\\data\\source-code\\";
+        String zipName = "C:\\Users\\10444\\Desktop\\se3\\data\\test.zip";
 //        File file = new File(zipName);
 //        FileInputStream fileInputStream = null;
 //        fileInputStream = new FileInputStream(file);

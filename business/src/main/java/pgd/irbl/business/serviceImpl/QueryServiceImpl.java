@@ -11,6 +11,7 @@ import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
 import pgd.irbl.business.grpcClient.PreProcessorClient;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class QueryServiceImpl implements QueryService {
 
     @Value("${file.path.report}")
     String reportPath;
+
+    @Value("${file.path.python-cache}")
+    String pythonCachePath;
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitID) {
@@ -52,8 +56,12 @@ public class QueryServiceImpl implements QueryService {
         if(bugReportFileName==null || codeDir==null){
             return ResponseVO.buildFailure(null);
         }
-
-        //todo set gRPC server port
+//        File filePythonCacheDir = new File(pythonCachePath+codeDir);
+//        boolean mkdir = filePythonCacheDir.mkdir();
+//        if(!mkdir){
+//            return ResponseVO.buildFailure("新建文件夹失败");
+//        }
+        // set gRPC server port
         String targetPreProcessor = "localhost:50053";
         ManagedChannel channelPreProcessor = ManagedChannelBuilder.forTarget(targetPreProcessor)
                 .usePlaintext()
@@ -70,14 +78,22 @@ public class QueryServiceImpl implements QueryService {
                 .build();
         List<FileScore> fileScoreList;
 
+        // new dir in python_cache
+
         try {
             PreProcessorClient preProcessorClient  = new PreProcessorClient(channelPreProcessor);
             int res = preProcessorClient.preprocess(codeDir);
             if(res!=1){
                 return ResponseVO.buildFailure(PREPROCESS_NULL_FAIL);
             }
+            // just for test
+//            try {
+//                Thread.sleep(1000*120);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             CalcClient client = new CalcClient(channel);
-            fileScoreList = client.calc(bugReportFileName, codeDir);
+            fileScoreList = client.calc(reportPath+bugReportFileName, codeDir);
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
             // resources the channel should be shut down when it will no longer be used. If it may be used

@@ -23,7 +23,8 @@ public class MyFileUtil {
 //    private static String savePath;
 
     public static String saveFile(String rootPath, MultipartFile multipartFile) throws IOException {
-        return saveFile(rootPath, multipartFile, multipartFile.getName() + System.currentTimeMillis()%1000 );
+//        return saveFile(rootPath, multipartFile, multipartFile.getName() + System.currentTimeMillis()%1000 );
+        return saveFile(rootPath, multipartFile, multipartFile.getName() );
     }
 
     /**
