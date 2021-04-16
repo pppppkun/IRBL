@@ -11,7 +11,7 @@ import numpy as np
 PARMAS = [0.395404709534767, 0.7994527355369837]
 
 
-def load_python_cache(project_path="swt", python_cache_path=r"C:\Users\10444\Desktop\se3\data\python-cache"):
+def load_python_cache(project_path="swt", python_cache_path=r"/data/python-cache"):
     python_cache_paths = glob.glob(os.path.join(python_cache_path, project_path) + '/**/*.pkl', recursive=True)
 
     source_codes = {}
@@ -22,7 +22,7 @@ def load_python_cache(project_path="swt", python_cache_path=r"C:\Users\10444\Des
     return source_codes
 
 
-def file_retrieval(report_path, project_path, python_cache_path=r"C:\Users\10444\Desktop\se3\data\python-cache"):
+def file_retrieval(report_path, project_path, python_cache_path=r"/data/python-cache"):
     report_id = 0
     description = ""
     with open(report_path, "r") as f:

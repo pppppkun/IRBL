@@ -210,8 +210,8 @@ class SourceCodePreprocessor(Preprocessor):
         self.stem()
 
 
-def load_preprocess_save(project_path, source_code_path=r"C:\Users\10444\Desktop\se3\data\source-code",
-                         python_cache_path=r"C:\Users\10444\Desktop\se3\data\python-cache"):
+def load_preprocess_save(project_path, source_code_path=r"/data/source-code",
+                         python_cache_path=r"/data/python-cache"):
     load_path = os.path.join(source_code_path, project_path)
     loader = DataLoader(load_path)
 
