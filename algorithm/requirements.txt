@@ -1,0 +1,9 @@
+Pygments==2.8.1
+grpcio==1.36.1
+javalang==0.13.0
+scipy==1.6.1
+numpy==1.20.1
+nltk==3.5
+inflection==0.5.1
+protobuf==3.15.8
+scikit_learn==0.24.1
