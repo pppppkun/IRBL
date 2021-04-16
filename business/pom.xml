@@ -13,6 +13,7 @@
     <description>business system for irbl</description>
     <properties>
         <java.version>1.8</java.version>
+
     </properties>
     <dependencies>
         <dependency>
@@ -108,7 +109,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
@@ -120,7 +121,6 @@
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.6.2</version>
             </extension>
         </extensions>
         <plugins>
