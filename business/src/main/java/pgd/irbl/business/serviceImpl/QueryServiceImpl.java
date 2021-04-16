@@ -1,7 +1,7 @@
 package pgd.irbl.business.serviceImpl;
 
 import pgd.irbl.business.service.QueryService;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.VO.ResponseVO;
 
 /**
  * @Author: pkun

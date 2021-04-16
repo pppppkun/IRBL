@@ -1,4 +1,4 @@
-package pgd.irbl.business.dto;
+package pgd.irbl.business.DTO;
 
 import lombok.Data;
 import org.bson.Document;

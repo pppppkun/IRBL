@@ -1,4 +1,4 @@
-package pgd.irbl.business.vo;
+package pgd.irbl.business.VO;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

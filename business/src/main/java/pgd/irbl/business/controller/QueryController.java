@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pgd.irbl.business.po.QueryRecord;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.PO.QueryRecord;
+import pgd.irbl.business.VO.ResponseVO;
 
 /**
  * @Author: pkun

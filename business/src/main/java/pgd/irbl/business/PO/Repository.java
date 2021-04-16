@@ -1,4 +1,4 @@
-package pgd.irbl.business.po;
+package pgd.irbl.business.PO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

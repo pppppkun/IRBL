@@ -1,17 +1,16 @@
-package pgd.irbl.business.po;
+package pgd.irbl.business.VO;
 
 import lombok.Data;
 import pgd.irbl.business.enums.UserRole;
 
 /**
  * @Author: pkun
- * @CreateTime: 2021-03-27 09:54
+ * @CreateTime: 2021-04-05 22:55
  */
 @Data
-public class User {
-    Long id;
+public class UserVO {
     String username;
-    String password;
     UserRole role;
     Integer queryNum;
+    String token;
 }

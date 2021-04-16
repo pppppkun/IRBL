@@ -1,7 +1,7 @@
-package pgd.irbl.business.dao;
+package pgd.irbl.business.Dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import pgd.irbl.business.po.User;
+import pgd.irbl.business.PO.User;
 
 /**
  * @Author: pkun

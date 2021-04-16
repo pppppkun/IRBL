@@ -1,10 +1,10 @@
 package pgd.irbl.business.service;
 
-import pgd.irbl.business.po.Repository;
-import pgd.irbl.business.vo.DeleteRepoVO;
-import pgd.irbl.business.vo.ModifyRepoVO;
-import pgd.irbl.business.vo.RegisterRepoVO;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.PO.Repository;
+import pgd.irbl.business.VO.DeleteRepoVO;
+import pgd.irbl.business.VO.ModifyRepoVO;
+import pgd.irbl.business.VO.RegisterRepoVO;
+import pgd.irbl.business.VO.ResponseVO;
 
 import java.util.List;
 

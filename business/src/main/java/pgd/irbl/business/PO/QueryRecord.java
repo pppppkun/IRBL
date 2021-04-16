@@ -1,11 +1,11 @@
-package pgd.irbl.business.po;
+package pgd.irbl.business.PO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.bson.Document;
 import org.springframework.data.annotation.Id;
-import pgd.irbl.business.vo.FileScore;
+import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.enums.QueryRecordState;
 
 import java.sql.Timestamp;

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.utils.JwtUtil;
-import pgd.irbl.business.vo.QueryRecordVO;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.VO.QueryRecordVO;
+import pgd.irbl.business.VO.ResponseVO;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,4 +1,4 @@
-package pgd.irbl.business.config;
+package pgd.irbl.business.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
