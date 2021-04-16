@@ -15,9 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import pgd.irbl.business.po.QueryRecord;
-import pgd.irbl.business.vo.QueryRecordVO;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.PO.QueryRecord;
+import pgd.irbl.business.VO.QueryRecordVO;
+import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.enums.QueryRecordState;
 
 import java.sql.Timestamp;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="pgd.irbl.business.dao.RepoMapper">
+<mapper namespace="pgd.irbl.business.Dao.RepoMapper">
 
     <select id="selectAllRepo" resultMap="Repo">
         select *
@@ -36,7 +36,7 @@
         where id = #{repoId}
     </select>
 
-    <resultMap id="Repo" type="pgd.irbl.business.po.Repository">
+    <resultMap id="Repo" type="pgd.irbl.business.PO.Repository">
         <id column="id" property="id"/>
         <result column="gitUrl" property="gitUrl"/>
         <result column="description" property="description"/>
