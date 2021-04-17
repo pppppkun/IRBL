@@ -8,6 +8,7 @@ import pgd.irbl.business.serviceImpl.CalculatorGrpc;
 import pgd.irbl.business.serviceImpl.FileScore;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +41,7 @@ public class CalcClient {
         CalcReply response;
 
         try {
-            response = blockingStub.calculate(request);
+            response = blockingStub.withDeadlineAfter(10, TimeUnit.MINUTES).calculate(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return null;

@@ -6,6 +6,7 @@ import pgd.irbl.business.serviceImpl.PreProcessReply;
 import pgd.irbl.business.serviceImpl.PreProcessRequest;
 import pgd.irbl.business.serviceImpl.PreProcessorGrpc;
 
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ public class PreProcessorClient {
         PreProcessReply response;
 
         try {
-            response = blockingStub.protoPreprocess(request);
+            response = blockingStub.withDeadlineAfter(10, TimeUnit.MINUTES).protoPreprocess(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
             return -1;
