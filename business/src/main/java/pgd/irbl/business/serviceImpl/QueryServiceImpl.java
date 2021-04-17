@@ -13,6 +13,7 @@ import pgd.irbl.business.grpcClient.CalcClient;
 import pgd.irbl.business.grpcClient.PreProcessorClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
@@ -104,9 +105,18 @@ public class QueryServiceImpl implements QueryService {
             channelPreProcessor.shutdownNow();
 
         }
+        List<pgd.irbl.business.VO.FileScore> voFileScoreList = new ArrayList<>();
+        for (FileScore filescore:fileScoreList
+             ) {
+            pgd.irbl.business.VO.FileScore tmpVOFileScore = new pgd.irbl.business.VO.FileScore();
+            tmpVOFileScore.setScore(filescore.getScore());
+            tmpVOFileScore.setFilePath(tmpVOFileScore.getFilePath());
+            voFileScoreList.add(tmpVOFileScore);
+        }
 
-        if (fileScoreList != null) {
-            return ResponseVO.buildSuccess(fileScoreList);
+
+        if (voFileScoreList != null) {
+            return ResponseVO.buildSuccess(voFileScoreList);
         }
         return ResponseVO.buildFailure(QUERY_FAIL);
     }
