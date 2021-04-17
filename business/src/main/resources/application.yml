@@ -6,6 +6,6 @@ spring:
 
 file:
   path:
-    code: "/Users/pkun/IdeaProjects/backend-irbl/data/source-code/"
-    report: "/Users/pkun/IdeaProjects/backend-irbl/data/report/"
-    python-cache: "/Users/pkun/IdeaProjects/backend-irbl/data/python-cache/"
+    code: "/data/source-code/"
+    report: "/data/report/"
+    python-cache: "/data/python-cache/"
