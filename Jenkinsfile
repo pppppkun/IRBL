@@ -99,8 +99,8 @@ pipeline {
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh 'docker pull ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}'
                 sh 'docker pull ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}'
-                sh "if (ps -ef| grep java|grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
-                sh "if (ps -ef| grep java|grep irbl-algorithm) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
+                sh "if (ps -ef| grep java | grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
+                sh "if (ps -ef| grep python | grep irbl-algorithm) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
                 sh "docker run -p 50053:50053 -p 50051:50051 --name irbl-algorithm -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
                 sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
             }
