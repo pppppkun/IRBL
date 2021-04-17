@@ -110,7 +110,7 @@ public class QueryServiceImpl implements QueryService {
              ) {
             pgd.irbl.business.VO.FileScore tmpVOFileScore = new pgd.irbl.business.VO.FileScore();
             tmpVOFileScore.setScore(filescore.getScore());
-            tmpVOFileScore.setFilePath(tmpVOFileScore.getFilePath());
+            tmpVOFileScore.setFilePath(filescore.getFilePath());
             voFileScoreList.add(tmpVOFileScore);
         }
 
