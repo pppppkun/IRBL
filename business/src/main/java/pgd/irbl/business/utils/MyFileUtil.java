@@ -58,7 +58,7 @@ public class MyFileUtil {
             File fileZip = new File(zipPath);
              ZipFile zip = new ZipFile(fileZip);
 //            ZipFile zip = new ZipFile(file, Charset.forName("GBK"));//解决中文文件夹乱码
-            String name = zip.getName().substring(zip.getName().lastIndexOf('\\')+1, zip.getName().lastIndexOf('.'));
+            String name = zip.getName().substring(zip.getName().lastIndexOf(File.pathSeparatorChar)+1, zip.getName().lastIndexOf('.'));
 
             File pathFile = new File(descDir+name);
             if (!pathFile.exists()) {
@@ -69,10 +69,10 @@ public class MyFileUtil {
                 ZipEntry entry = entries.nextElement();
                 String zipEntryName = entry.getName();
                 InputStream in = zip.getInputStream(entry);
-                String outPath = (descDir + name +"/"+ zipEntryName).replaceAll("\\*", "/");
+                String outPath = (descDir + name +File.pathSeparatorChar+ zipEntryName).replaceAll("\\*", "/");
 
                 // 判断路径是否存在,不存在则创建文件路径
-                File file = new File(outPath.substring(0, outPath.lastIndexOf('/')));
+                File file = new File(outPath.substring(0, outPath.lastIndexOf(File.pathSeparatorChar)));
                 if (!file.exists()) {
                     file.mkdirs();
                 }
