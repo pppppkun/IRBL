@@ -11,6 +11,7 @@ import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
 import pgd.irbl.business.grpcClient.PreProcessorClient;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode) {
-        if(bugReport==null || sourceCode==null){
+        if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
         String bugReportFileName, codeDir;
@@ -52,7 +53,7 @@ public class QueryServiceImpl implements QueryService {
             e.printStackTrace();
             return ResponseVO.buildFailure(e.getMessage());
         }
-        if(bugReportFileName==null || codeDir==null){
+        if (bugReportFileName == null || codeDir == null) {
             return ResponseVO.buildFailure(null);
         }
 //        File filePythonCacheDir = new File(pythonCachePath+codeDir);
@@ -80,9 +81,9 @@ public class QueryServiceImpl implements QueryService {
         // new dir in python_cache
 
         try {
-            PreProcessorClient preProcessorClient  = new PreProcessorClient(channelPreProcessor);
+            PreProcessorClient preProcessorClient = new PreProcessorClient(channelPreProcessor);
             int res = preProcessorClient.preprocess(codeDir);
-            if(res!=1){
+            if (res != 1) {
                 return ResponseVO.buildFailure(PREPROCESS_NULL_FAIL);
             }
             // just for test
@@ -92,7 +93,7 @@ public class QueryServiceImpl implements QueryService {
 //                e.printStackTrace();
 //            }
             CalcClient client = new CalcClient(channel);
-            fileScoreList = client.calc(reportPath+bugReportFileName, codeDir);
+            fileScoreList = client.calc(reportPath + bugReportFileName, codeDir);
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
             // resources the channel should be shut down when it will no longer be used. If it may be used
@@ -104,7 +105,7 @@ public class QueryServiceImpl implements QueryService {
 
         }
 
-        if(fileScoreList!=null){
+        if (fileScoreList != null) {
             return ResponseVO.buildSuccess(fileScoreList);
         }
         return ResponseVO.buildFailure(QUERY_FAIL);
