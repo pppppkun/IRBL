@@ -24,6 +24,18 @@ pipeline {
                 echo "${branch}"
            }
         }
+        stage('algorithm Build') {
+            when {
+                environment name: 'branch', value: 'dev'
+            }
+            agent{
+                label 'master'
+            }
+            steps{
+                echo 'Build Algorithm Module'
+                sh "cd algorithm && build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
+            }
+        }
         stage('Maven Build and Test') {
             when {
                 environment name: 'branch', value: 'dev'
@@ -36,6 +48,7 @@ pipeline {
             }
             steps{
                 echo 'Business Module Test And Build'
+                sh 'mvn -pl business protobuf:compile'
                 sh 'mvn -pl business clean package jacoco:report -Dmaven.test.failure.ignore=true'
                 jacoco()
 //                 sh 'mvn -pl business package -Dmaven.test.skip=true'
@@ -70,6 +83,7 @@ pipeline {
                 echo 'Image Push Stage'
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh "docker push ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
+                sh "docker push ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
         }
         stage('deploy'){
@@ -85,8 +99,11 @@ pipeline {
             steps{
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh 'docker pull ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}'
+                sh 'docker pull ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}'
                 sh "if (ps -ef| grep java|grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
-                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
+                sh "if (ps -ef| grep java|grep irbl-algorithm) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
+                sh "docker run -p 50053:50053 -p 50051:50051 --name irbl-algorithm -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
+                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
             }
         }
     }

@@ -14,7 +14,7 @@ class Preprocessor:
     def _split_camelcase(self, tokens):
         # 识别并处理camelcase风格的变量名
 
-        returning_tokens = tokens[:]        # 拷贝
+        returning_tokens = tokens[:]  # 拷贝
 
         for token in tokens:
             # string.punctuation是英语中所有的标点字符组成的集合
@@ -73,6 +73,7 @@ class Preprocessor:
             if token not in JAVA_KEYWORDS:
                 returning_tokens.append(token)
         return returning_tokens
+
 
 class BugReportPreprocessor(Preprocessor):
 
@@ -210,8 +211,8 @@ class SourceCodePreprocessor(Preprocessor):
         self.stem()
 
 
-def load_preprocess_save(project_path, source_code_path=r"/data/source-code",
-                         python_cache_path=r"/data/python-cache"):
+def load_preprocess_save(project_path, source_code_path=DEPLOY_DATA_PATH + "source-code",
+                         python_cache_path=DEPLOY_DATA_PATH + "python-cache"):
     load_path = os.path.join(source_code_path, project_path)
     loader = DataLoader(load_path)
 
@@ -227,7 +228,6 @@ def load_preprocess_save(project_path, source_code_path=r"/data/source-code",
             pickle.dump(preprocessor.source_codes[key], f)
 
 
-
 if __name__ == '__main__':
     load_preprocess_save(r"swt")
 
@@ -238,6 +238,3 @@ if __name__ == '__main__':
     # print("taking {:.2f}s".format(end_time - begin_time))
     # # taking 11654.39s
     # print("preprocessing finish!")
-
-
-

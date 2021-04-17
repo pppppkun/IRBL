@@ -13,6 +13,10 @@ NORMAL_XML_FILE_PATH = os.path.join(NORMAL_SWT_PATH, "SWTBugRepository.xml")
 SCORES_NEEDED_TO_LEARN = ["token_match", "calculate_vsm_similarity"]
 SCORES_NEEDED_TO_CALCULATE = ["token_match", "calculate_vsm_similarity"]
 
+# for deploy
+DEPLOY_DATA_PATH = '/data/'
+# for dev
+DEV_DATA_PATH = ''
 
 STOP_WORDS = set(
     ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your',

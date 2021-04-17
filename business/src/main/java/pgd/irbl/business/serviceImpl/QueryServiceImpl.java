@@ -61,12 +61,12 @@ public class QueryServiceImpl implements QueryService {
 //            return ResponseVO.buildFailure("新建文件夹失败");
 //        }
         // set gRPC server port
-        String targetPreProcessor = "localhost:50053";
+        String targetPreProcessor = "116.85.66.200:50053";
         ManagedChannel channelPreProcessor = ManagedChannelBuilder.forTarget(targetPreProcessor)
                 .usePlaintext()
                 .build();
 
-        String target = "localhost:50051";
+        String target = "116.85.66.200:50051";
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse
         // them until the application shuts down.
