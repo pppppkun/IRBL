@@ -33,7 +33,7 @@ pipeline {
             }
             steps{
                 echo 'Build Algorithm Module'
-                sh "cd algorithm && build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
+                sh "cd algorithm && docker build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
         }
         stage('Maven Build and Test') {
