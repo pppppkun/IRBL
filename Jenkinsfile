@@ -49,10 +49,8 @@ pipeline {
             }
             steps{
                 echo 'Business Module Test And Build'
-                sh 'mvn -pl business protobuf:compile'
                 sh 'mvn -pl business clean package jacoco:report -Dmaven.test.failure.ignore=true'
                 jacoco()
-//                 sh 'mvn -pl business package -Dmaven.test.skip=true'
             }
 	    }
         stage('Image Build'){
