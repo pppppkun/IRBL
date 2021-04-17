@@ -14,7 +14,7 @@ import java.util.zip.ZipFile;
 
 /**
  * @author qin
- * @description  save file
+ * @description save file
  * @date 2021-04-06
  */
 
@@ -24,11 +24,10 @@ public class MyFileUtil {
 
     public static String saveFile(String rootPath, MultipartFile multipartFile) throws IOException {
 //        return saveFile(rootPath, multipartFile, multipartFile.getName() + System.currentTimeMillis()%1000 );
-        return saveFile(rootPath, multipartFile, multipartFile.getName() );
+        return saveFile(rootPath, multipartFile, multipartFile.getName());
     }
 
     /**
-     *
      * @param rootPath
      * @param multipartFile
      * @param fileName
@@ -36,7 +35,7 @@ public class MyFileUtil {
      * @throws IOException
      */
     public static String saveFile(String rootPath, MultipartFile multipartFile, String fileName) throws IOException {
-        File file= new File(rootPath + fileName);
+        File file = new File(rootPath + fileName);
         multipartFile.transferTo(file);
         return fileName;
     }
@@ -44,57 +43,57 @@ public class MyFileUtil {
     public static String unZipAndSaveDir(String codePath, MultipartFile multipartFile) throws IOException {
         // 有重名的可能会出现 bug
         String fileName = multipartFile.getName();
-        File file= new File(codePath + fileName);
+        File file = new File(codePath + fileName);
         multipartFile.transferTo(file);
-        unZip(codePath ,codePath + fileName);
-        return fileName.substring(0,fileName.length()-4);
+        unZip(codePath, codePath + fileName);
+        return fileName.substring(0, fileName.length() - 4);
     }
 
 //    public static void unZip(String destinationDir, String jarPath) throws IOException {
 //        File file = new File(jarPath);
 //        ZipFile zipFile = new ZipFile(file);
 
-        public static void unZip(String descDir, String zipPath) throws IOException {
-            File fileZip = new File(zipPath);
-             ZipFile zip = new ZipFile(fileZip);
+    public static void unZip(String descDir, String zipPath) throws IOException {
+        File fileZip = new File(zipPath);
+        ZipFile zip = new ZipFile(fileZip);
 //            ZipFile zip = new ZipFile(file, Charset.forName("GBK"));//解决中文文件夹乱码
-            String name = zip.getName().substring(zip.getName().lastIndexOf(File.pathSeparatorChar)+1, zip.getName().lastIndexOf('.'));
+        String name = zip.getName().substring(zip.getName().lastIndexOf(File.pathSeparatorChar) + 1, zip.getName().lastIndexOf('.'));
 
-            File pathFile = new File(descDir+name);
-            if (!pathFile.exists()) {
-                pathFile.mkdirs();
+        File pathFile = new File(descDir + name);
+        if (!pathFile.exists()) {
+            pathFile.mkdirs();
+        }
+
+        for (Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements(); ) {
+            ZipEntry entry = entries.nextElement();
+            String zipEntryName = entry.getName();
+            InputStream in = zip.getInputStream(entry);
+            String outPath = (descDir + name + File.pathSeparatorChar + zipEntryName).replaceAll("\\*", "/");
+
+            // 判断路径是否存在,不存在则创建文件路径
+            File file = new File(outPath.substring(0, outPath.lastIndexOf(File.pathSeparatorChar)));
+            if (!file.exists()) {
+                file.mkdirs();
             }
-
-            for (Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements();) {
-                ZipEntry entry = entries.nextElement();
-                String zipEntryName = entry.getName();
-                InputStream in = zip.getInputStream(entry);
-                String outPath = (descDir + name +File.pathSeparatorChar+ zipEntryName).replaceAll("\\*", "/");
-
-                // 判断路径是否存在,不存在则创建文件路径
-                File file = new File(outPath.substring(0, outPath.lastIndexOf(File.pathSeparatorChar)));
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                // 判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
-                if (new File(outPath).isDirectory()) {
-                    continue;
-                }
-                // 输出文件路径信息
+            // 判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
+            if (new File(outPath).isDirectory()) {
+                continue;
+            }
+            // 输出文件路径信息
 //			System.out.println(outPath);
 
-                FileOutputStream out = new FileOutputStream(outPath);
-                byte[] buf1 = new byte[1024];
-                int len;
-                while ((len = in.read(buf1)) > 0) {
-                    out.write(buf1, 0, len);
-                }
-                in.close();
-                out.close();
+            FileOutputStream out = new FileOutputStream(outPath);
+            byte[] buf1 = new byte[1024];
+            int len;
+            while ((len = in.read(buf1)) > 0) {
+                out.write(buf1, 0, len);
             }
-            System.out.println("******************解压完毕********************");
-            return;
+            in.close();
+            out.close();
         }
+        System.out.println("******************解压完毕********************");
+        return;
+    }
 
 
 //    public static void setSavePath(String savePath) {
