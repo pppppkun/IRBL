@@ -57,7 +57,7 @@ public class MyFileUtil {
         File fileZip = new File(zipPath);
         ZipFile zip = new ZipFile(fileZip);
 //            ZipFile zip = new ZipFile(file, Charset.forName("GBK"));//解决中文文件夹乱码
-        String name = zip.getName().substring(zip.getName().lastIndexOf(File.pathSeparatorChar) + 1, zip.getName().lastIndexOf('.'));
+        String name = zip.getName().substring(zip.getName().lastIndexOf(File.separatorChar) + 1, zip.getName().lastIndexOf('.'));
 
         File pathFile = new File(descDir + name);
         if (!pathFile.exists()) {
