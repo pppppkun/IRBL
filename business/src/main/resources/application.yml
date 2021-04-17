@@ -3,6 +3,12 @@ spring:
     active: dev
 
 
+server:
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: li2000chun
+    key-store-type: PKCS12
+    key-alias: irbl
 
 file:
   path:
