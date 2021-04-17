@@ -33,6 +33,7 @@ pipeline {
             }
             steps{
                 echo 'Build Algorithm Module'
+                sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh "cd algorithm && docker build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
         }
