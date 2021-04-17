@@ -68,10 +68,10 @@ public class MyFileUtil {
             ZipEntry entry = entries.nextElement();
             String zipEntryName = entry.getName();
             InputStream in = zip.getInputStream(entry);
-            String outPath = (descDir + name + File.pathSeparatorChar + zipEntryName).replaceAll("\\*", "/");
+            String outPath = (descDir + name + File.separatorChar + zipEntryName).replaceAll("\\*", "/");
 
             // 判断路径是否存在,不存在则创建文件路径
-            File file = new File(outPath.substring(0, outPath.lastIndexOf(File.pathSeparatorChar)));
+            File file = new File(outPath.substring(0, outPath.lastIndexOf(File.separatorChar)));
             if (!file.exists()) {
                 file.mkdirs();
             }
