@@ -46,7 +46,7 @@ public class QueryServiceImpl implements QueryService {
         }
         String bugReportFileName, codeDir;
         try {
-            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport);
+            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport"+System.currentTimeMillis() );
 //            codeDir = MyFileUtil.saveFile(codePath, sourceCode);
             codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
         } catch (IOException e) {
