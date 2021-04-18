@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.DTO.RecordWithTime;
 import pgd.irbl.business.PO.QueryRecord;
+import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
@@ -47,5 +48,20 @@ public class RecordServiceImpl implements RecordService {
         }
         if(document == null) return null;
         return new QueryRecord(document);
+    }
+
+    @Override
+    public int setQueryRecordQuerying(String recordId) {
+        return 0;
+    }
+
+    @Override
+    public int setQueryRecordFail(String recordId) {
+        return 0;
+    }
+
+    @Override
+    public int setQueryRecordComplete(String recordId, List<FileScore> fileScores) {
+        return 0;
     }
 }

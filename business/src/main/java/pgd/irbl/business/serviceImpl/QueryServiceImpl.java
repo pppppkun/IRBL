@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.service.QueryService;
+import pgd.irbl.business.serviceImpl.protobuf.FileScore;
 import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;

@@ -1,4 +1,4 @@
-package pgd.irbl.business.serviceImpl;
+package pgd.irbl.business.serviceImpl.protobuf;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 

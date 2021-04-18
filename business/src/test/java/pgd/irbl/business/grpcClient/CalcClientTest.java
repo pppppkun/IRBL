@@ -3,11 +3,9 @@ package pgd.irbl.business.grpcClient;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.junit.Test;
-import pgd.irbl.business.serviceImpl.FileScore;
+import pgd.irbl.business.serviceImpl.protobuf.FileScore;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author qin

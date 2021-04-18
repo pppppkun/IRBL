@@ -1,8 +1,11 @@
 package pgd.irbl.business.service;
 
 import pgd.irbl.business.PO.QueryRecord;
+import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
+
+import java.util.List;
 
 /**
  * @Author: pkun
@@ -12,5 +15,9 @@ public interface RecordService {
 
     ResponseVO getUserAllRecord(Long userId);
     QueryRecord getQueryRecordById(QueryRecordVO queryRecordVO);
+    int setQueryRecordQuerying(String recordId);
+    int setQueryRecordFail(String recordId);
+    int setQueryRecordComplete(String recordId, List<FileScore> fileScores);
+
 
 }
