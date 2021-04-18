@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import pgd.irbl.business.DTO.RecordWithTime;
 import pgd.irbl.business.PO.QueryRecord;
 import pgd.irbl.business.VO.FileScore;
+import pgd.irbl.business.enums.QueryRecordState;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
@@ -51,7 +52,19 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public String insertQueryRecord(Long userId) {
+        return null;
+    }
+
+    @Override
     public int setQueryRecordQuerying(String recordId) {
+        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+        Document document = queryRecord.find(eq("_id", recordId)).first();
+        if(document == null) return -1;
+        if(document.get("QueryRecordState") == null) return -1;
+        if(QueryRecordState.valueOf(document.getString("QueryRecordState")).equals(QueryRecordState.preprocessing))
+            document.put("QueryRecordState", QueryRecordState.querying.getValue());
+//        queryRecord.updateOne();
         return 0;
     }
 

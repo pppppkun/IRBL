@@ -6,12 +6,15 @@ package pgd.irbl.business.enums;
  */
 public enum QueryRecordState {
 
-    initializing("initializing"),
+    preprocessing("preprocessing"),
     querying("querying"),
     complete("complete");
 
     String value;
     QueryRecordState(String value){
         this.value = value;
+    }
+    public String getValue() {
+        return value;
     }
 }
