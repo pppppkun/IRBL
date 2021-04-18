@@ -11,11 +11,11 @@ import java.sql.Timestamp;
  */
 @Data
 public class RecordWithTime {
-    String reportId;
+    String recordId;
     Timestamp queryTime;
     public RecordWithTime(){}
     public RecordWithTime(Document document){
-        reportId = document.getObjectId("_id").toString();
+        recordId = document.getObjectId("_id").toString();
         queryTime = new Timestamp(document.getLong("queryTime"));
     }
 }
