@@ -71,7 +71,7 @@ public class QueryServiceImpl implements QueryService {
         logger.info(" new PreprocessAndCalc thread creat");
 //        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
         // 暴力了
-        new Thread(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode)).run();
+        new Thread(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode)).start();
         logger.info(" new PreprocessAndCalc thread submit");
 
         assert resCode.equals(0);
