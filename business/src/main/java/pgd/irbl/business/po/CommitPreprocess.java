@@ -1,4 +1,4 @@
-package pgd.irbl.business.PO;
+package pgd.irbl.business.po;
 
 import lombok.Data;
 

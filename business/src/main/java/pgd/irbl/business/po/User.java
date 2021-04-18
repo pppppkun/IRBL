@@ -1,4 +1,4 @@
-package pgd.irbl.business.PO;
+package pgd.irbl.business.po;
 
 import lombok.Data;
 import pgd.irbl.business.enums.UserRole;

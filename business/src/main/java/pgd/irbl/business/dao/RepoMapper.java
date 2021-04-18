@@ -1,7 +1,7 @@
-package pgd.irbl.business.Dao;
+package pgd.irbl.business.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import pgd.irbl.business.PO.Repository;
+import pgd.irbl.business.po.Repository;
 
 import java.util.List;
 

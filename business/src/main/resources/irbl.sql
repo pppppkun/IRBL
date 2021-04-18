@@ -7,7 +7,7 @@ create table `Repo`
     `id`          int(11) not null auto_increment,
     `description` varchar(255) default null,
     `gitUrl`      varchar(255) default null,
-    `state`      varchar(15)      default null,
+    `state`       varchar(15)  default null,
     `queryNum`    int(11)      default null,
     `startTime`   datetime     default null,
     `endTime`     datetime     default null,

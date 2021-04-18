@@ -1,4 +1,4 @@
-package pgd.irbl.business.Dao;
+package pgd.irbl.business.dao;
 
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import pgd.irbl.business.PO.Repository;
+import pgd.irbl.business.po.Repository;
 import pgd.irbl.business.enums.RepoState;
 
 import java.sql.Date;

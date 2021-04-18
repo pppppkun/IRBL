@@ -3,12 +3,12 @@ package pgd.irbl.business.controller;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pgd.irbl.business.PO.Repository;
+import pgd.irbl.business.po.Repository;
 import pgd.irbl.business.service.ManageService;
-import pgd.irbl.business.VO.DeleteRepoVO;
-import pgd.irbl.business.VO.ModifyRepoVO;
-import pgd.irbl.business.VO.RegisterRepoVO;
-import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.vo.DeleteRepoVO;
+import pgd.irbl.business.vo.ModifyRepoVO;
+import pgd.irbl.business.vo.RegisterRepoVO;
+import pgd.irbl.business.vo.ResponseVO;
 
 /**
  * @Author: pkun

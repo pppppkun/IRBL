@@ -1,4 +1,4 @@
-package pgd.irbl.business.DTO;
+package pgd.irbl.business.dto;
 
 import lombok.Data;
 import org.bson.Document;
@@ -13,9 +13,12 @@ import java.sql.Timestamp;
 public class RecordWithTime {
     String recordId;
     Timestamp queryTime;
-    public RecordWithTime(){}
-    public RecordWithTime(Document document){
+
+    public RecordWithTime() {
+    }
+
+    public RecordWithTime(Document document) {
         recordId = document.getObjectId("_id").toString();
-        queryTime = new Timestamp(document.getLong("queryTime"));
+        queryTime = new Timestamp(((Number) document.get("queryTime")).longValue());
     }
 }

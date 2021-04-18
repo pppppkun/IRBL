@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import pgd.irbl.business.PO.Repository;
-import pgd.irbl.business.VO.DeleteRepoVO;
-import pgd.irbl.business.VO.ModifyRepoVO;
-import pgd.irbl.business.VO.RegisterRepoVO;
+import pgd.irbl.business.po.Repository;
+import pgd.irbl.business.vo.DeleteRepoVO;
+import pgd.irbl.business.vo.ModifyRepoVO;
+import pgd.irbl.business.vo.RegisterRepoVO;
 import pgd.irbl.business.enums.RepoState;
 
 import static pgd.irbl.business.constant.ManageConstant.*;

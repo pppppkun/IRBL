@@ -1,11 +1,11 @@
-package pgd.irbl.business.PO;
+package pgd.irbl.business.po;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.bson.Document;
 import org.springframework.data.annotation.Id;
-import pgd.irbl.business.VO.FileScore;
+import pgd.irbl.business.vo.FileScore;
 import pgd.irbl.business.enums.QueryRecordState;
 
 import java.sql.Timestamp;
@@ -47,7 +47,7 @@ public class QueryRecord {
             fileScoreList = new ArrayList<>();
             o.forEach(d -> fileScoreList.add(new FileScore(d)));
         }
-        queryTime = new Timestamp(document.getLong("queryTime"));
+        queryTime = new Timestamp(((Number) document.get("queryTime")).longValue());
         queryRecordState = QueryRecordState.valueOf(document.getString("queryRecordState"));
     }
 

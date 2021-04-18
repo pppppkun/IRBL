@@ -1,4 +1,4 @@
-package pgd.irbl.business.Dao;
+package pgd.irbl.business.dao;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import pgd.irbl.business.PO.User;
+import pgd.irbl.business.po.User;
 import pgd.irbl.business.enums.UserRole;
 
 /**

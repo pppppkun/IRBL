@@ -1,4 +1,4 @@
-package pgd.irbl.business.VO;
+package pgd.irbl.business.vo;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;

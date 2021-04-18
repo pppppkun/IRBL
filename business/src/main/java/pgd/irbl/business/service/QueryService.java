@@ -1,7 +1,7 @@
 package pgd.irbl.business.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.vo.ResponseVO;
 
 /**
  * @Author: pkun

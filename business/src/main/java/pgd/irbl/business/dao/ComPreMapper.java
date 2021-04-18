@@ -1,4 +1,4 @@
-package pgd.irbl.business.Dao;
+package pgd.irbl.business.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 

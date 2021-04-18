@@ -1,7 +1,7 @@
 package pgd.irbl.business.service;
 
-import pgd.irbl.business.VO.LoginRegisterVO;
-import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.vo.LoginRegisterVO;
+import pgd.irbl.business.vo.ResponseVO;
 
 /**
  * @Author: pkun

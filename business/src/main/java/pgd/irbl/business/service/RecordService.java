@@ -1,9 +1,9 @@
 package pgd.irbl.business.service;
 
-import pgd.irbl.business.PO.QueryRecord;
-import pgd.irbl.business.VO.FileScore;
-import pgd.irbl.business.VO.QueryRecordVO;
-import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.po.QueryRecord;
+import pgd.irbl.business.vo.FileScore;
+import pgd.irbl.business.vo.QueryRecordVO;
+import pgd.irbl.business.vo.ResponseVO;
 
 import java.util.List;
 

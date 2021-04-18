@@ -3,7 +3,6 @@ package pgd.irbl.business.serviceImpl;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,16 +10,13 @@ import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
 import pgd.irbl.business.utils.MyFileUtil;
-import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
 import pgd.irbl.business.grpcClient.PreProcessorClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
@@ -152,9 +148,9 @@ public class QueryServiceImpl implements QueryService {
                 calcChannel.shutdownNow();
                 preProcessorChannel.shutdownNow();
             }
-            List<pgd.irbl.business.VO.FileScore> voFileScoreList = new ArrayList<>();
+            List<pgd.irbl.business.vo.FileScore> voFileScoreList = new ArrayList<>();
             for (FileScore filescore : fileScoreList) {
-                pgd.irbl.business.VO.FileScore tmpVOFileScore = new pgd.irbl.business.VO.FileScore();
+                pgd.irbl.business.vo.FileScore tmpVOFileScore = new pgd.irbl.business.vo.FileScore();
                 tmpVOFileScore.setScore(filescore.getScore());
                 tmpVOFileScore.setFilePath(filescore.getFilePath());
                 voFileScoreList.add(tmpVOFileScore);

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pgd.irbl.business.service.UserService;
-import pgd.irbl.business.VO.LoginRegisterVO;
-import pgd.irbl.business.VO.ResponseVO;
+import pgd.irbl.business.vo.LoginRegisterVO;
+import pgd.irbl.business.vo.ResponseVO;
 
 /**
  * @Author: pkun
