@@ -1,6 +1,7 @@
 package pgd.irbl.business.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.javafaker.Faker;
 import com.mongodb.client.result.InsertOneResult;
 import org.bson.Document;
 import org.junit.Assert;
@@ -16,12 +17,16 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pgd.irbl.business.PO.QueryRecord;
+import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.VO.QueryRecordVO;
 import pgd.irbl.business.VO.ResponseVO;
 import pgd.irbl.business.enums.QueryRecordState;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * @Author: pkun
@@ -45,7 +50,7 @@ public class RecordServiceTest {
         mongoTemplate.dropCollection("queryRecord");
         mongoTemplate.createCollection("queryRecord");
         QueryRecord queryRecord = new QueryRecord();
-        queryRecord.setQueryRecordState(QueryRecordState.querying);
+        queryRecord.setQueryRecordState(QueryRecordState.preprocessing);
         queryRecord.setGitUrl("xxx.xxx.xxx.xxx");
         queryRecord.setUserId(2L);
         queryRecord.setFileScoreList(null);
@@ -84,5 +89,25 @@ public class RecordServiceTest {
         Assert.assertNull(record);
     }
 
+    @Test
+    public void Test4setQueryState(){
+        recordService.setQueryRecordQuerying(Objects.requireNonNull(oneResult.getInsertedId()).asObjectId().getValue().toString());
+        QueryRecordVO queryRecordVO = new QueryRecordVO();
+        queryRecordVO.setRecordId(oneResult.getInsertedId().asObjectId().getValue().toString());
+        QueryRecord record = recordService.getQueryRecordById(queryRecordVO);
+        Assert.assertEquals(QueryRecordState.querying, record.getQueryRecordState());
+        List<FileScore> fileScoreList = new ArrayList<>();
+        Faker faker = new Faker(new Locale("en-US"));
+        for(int i = 0;i<10;i++) {
+            FileScore fileScore = new FileScore();
+            fileScore.setFilePath(faker.file().fileName());
+            fileScore.setScore(faker.number().randomDouble(100, 0, 10));
+            fileScoreList.add(fileScore);
+        }
+        int ret = recordService.setQueryRecordComplete(Objects.requireNonNull(oneResult.getInsertedId()).asObjectId().getValue().toString(), fileScoreList);
+        Assert.assertEquals(0, ret);
+        record = recordService.getQueryRecordById(queryRecordVO);
+        Assert.assertEquals(10, record.getFileScoreList().size());
+    }
 
 }

@@ -9,6 +9,7 @@ import pgd.irbl.business.VO.FileScore;
 import pgd.irbl.business.enums.QueryRecordState;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,11 @@ public class QueryRecord {
         repoCommitId = document.getString("repoCommitId");
         userId = ((Number) document.get("userId")).longValue();
         gitUrl = document.getString("gitUrl");
-        fileScoreList = document.getList("fileScoreList", FileScore.class);
+        List<Document> o = document.getList("fileScoreList", Document.class);
+        if(o != null) {
+            fileScoreList = new ArrayList<>();
+            o.forEach(d -> fileScoreList.add(new FileScore(d)));
+        }
         queryTime = new Timestamp(document.getLong("queryTime"));
         queryRecordState = QueryRecordState.valueOf(document.getString("queryRecordState"));
     }

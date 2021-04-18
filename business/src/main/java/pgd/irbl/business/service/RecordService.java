@@ -18,7 +18,7 @@ public interface RecordService {
     String insertQueryRecord(Long userId);
     int setQueryRecordQuerying(String recordId);
     int setQueryRecordFail(String recordId);
-    int setQueryRecordComplete(String recordId, List<FileScore> fileScores);
+    int setQueryRecordComplete(String recordId, List<FileScore> fileScoreList);
 
 
 }

@@ -1,6 +1,7 @@
 package pgd.irbl.business.VO;
 
 import lombok.Data;
+import org.bson.Document;
 
 /**
  * @Author: pkun
@@ -11,4 +12,11 @@ public class FileScore {
     Double score;
     // this field contain name
     String filePath;
+
+    public FileScore(){};
+    public FileScore(Document document) {
+        this.score = document.getDouble("score");
+        this.filePath = document.getString("filePath");
+    }
+
 }

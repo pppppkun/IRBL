@@ -8,6 +8,7 @@ public enum QueryRecordState {
 
     preprocessing("preprocessing"),
     querying("querying"),
+    fail("fail"),
     complete("complete");
 
     String value;
