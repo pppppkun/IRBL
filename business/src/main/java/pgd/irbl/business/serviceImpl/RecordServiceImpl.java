@@ -2,13 +2,12 @@ package pgd.irbl.business.serviceImpl;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
+import static pgd.irbl.business.constant.RecordConstant.*;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.InsertOneResult;
-import org.bson.BsonArray;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import pgd.irbl.business.VO.ResponseVO;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,13 +82,13 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public int setQueryRecordComplete(String recordId, List<FileScore> fileScoreList) {
         int ret = changeQueryRecordState(recordId, QueryRecordState.querying, QueryRecordState.complete);
-        if(ret == 0)
+        if(ret == SUCCESS_CHANGE_STATE)
         {
             MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
             List<Document> documents = new ArrayList<>();
             for(FileScore fileScore : fileScoreList) documents.add(Document.parse(JSONObject.toJSONString(fileScore)));
             queryRecord.updateOne(eq("_id", new ObjectId(recordId)), set("fileScoreList", documents));
-            return 0;
+            return SUCCESS_CHANGE_STATE;
         }
         else return ret;
     }
@@ -100,14 +98,14 @@ public class RecordServiceImpl implements RecordService {
     {
         MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
         Document document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
-        if(document == null) return -1;
-        if(document.get("queryRecordState") == null) return -1;
+        if(document == null) return RECORD_NON_EXISTS;
+        if(document.get("queryRecordState") == null) return RECORD_NON_EXISTS;
         if(from == null || QueryRecordState.valueOf(document.getString("queryRecordState")).equals(from))
         {
             queryRecord.updateOne(eq("_id", new ObjectId(recordId)), set("queryRecordState", to.getValue()));
-            return 0;
+            return SUCCESS_CHANGE_STATE;
         }
-        return 1;
+        return NOT_MEET_EXPECTATIONS;
     }
 
 }

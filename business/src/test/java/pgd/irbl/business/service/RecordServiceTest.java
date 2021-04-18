@@ -116,6 +116,7 @@ public class RecordServiceTest {
         QueryRecordVO queryRecordVO = new QueryRecordVO(); queryRecordVO.setRecordId(recordId);
         QueryRecord queryRecord = recordService.getQueryRecordById(queryRecordVO);
         Assert.assertNotNull(queryRecord);
+        Assert.assertEquals(Long.valueOf(123123L), queryRecord.getUserId());
     }
 
 }
