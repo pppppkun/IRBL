@@ -40,6 +40,7 @@ public class QueryController {
     , HttpServletRequest httpServletRequest){
         //todo
         ResponseVO responseVO;
+//        Long userId = 1L;
         Long userId = JwtUtil.verifyTokenAndGetUserId(httpServletRequest.getHeader(JwtUtil.TOKEN_NAME));
         if(userId == null) return ResponseVO.buildFailure("未授权的用户");
         try {
