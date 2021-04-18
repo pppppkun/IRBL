@@ -68,12 +68,30 @@ public class QueryServiceImpl implements QueryService {
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
+        // save file  20210418 18:24
+        String bugReportFileName = null, codeDir = null;
+        try {
+            logger.info(bugReport.getOriginalFilename());
+            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
+            logger.info(bugReportFileName + " bugReport save finish");
+            codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
+            logger.info(codeDir + " codeDir unzip finish");
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("enter Exception" + e.getMessage());
+            recordService.setQueryRecordFail(recordId);
+        }
+        if (bugReportFileName == null || codeDir == null) {
+            logger.info("enter Exception bug or dir is null");
+            recordService.setQueryRecordFail(recordId);
+            return ResponseVO.buildFailure(QUERY_FAIL);
+        }
 //        ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
 //        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
         // 暴力了
-        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
+        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
         t.setName(recordId);
         t.start();
         logger.info(" new PreprocessAndCalc thread submit");
@@ -85,37 +103,21 @@ public class QueryServiceImpl implements QueryService {
     class PreprocessAndCalc implements Runnable {
         private final Logger logger = Logger.getLogger(PreprocessAndCalc.class.getName());
         String recordId;
-        MultipartFile bugReport;
-        MultipartFile sourceCode;
+        String bugReportFileName;
+        String codeDir;
         RecordService recordService;
 
-        PreprocessAndCalc(RecordService recordService, String recordId, MultipartFile bugReport, MultipartFile sourceCode) {
+        PreprocessAndCalc(RecordService recordService, String recordId, String bugReportFileName, String codeDir) {
 //            WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
 //            RecordService recordService=(RecordService)context.getBean("recordService");
             this.recordService = recordService;
             this.recordId = recordId;
-            this.bugReport = bugReport;
-            this.sourceCode = sourceCode;
+            this.bugReportFileName = bugReportFileName;
+            this.codeDir = codeDir;
         }
 
         @Override
         public void run() {
-            String bugReportFileName = null, codeDir = null;
-            try {
-                logger.info(bugReport.getOriginalFilename());
-                bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
-                logger.info(bugReportFileName + " bugReport save finish");
-                codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
-                logger.info(codeDir + " codeDir unzip finish");
-            } catch (IOException e) {
-                e.printStackTrace();
-                logger.info("enter Exception" + e.getMessage());
-                recordService.setQueryRecordFail(recordId);
-            }
-            if (bugReportFileName == null || codeDir == null) {
-                logger.info("enter Exception bug or dir is null");
-                recordService.setQueryRecordFail(recordId);
-            }
             // set gRPC server port
             String targetPreProcessor = "116.85.66.200:50053";
 //            String targetPreProcessor = "localhost:50053";
