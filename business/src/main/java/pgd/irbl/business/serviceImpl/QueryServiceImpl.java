@@ -48,6 +48,8 @@ public class QueryServiceImpl implements QueryService {
     @Value("${cpu.core}")
     static Integer cpuCoreNum;
 
+    Thread t;
+
 //    @Autowired()
 //    @Qualifier("applicationTaskExecutor")
 //    Executor executor;
@@ -71,7 +73,9 @@ public class QueryServiceImpl implements QueryService {
         logger.info(" new PreprocessAndCalc thread creat");
 //        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
         // 暴力了
-        new Thread(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode)).start();
+        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
+        t.setName(recordId);
+        t.start();
         logger.info(" new PreprocessAndCalc thread submit");
 
         assert resCode.equals(0);
@@ -99,9 +103,9 @@ public class QueryServiceImpl implements QueryService {
             String bugReportFileName = null, codeDir = null;
             try {
                 bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
-                logger.info(bugReportFileName + "bugReport save finish");
+                logger.info(bugReportFileName + " bugReport save finish");
                 codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
-                logger.info(codeDir + "codeDir unzip finish");
+                logger.info(codeDir + " codeDir unzip finish");
             } catch (IOException e) {
                 e.printStackTrace();
                 recordService.setQueryRecordFail(recordId);
@@ -110,12 +114,14 @@ public class QueryServiceImpl implements QueryService {
                 recordService.setQueryRecordFail(recordId);
             }
             // set gRPC server port
-            String targetPreProcessor = "116.85.66.200:50053";
+//            String targetPreProcessor = "116.85.66.200:50053";
+            String targetPreProcessor = "localhost:50053";
             ManagedChannel preProcessorChannel = ManagedChannelBuilder.forTarget(targetPreProcessor)
                     .usePlaintext()
                     .build();
 
-            String target = "116.85.66.200:50051";
+//            String target = "116.85.66.200:50051";
+            String target = "localhost:50051";
             // Create a communication channel to the server, known as a Channel. Channels are thread-safe
             // and reusable. It is common to create channels at the beginning of your application and reuse
             // them until the application shuts down.

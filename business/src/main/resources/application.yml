@@ -7,6 +7,12 @@ spring:
       max-request-size: 100MB
 
 
+#file:
+#  path:
+#    code: "/Users/pkun/IdeaProjects/backend-irbl/data/source-code/"
+#    report: "/Users/pkun/IdeaProjects/backend-irbl/data/report/"
+#    python-cache: "/Users/pkun/IdeaProjects/backend-irbl/data/python-cache/"
+
 file:
   path:
     code: "/data/source-code/"
