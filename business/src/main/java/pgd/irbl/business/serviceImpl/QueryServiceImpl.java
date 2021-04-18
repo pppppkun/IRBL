@@ -102,26 +102,29 @@ public class QueryServiceImpl implements QueryService {
         public void run() {
             String bugReportFileName = null, codeDir = null;
             try {
+                logger.info(bugReport.getOriginalFilename());
                 bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
                 logger.info(bugReportFileName + " bugReport save finish");
                 codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
                 logger.info(codeDir + " codeDir unzip finish");
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.info("enter Exception" + e.getMessage());
                 recordService.setQueryRecordFail(recordId);
             }
             if (bugReportFileName == null || codeDir == null) {
+                logger.info("enter Exception bug or dir is null");
                 recordService.setQueryRecordFail(recordId);
             }
             // set gRPC server port
-//            String targetPreProcessor = "116.85.66.200:50053";
-            String targetPreProcessor = "localhost:50053";
+            String targetPreProcessor = "116.85.66.200:50053";
+//            String targetPreProcessor = "localhost:50053";
             ManagedChannel preProcessorChannel = ManagedChannelBuilder.forTarget(targetPreProcessor)
                     .usePlaintext()
                     .build();
 
-//            String target = "116.85.66.200:50051";
-            String target = "localhost:50051";
+            String target = "116.85.66.200:50051";
+//            String target = "localhost:50051";
             // Create a communication channel to the server, known as a Channel. Channels are thread-safe
             // and reusable. It is common to create channels at the beginning of your application and reuse
             // them until the application shuts down.

@@ -1,5 +1,6 @@
 package pgd.irbl.business.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,7 +18,7 @@ import java.util.zip.ZipFile;
  * @description save file
  * @date 2021-04-06
  */
-
+@Slf4j
 public class MyFileUtil {
 
 //    private static String savePath;
@@ -35,7 +36,9 @@ public class MyFileUtil {
      * @throws IOException
      */
     public static String saveFile(String rootPath, MultipartFile multipartFile, String fileName) throws IOException {
+        log.info("enter save file. root path: " + rootPath + " filename: " + fileName + " upload filename: " + multipartFile.getOriginalFilename());
         File file = new File(rootPath + fileName);
+        log.info("begin to transfer file from multipartFile to " + fileName);
         multipartFile.transferTo(file);
         return fileName;
     }

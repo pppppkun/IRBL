@@ -62,8 +62,8 @@ public class RecordServiceImpl implements RecordService {
         QueryRecord queryRecord = new QueryRecord();
         queryRecord.setUserId(userId);
         queryRecord.setQueryTime(new Timestamp(System.currentTimeMillis()));
-        queryRecord.setRepoCommitId("未设置commitId");
-        queryRecord.setGitUrl("未设置gitUrl");
+//        queryRecord.setRepoCommitId("未设置commitId");
+//        queryRecord.setGitUrl("未设置gitUrl");
         queryRecord.setQueryRecordState(QueryRecordState.preprocessing);
         InsertOneResult oneResult =  mongoTemplate.getCollection("queryRecord").insertOne(Document.parse(JSONObject.toJSONString(queryRecord)));
         return oneResult.getInsertedId().asObjectId().getValue().toString();
