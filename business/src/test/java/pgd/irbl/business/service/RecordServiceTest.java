@@ -110,4 +110,12 @@ public class RecordServiceTest {
         Assert.assertEquals(10, record.getFileScoreList().size());
     }
 
+    @Test
+    public void Test5insertRecord(){
+        String recordId = recordService.insertQueryRecord(123123L);
+        QueryRecordVO queryRecordVO = new QueryRecordVO(); queryRecordVO.setRecordId(recordId);
+        QueryRecord queryRecord = recordService.getQueryRecordById(queryRecordVO);
+        Assert.assertNotNull(queryRecord);
+    }
+
 }
