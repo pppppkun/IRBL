@@ -34,6 +34,13 @@ public class QueryController {
     @PostMapping("/uploadUnRegister")
     @ApiOperation(value = "上传的报告属于未注册的项目", response = QueryRecord.class, notes = "这个方法的返回值是 recordId")
     public ResponseVO uploadUnRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("sourceCode") MultipartFile sourceCode){
-        return queryService.queryNotRegister(bugReport, sourceCode);
+        //todo
+        ResponseVO responseVO;
+        try {
+            responseVO = queryService.queryNotRegister(bugReport, sourceCode );
+        }catch (Exception e){
+            responseVO = ResponseVO.buildFailure(e.getMessage());
+        }
+        return responseVO;
     }
 }
