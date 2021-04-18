@@ -3,6 +3,7 @@ package pgd.irbl.business.serviceImpl;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -44,9 +46,12 @@ public class QueryServiceImpl implements QueryService {
     String pythonCachePath;
 
     @Value("${cpu.core}")
-    Integer cpuCoreNum;
+    static Integer cpuCoreNum;
 
-    Executor executor = Executors.newFixedThreadPool(cpuCoreNum);
+//    @Autowired()
+//    @Qualifier("applicationTaskExecutor")
+//    Executor executor;
+//    ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitID) {
@@ -61,23 +66,26 @@ public class QueryServiceImpl implements QueryService {
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
+//        ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
+//        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
+        // 暴力了
+        new Thread(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode)).start();
         logger.info(" new PreprocessAndCalc thread submit");
 
         assert resCode.equals(0);
         return ResponseVO.buildSuccess(recordId);
     }
 
-    class PreprocessAndCalc implements Runnable{
+    class PreprocessAndCalc implements Runnable {
         private final Logger logger = Logger.getLogger(PreprocessAndCalc.class.getName());
-        String recordId ;
+        String recordId;
         MultipartFile bugReport;
         MultipartFile sourceCode;
         RecordService recordService;
 
-        PreprocessAndCalc(RecordService recordService,String recordId,MultipartFile bugReport ,MultipartFile sourceCode){
+        PreprocessAndCalc(RecordService recordService, String recordId, MultipartFile bugReport, MultipartFile sourceCode) {
 //            WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
 //            RecordService recordService=(RecordService)context.getBean("recordService");
             this.recordService = recordService;
@@ -85,11 +93,12 @@ public class QueryServiceImpl implements QueryService {
             this.bugReport = bugReport;
             this.sourceCode = sourceCode;
         }
+
         @Override
         public void run() {
-            String bugReportFileName = null, codeDir=null;
+            String bugReportFileName = null, codeDir = null;
             try {
-                bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport"+System.currentTimeMillis() );
+                bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
                 logger.info(bugReportFileName + "bugReport save finish");
                 codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
                 logger.info(codeDir + "codeDir unzip finish");
@@ -133,16 +142,16 @@ public class QueryServiceImpl implements QueryService {
                 preProcessorChannel.shutdownNow();
             }
             List<pgd.irbl.business.VO.FileScore> voFileScoreList = new ArrayList<>();
-            for (FileScore filescore:fileScoreList) {
+            for (FileScore filescore : fileScoreList) {
                 pgd.irbl.business.VO.FileScore tmpVOFileScore = new pgd.irbl.business.VO.FileScore();
                 tmpVOFileScore.setScore(filescore.getScore());
                 tmpVOFileScore.setFilePath(filescore.getFilePath());
                 voFileScoreList.add(tmpVOFileScore);
             }
-            if (voFileScoreList.size()==0) {
+            if (voFileScoreList.size() == 0) {
                 recordService.setQueryRecordFail(recordId);
             }
-            recordService.setQueryRecordComplete(recordId,voFileScoreList);
+            recordService.setQueryRecordComplete(recordId, voFileScoreList);
         }
     }
 
