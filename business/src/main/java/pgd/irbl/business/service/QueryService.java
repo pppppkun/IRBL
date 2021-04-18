@@ -11,6 +11,6 @@ public interface QueryService {
 
     ResponseVO queryRegister(MultipartFile bugReport, String commitID);
 
-    ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode);
+    ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId);
 
 }

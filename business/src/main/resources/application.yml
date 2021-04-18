@@ -12,3 +12,6 @@ file:
     code: "/data/source-code/"
     report: "/data/report/"
     python-cache: "/data/python-cache/"
+
+cpu:
+  core: 2
