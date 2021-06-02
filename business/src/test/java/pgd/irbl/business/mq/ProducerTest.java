@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 public class ProducerTest {
 
     @Test
-    public void producerAndSend() throws MQClientException, RemotingException, InterruptedException, MQBrokerException, UnsupportedEncodingException {
+    public void produceAndSend() throws MQClientException, RemotingException, InterruptedException, MQBrokerException, UnsupportedEncodingException {
         //创建一个消息生产者，并设置一个消息生产者组
         DefaultMQProducer producer = new DefaultMQProducer("test_producer_group");
         // 消息发送失败重试次数
