@@ -15,6 +15,7 @@ import pgd.irbl.business.vo.DeleteRepoVO;
 import pgd.irbl.business.vo.ModifyRepoVO;
 import pgd.irbl.business.vo.RegisterRepoVO;
 import pgd.irbl.business.enums.RepoState;
+import pgd.irbl.business.vo.ResponseVO;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
 
@@ -77,8 +78,9 @@ public class ManageServiceTest {
         modifyRepoVO.setRepoId(2L);
         modifyRepoVO.setDescription("TestTest");
         Assert.assertEquals(MODIFY_SUCCESS, manageService.modifyRepo(modifyRepoVO).getContent());
-        modifyRepoVO.setRepoId(1L);
-        Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
+        modifyRepoVO.setRepoId(4L);
+        ResponseVO responseVO = manageService.modifyRepo(modifyRepoVO);
+        Assert.assertEquals(REPO_NO_EXISTS, responseVO.getMessage());
     }
 
 }
