@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.dao.RepoCommitMapper;
+import pgd.irbl.business.po.User;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
+import pgd.irbl.business.serviceImpl.protobuf.PreProcessRequest;
 import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
@@ -18,6 +20,8 @@ import pgd.irbl.business.grpcClient.PreProcessorClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
@@ -45,13 +49,24 @@ public class QueryServiceImpl implements QueryService {
     @Value("${cpu.core}")
     static Integer cpuCoreNum;
 
-    Thread t;
+    @Value("${target.calculator}")
+    String targetCalculator;
 
     RepoCommitMapper repoCommitMapper;
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper =repoCommitMapper;
     }
+    @Value("${target.preProcessor}")
+    String targetPreProcessor;
+
+    @Value("${repo_direction}")
+    String repoDirection;
+
+    Thread t;
+    @Autowired
+    ExecutorService executor;
+
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
         String recordId = recordService.insertQueryRecord(userId);
@@ -92,14 +107,14 @@ public class QueryServiceImpl implements QueryService {
             recordService.setQueryRecordFail(recordId);
             return ResponseVO.buildFailure(QUERY_FAIL);
         }
-//        ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
+
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-//        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir) );
         // 暴力了
-        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
-        t.setName(recordId);
-        t.start();
+//        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
+//        t.setName(recordId);
+//        t.start();
         logger.info(" new PreprocessAndCalc thread submit");
 
         assert resCode.equals(0);
@@ -124,34 +139,35 @@ public class QueryServiceImpl implements QueryService {
 
         @Override
         public void run() {
-            // set gRPC server port
-            String targetPreProcessor = "116.85.66.200:50053";
-//            String targetPreProcessor = "localhost:50053";
+            // set gRPC server port todo modify
             ManagedChannel preProcessorChannel = ManagedChannelBuilder.forTarget(targetPreProcessor)
                     .usePlaintext()
                     .build();
-
-            String target = "116.85.66.200:50051";
-//            String target = "localhost:50051";
             // Create a communication channel to the server, known as a Channel. Channels are thread-safe
             // and reusable. It is common to create channels at the beginning of your application and reuse
             // them until the application shuts down.
-            ManagedChannel calcChannel = ManagedChannelBuilder.forTarget(target)
+            ManagedChannel calcChannel = ManagedChannelBuilder.forTarget(targetCalculator)
                     // Channels are secure by default (via SSL/TLS). For the example we disable TLS to avoid
                     // needing certificates.
                     .usePlaintext()
                     .build();
-            List<FileScore> fileScoreList;
+            List<FileScore> fileScoreList = new ArrayList<>();
 
             try {
                 PreProcessorClient preProcessorClient = new PreProcessorClient(preProcessorChannel);
+                //todo 异步调用
+//                preProcessorClient.preprocessAsync(codeDir,preProcessorChannel,fileScoreList,reportPath + bugReportFileName, codeDir);
                 int res = preProcessorClient.preprocess(codeDir);
+                logger.info("preprocess finish");
                 if (res != 1) {
                     recordService.setQueryRecordFail(recordId);
                 }
                 CalcClient calcClient = new CalcClient(calcChannel);
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
-            } finally {
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }finally {
                 // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
                 // resources the channel should be shut down when it will no longer be used. If it may be used
                 // again leave it running.

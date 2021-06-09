@@ -27,7 +27,9 @@ public class CalcClient {
         blockingStub = CalculatorGrpc.newBlockingStub(channel);
     }
 
-    /** Send calculate request to server. */
+    /**
+     *  Send calculate request to server.
+     */
     public List<FileScore> calc(String bugReportFullPath, String codeFullPath) {
         logger.info(String.format("Will try to calculate bug %s bugReportFullPath: %s %s codeFullPath %s %s",
                 System.lineSeparator(),
@@ -50,4 +52,30 @@ public class CalcClient {
         return response.getEvaluationList();
     }
 
+    public void calcForAsync(List<FileScore> fileScoreList,String bugReportFullPath, String codeFullPath) {
+        logger.info(String.format("Will try to calculate bug %s bugReportFullPath: %s %s codeFullPath %s %s",
+                System.lineSeparator(),
+                bugReportFullPath,
+                System.lineSeparator(),
+                codeFullPath,
+                System.lineSeparator()
+                )
+        );
+        CalcRequest request = CalcRequest.newBuilder().setBugReportPath(bugReportFullPath).setFilePath(codeFullPath).build();
+        CalcReply response;
+
+        try {
+            response = blockingStub.withDeadlineAfter(10, TimeUnit.MINUTES).calculate(request);
+        } catch (StatusRuntimeException e) {
+            logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+            return;
+        }
+        logger.info("succeed" );
+        List<FileScore> fileScores = response.getEvaluationList();
+        for (FileScore fileScore :
+                fileScores) {
+            fileScoreList.add(fileScore);
+        }
+        return;
+    }
 }
