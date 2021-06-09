@@ -14,7 +14,8 @@ SCORES_NEEDED_TO_LEARN = ["token_match", "calculate_vsm_similarity"]
 SCORES_NEEDED_TO_CALCULATE = ["token_match", "calculate_vsm_similarity"]
 
 # for deploy
-DEPLOY_DATA_PATH = '/data/'
+# DEPLOY_DATA_PATH = '/data/'
+DEPLOY_DATA_PATH = 'E:\\4_work_dir\\'
 # for dev
 DEV_DATA_PATH = ''
 

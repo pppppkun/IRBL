@@ -44,6 +44,12 @@ public class QueryServiceImpl implements QueryService {
     @Value("${cpu.core}")
     static Integer cpuCoreNum;
 
+    @Value("${target.calculator}")
+    String targetCalculator;
+
+    @Value("${target.preProcessor}")
+    String targetPreProcessor;
+
     Thread t;
 
 //    @Autowired()
@@ -114,34 +120,37 @@ public class QueryServiceImpl implements QueryService {
 
         @Override
         public void run() {
-            // set gRPC server port
-            String targetPreProcessor = "116.85.66.200:50053";
+            // set gRPC server port todo modify
+//            String targetPreProcessor = "116.85.66.200:50053";
 //            String targetPreProcessor = "localhost:50053";
             ManagedChannel preProcessorChannel = ManagedChannelBuilder.forTarget(targetPreProcessor)
                     .usePlaintext()
                     .build();
 
-            String target = "116.85.66.200:50051";
+//            String targetCalculator = "116.85.66.200:50051";
 //            String target = "localhost:50051";
             // Create a communication channel to the server, known as a Channel. Channels are thread-safe
             // and reusable. It is common to create channels at the beginning of your application and reuse
             // them until the application shuts down.
-            ManagedChannel calcChannel = ManagedChannelBuilder.forTarget(target)
+            ManagedChannel calcChannel = ManagedChannelBuilder.forTarget(targetCalculator)
                     // Channels are secure by default (via SSL/TLS). For the example we disable TLS to avoid
                     // needing certificates.
                     .usePlaintext()
                     .build();
-            List<FileScore> fileScoreList;
+            List<FileScore> fileScoreList = new ArrayList<>();
 
             try {
                 PreProcessorClient preProcessorClient = new PreProcessorClient(preProcessorChannel);
                 int res = preProcessorClient.preprocess(codeDir);
+                logger.info("preprocess finish");
                 if (res != 1) {
                     recordService.setQueryRecordFail(recordId);
                 }
                 CalcClient calcClient = new CalcClient(calcChannel);
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
-            } finally {
+            } catch (Exception e){
+                e.printStackTrace();
+            }finally {
                 // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
                 // resources the channel should be shut down when it will no longer be used. If it may be used
                 // again leave it running.

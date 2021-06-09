@@ -13,11 +13,26 @@ spring:
 #    report: "/Users/pkun/IdeaProjects/backend-irbl/data/report/"
 #    python-cache: "/Users/pkun/IdeaProjects/backend-irbl/data/python-cache/"
 
+#file:
+#  path:
+#    code: "/data/source-code/"
+#    report: "/data/report/"
+#    python-cache: "/data/python-cache/"
+
 file:
   path:
-    code: "/data/source-code/"
-    report: "/data/report/"
-    python-cache: "/data/python-cache/"
+    code: "E:\\4_work_dir\\source-code\\"
+    report: "E:\\4_work_dir\\report\\"
+    python-cache: "E:\\4_work_dir\\python-cache\\"
 
 cpu:
   core: 2
+
+# 配置 gRPC 地址
+#target:
+#  calculator: "116.85.66.200:50051"
+#  preProcessor: "116.85.66.200:50053"
+
+target:
+  calculator: "localhost:50051"
+  preProcessor: "localhost:50053"
