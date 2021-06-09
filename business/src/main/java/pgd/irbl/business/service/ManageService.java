@@ -1,10 +1,7 @@
 package pgd.irbl.business.service;
 
 import pgd.irbl.business.po.Repository;
-import pgd.irbl.business.vo.DeleteRepoVO;
-import pgd.irbl.business.vo.ModifyRepoVO;
-import pgd.irbl.business.vo.RegisterRepoVO;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.vo.*;
 
 import java.util.List;
 
@@ -18,6 +15,6 @@ public interface ManageService {
     ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO);
     List<Repository> getAllRepo();
     ResponseVO modifyRepo(ModifyRepoVO modifyRepoVO);
-    ResponseVO dealWebhook();
+    ResponseVO dealWebhook(WebhookVO webhookVO);
 
 }

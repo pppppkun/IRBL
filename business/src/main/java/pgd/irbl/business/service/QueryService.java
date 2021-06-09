@@ -9,7 +9,7 @@ import pgd.irbl.business.vo.ResponseVO;
  */
 public interface QueryService {
 
-    ResponseVO queryRegister(MultipartFile bugReport, String commitID);
+    ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId);
 
     ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId);
 

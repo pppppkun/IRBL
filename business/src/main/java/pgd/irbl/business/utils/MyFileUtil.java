@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
+import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -71,7 +72,8 @@ public class MyFileUtil {
             ZipEntry entry = entries.nextElement();
             String zipEntryName = entry.getName();
             InputStream in = zip.getInputStream(entry);
-            String outPath = (descDir + name + File.separatorChar + zipEntryName).replaceAll("\\*", "/");
+//            String outPath = (descDir + name + File.separatorChar + zipEntryName).replaceAll("\\*", "/");
+            String outPath = (descDir + name + File.separatorChar + zipEntryName).replaceAll("/", Matcher.quoteReplacement(File.separator));
 
             // 判断路径是否存在,不存在则创建文件路径
             File file = new File(outPath.substring(0, outPath.lastIndexOf(File.separatorChar)));

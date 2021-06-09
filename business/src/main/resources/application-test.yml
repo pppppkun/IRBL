@@ -33,3 +33,5 @@ mybatis:
   mapper-locations: classpath:dataImpl/*Mapper.xml
 
 token: nmsl
+
+repo_direction: ./

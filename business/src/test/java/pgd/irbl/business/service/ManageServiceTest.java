@@ -54,7 +54,7 @@ public class ManageServiceTest {
     public void Test1registerRepo(){
         RegisterRepoVO registerRepoVO = new RegisterRepoVO();
         registerRepoVO.setDescription("xxxxxxx");
-        registerRepoVO.setGitUrl("xxx.xxx.xxx");
+        registerRepoVO.setGitUrl("https://github.com/pppppkun/cloudNativePractice.git");
         Assert.assertEquals(REGISTER_SUCCESS, manageService.registerRepo(registerRepoVO).getContent());
         Assert.assertEquals(REPO_EXISTS, manageService.registerRepo(registerRepoVO).getMessage());
     }
@@ -79,8 +79,8 @@ public class ManageServiceTest {
         modifyRepoVO.setDescription("TestTest");
         Assert.assertEquals(MODIFY_SUCCESS, manageService.modifyRepo(modifyRepoVO).getContent());
         modifyRepoVO.setRepoId(4L);
-        ResponseVO responseVO = manageService.modifyRepo(modifyRepoVO);
-        Assert.assertEquals(REPO_NO_EXISTS, responseVO.getMessage());
+        Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
     }
+
 
 }
