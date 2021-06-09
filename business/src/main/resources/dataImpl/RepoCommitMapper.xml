@@ -10,6 +10,13 @@
         insert into RepoCommit(gitUrl, commit) VALUES (#{gitUrl}, #{commit})
     </insert>
 
+    <insert id="insertRepoCommitByList" parameterType="java.util.List">
+        insert into RepoCommit(gitUrl, commit) VALUES
+        <foreach collection="list" item="repoCommit" separator="," close=";">
+            (#{repoCommit.gitUrl}, #{repoCommit.commit})
+        </foreach>
+    </insert>
+
     <resultMap id="RepoCommit" type="pgd.irbl.business.po.RepoCommit">
         <id column="id" property="id"/>
         <result column="commit" property="commit"/>

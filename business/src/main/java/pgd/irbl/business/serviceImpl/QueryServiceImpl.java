@@ -53,9 +53,17 @@ public class QueryServiceImpl implements QueryService {
         this.repoCommitMapper =repoCommitMapper;
     }
     @Override
-    public ResponseVO queryRegister(MultipartFile bugReport, String commitId) {
-        //todo
+    public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
+        String recordId = recordService.insertQueryRecord(userId);
+        Integer resCode = recordService.setQueryRecordQuerying(recordId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
+
+        if (bugReport == null) {
+            return ResponseVO.buildFailure(QUERY_NULL_FAIL);
+        }
+
+
+
         return ResponseVO.buildSuccess(gitUrl);
     }
 

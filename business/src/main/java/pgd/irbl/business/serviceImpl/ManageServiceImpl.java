@@ -3,6 +3,7 @@ package pgd.irbl.business.serviceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.dao.RepoCommitMapper;
 import pgd.irbl.business.dao.RepoMapper;
@@ -11,7 +12,6 @@ import pgd.irbl.business.po.Repository;
 import pgd.irbl.business.service.ManageService;
 import pgd.irbl.business.vo.*;
 import pgd.irbl.business.enums.RepoState;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
@@ -19,6 +19,7 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
@@ -34,6 +35,9 @@ public class ManageServiceImpl implements ManageService {
 
     RepoMapper repoMapper;
     RepoCommitMapper repoCommitMapper;
+
+    @Value("${repo_direction}")
+    private String REPO_DIRECTION;
 
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {
@@ -58,23 +62,25 @@ public class ManageServiceImpl implements ManageService {
         int ret = repoMapper.insertRepo(repository);
 
         try {
-            File localPath = File.createTempFile("getCommit", "");
-            if (!localPath.delete()) {
-                throw new IOException("Could not delete temporary file " + localPath);
-            }
-            // then clone
             try {
+                String gitUrl = repository.getGitUrl();
+                String repoName = gitUrl.substring(gitUrl.lastIndexOf("/")+1, gitUrl.lastIndexOf(".git"));
+                File f = new File(REPO_DIRECTION+repoName);
                 Git result = Git.cloneRepository()
-                        .setURI("https://github.com/pppppkun/cloudNativePractice.git")
-                        .setDirectory(localPath)
+                        .setURI(gitUrl)
+                        .setDirectory(f)
                         .call();
                 // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
                 Iterable<RevCommit> commits = result.log().all().call();
+                List<RepoCommit> repoCommits = new ArrayList<>();
                 for (RevCommit commit : commits) {
-                    System.out.println("LogCommit: " + commit.getName() + " " + commit.getShortMessage());
+                    RepoCommit repoCommit = new RepoCommit();
+                    repoCommit.setGitUrl(gitUrl);
+                    repoCommit.setCommit(commit.getName());
+                    repoCommits.add(repoCommit);
                 }
+                repoCommitMapper.insertRepoCommitByList(repoCommits);
             } catch (GitAPIException ignored) { }
-            FileUtils.deleteDirectory(localPath);
         } catch (IOException ignored) { }
 
         if (ret == 0) {
@@ -106,8 +112,6 @@ public class ManageServiceImpl implements ManageService {
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(DELETE_SUCCESS);
     }
-
-    private static final String REMOTE_URL = "https://github.com/github/testrepo.git";
 
     @Override
     public ResponseVO dealWebhook(WebhookVO webhookVO) {
