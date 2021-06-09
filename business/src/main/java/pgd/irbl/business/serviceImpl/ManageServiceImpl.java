@@ -1,15 +1,15 @@
 package pgd.irbl.business.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pgd.irbl.business.dao.RepoCommitMapper;
 import pgd.irbl.business.dao.RepoMapper;
+import pgd.irbl.business.po.RepoCommit;
 import pgd.irbl.business.po.Repository;
 import pgd.irbl.business.service.ManageService;
-import pgd.irbl.business.vo.DeleteRepoVO;
-import pgd.irbl.business.vo.ModifyRepoVO;
-import pgd.irbl.business.vo.RegisterRepoVO;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.vo.*;
 import pgd.irbl.business.enums.RepoState;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -33,10 +33,16 @@ public class ManageServiceImpl implements ManageService {
 
 
     RepoMapper repoMapper;
+    RepoCommitMapper repoCommitMapper;
 
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {
         this.repoMapper = repoMapper;
+    }
+
+    @Autowired
+    public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
+        this.repoCommitMapper = repoCommitMapper;
     }
 
     @Override
@@ -50,6 +56,27 @@ public class ManageServiceImpl implements ManageService {
         repository.setDescription(registerRepoVO.getDescription());
         repository.setGitUrl(registerRepoVO.getGitUrl());
         int ret = repoMapper.insertRepo(repository);
+
+        try {
+            File localPath = File.createTempFile("getCommit", "");
+            if (!localPath.delete()) {
+                throw new IOException("Could not delete temporary file " + localPath);
+            }
+            // then clone
+            try {
+                Git result = Git.cloneRepository()
+                        .setURI("https://github.com/pppppkun/cloudNativePractice.git")
+                        .setDirectory(localPath)
+                        .call();
+                // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
+                Iterable<RevCommit> commits = result.log().all().call();
+                for (RevCommit commit : commits) {
+                    System.out.println("LogCommit: " + commit.getName() + " " + commit.getShortMessage());
+                }
+            } catch (GitAPIException ignored) { }
+            FileUtils.deleteDirectory(localPath);
+        } catch (IOException ignored) { }
+
         if (ret == 0) {
             log.error(repository.getGitUrl());
             return ResponseVO.buildFailure(REGISTER_FAIL);
@@ -83,34 +110,12 @@ public class ManageServiceImpl implements ManageService {
     private static final String REMOTE_URL = "https://github.com/github/testrepo.git";
 
     @Override
-    public ResponseVO dealWebhook() {
-        try {
-            File localPath = File.createTempFile("TestGitRepository", "");
-            if (!localPath.delete()) {
-                throw new IOException("Could not delete temporary file " + localPath);
-            }
-            // then clone
-            log.info("Cloning from " + REMOTE_URL + " to " + localPath);
-            try {
-                Git result = Git.cloneRepository()
-                        .setURI(REMOTE_URL)
-                        .setDirectory(localPath)
-                        .setProgressMonitor(new SimpleProgressMonitor())
-                        .call();
-                // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
-                log.info("Having repository: " + result.getRepository().getDirectory());
-            } catch (GitAPIException e) {
-            }
-
-            //todo
-
-
-            // clean up here to not keep using more and more disk-space for these samples
-            FileUtils.deleteDirectory(localPath);
-            return null;
-        } catch (IOException Exception) {
-        }
-        return null;
+    public ResponseVO dealWebhook(WebhookVO webhookVO) {
+        RepoCommit repoCommit = new RepoCommit();
+        repoCommit.setGitUrl(webhookVO.getGitUrl());
+        repoCommit.setCommit(webhookVO.getCommitId());
+        repoCommitMapper.insertRepoCommit(repoCommit);
+        return ResponseVO.buildSuccess();
     }
 
     private static class SimpleProgressMonitor implements ProgressMonitor {

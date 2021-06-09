@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pgd.irbl.business.po.Repository;
 import pgd.irbl.business.service.ManageService;
-import pgd.irbl.business.vo.DeleteRepoVO;
-import pgd.irbl.business.vo.ModifyRepoVO;
-import pgd.irbl.business.vo.RegisterRepoVO;
-import pgd.irbl.business.vo.ResponseVO;
+import pgd.irbl.business.vo.*;
 
 /**
  * @Author: pkun
@@ -52,7 +49,7 @@ public class ManageController {
 
     @PostMapping("/webhooks")
     @ApiOperation(value = "webhooks，这个接口暂时用不到")
-    public ResponseVO webhooks(@RequestBody Object o){
-        return ResponseVO.buildSuccess();
+    public ResponseVO webhooks(@RequestBody WebhookVO webhookVO){
+        return manageService.dealWebhook(webhookVO);
     }
 }

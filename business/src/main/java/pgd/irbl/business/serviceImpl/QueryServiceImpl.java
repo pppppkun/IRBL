@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pgd.irbl.business.dao.RepoCommitMapper;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
@@ -46,15 +47,16 @@ public class QueryServiceImpl implements QueryService {
 
     Thread t;
 
-//    @Autowired()
-//    @Qualifier("applicationTaskExecutor")
-//    Executor executor;
-//    ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
-
+    RepoCommitMapper repoCommitMapper;
+    @Autowired
+    public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
+        this.repoCommitMapper =repoCommitMapper;
+    }
     @Override
-    public ResponseVO queryRegister(MultipartFile bugReport, String commitID) {
+    public ResponseVO queryRegister(MultipartFile bugReport, String commitId) {
         //todo
-        return null;
+        String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
+        return ResponseVO.buildSuccess(gitUrl);
     }
 
     @Override
