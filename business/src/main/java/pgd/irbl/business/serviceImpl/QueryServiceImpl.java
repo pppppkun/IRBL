@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pgd.irbl.business.po.User;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
@@ -17,6 +18,8 @@ import pgd.irbl.business.grpcClient.PreProcessorClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
@@ -51,11 +54,8 @@ public class QueryServiceImpl implements QueryService {
     String targetPreProcessor;
 
     Thread t;
-
-//    @Autowired()
-//    @Qualifier("applicationTaskExecutor")
-//    Executor executor;
-//    ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
+    @Autowired
+    ExecutorService executor;
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitID) {
@@ -88,14 +88,14 @@ public class QueryServiceImpl implements QueryService {
             recordService.setQueryRecordFail(recordId);
             return ResponseVO.buildFailure(QUERY_FAIL);
         }
-//        ExecutorService executor = Executors.newFixedThreadPool(cpuCoreNum);
+
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-//        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReport, sourceCode));
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir) );
         // 暴力了
-        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
-        t.setName(recordId);
-        t.start();
+//        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
+//        t.setName(recordId);
+//        t.start();
         logger.info(" new PreprocessAndCalc thread submit");
 
         assert resCode.equals(0);
