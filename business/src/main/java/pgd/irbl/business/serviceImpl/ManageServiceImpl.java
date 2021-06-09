@@ -69,7 +69,9 @@ public class ManageServiceImpl implements ManageService {
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
+                        .setProgressMonitor(new SimpleProgressMonitor())
                         .call();
+                log.info("clone success!" + gitUrl);
                 // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
                 Iterable<RevCommit> commits = result.log().all().call();
                 List<RepoCommit> repoCommits = new ArrayList<>();
@@ -79,6 +81,7 @@ public class ManageServiceImpl implements ManageService {
                     repoCommit.setCommit(commit.getName());
                     repoCommits.add(repoCommit);
                 }
+                log.info("begin insert commit about " + gitUrl);
                 repoCommitMapper.insertRepoCommitByList(repoCommits);
             } catch (GitAPIException ignored) { }
         } catch (IOException ignored) { }
