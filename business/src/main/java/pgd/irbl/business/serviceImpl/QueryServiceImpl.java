@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pgd.irbl.business.dao.RepoCommitMapper;
 import pgd.irbl.business.po.User;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
@@ -51,17 +52,57 @@ public class QueryServiceImpl implements QueryService {
     @Value("${target.calculator}")
     String targetCalculator;
 
+    RepoCommitMapper repoCommitMapper;
+    @Autowired
+    public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
+        this.repoCommitMapper =repoCommitMapper;
+    }
     @Value("${target.preProcessor}")
     String targetPreProcessor;
+
+    @Value("${repo_direction}")
+    String repoDirection;
 
     Thread t;
     @Autowired
     ExecutorService executor;
 
     @Override
-    public ResponseVO queryRegister(MultipartFile bugReport, String commitID) {
-        //todo
-        return null;
+    public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
+        String recordId = recordService.insertQueryRecord(userId);
+        Integer resCode = recordService.setQueryRecordQuerying(recordId);
+        String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/")+1, gitUrl.lastIndexOf(".git"));
+
+        if (bugReport == null) {
+            return ResponseVO.buildFailure(QUERY_NULL_FAIL);
+        }
+
+        if(System.getProperty ("os.name").toLowerCase().contains("win")){
+            repoDirection = "E:\\4_work_dir\\source-code\\";
+        }
+        String bugReportFileName = null;
+        logger.info(bugReport.getOriginalFilename());
+        try {
+            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("enter Exception" + e.getMessage());
+            recordService.setQueryRecordFail(recordId);
+        }
+        if (bugReportFileName == null) {
+            logger.info("enter Exception bug or dir is null");
+            recordService.setQueryRecordFail(recordId);
+            return ResponseVO.buildFailure(QUERY_FAIL);
+        }
+        logger.info(bugReportFileName + " bugReport save finish");
+        //create new Thread and run
+        logger.info(" new PreprocessAndCalc thread creat");
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, repoName) );
+        logger.info(" new PreprocessAndCalc thread submit");
+        assert resCode.equals(0);
+        return ResponseVO.buildSuccess(recordId);
+
     }
 
     @Override

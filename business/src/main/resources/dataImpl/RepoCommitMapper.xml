@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pgd.irbl.business.dao.RepoCommitMapper">
+
+    <select id="findGitUrlByCommitId" resultType="java.lang.String">
+        select gitUrl from RepoCommit where commit like concat(#{commit}, '%') limit 1
+    </select>
+
+    <insert id="insertRepoCommit" useGeneratedKeys="true" keyProperty="id">
+        insert into RepoCommit(gitUrl, commit) VALUES (#{gitUrl}, #{commit})
+    </insert>
+
+    <insert id="insertRepoCommitByList" parameterType="java.util.List">
+        insert into RepoCommit(gitUrl, commit) VALUES
+        <foreach collection="list" item="repoCommit" separator="," close=";">
+            (#{repoCommit.gitUrl}, #{repoCommit.commit})
+        </foreach>
+    </insert>
+
+    <resultMap id="RepoCommit" type="pgd.irbl.business.po.RepoCommit">
+        <id column="id" property="id"/>
+        <result column="commit" property="commit"/>
+        <result column="gitUrl" property="gitUrl"/>
+    </resultMap>
+
+
+</mapper>
