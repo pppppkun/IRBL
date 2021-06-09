@@ -51,6 +51,9 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO registerRepo(RegisterRepoVO registerRepoVO) {
+        if(System.getProperty ("os.name").toLowerCase().contains("win")){
+            REPO_DIRECTION = "E:\\4_work_dir\\source-code\\";
+        }
         if (repoMapper.findRepoIdByGitUrl(registerRepoVO.getGitUrl()) != null)
             return ResponseVO.buildFailure(REPO_EXISTS);
         Repository repository = new Repository();

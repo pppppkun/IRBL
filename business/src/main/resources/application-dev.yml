@@ -31,4 +31,4 @@ spring:
 mybatis:
   mapper-locations: classpath:dataImpl/*Mapper.xml
 
-repo_direction: ./data/source-code/
+repo_direction: /data/source-code/
