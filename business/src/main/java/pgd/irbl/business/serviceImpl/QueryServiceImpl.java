@@ -10,6 +10,7 @@ import pgd.irbl.business.po.User;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
+import pgd.irbl.business.serviceImpl.protobuf.PreProcessRequest;
 import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
@@ -121,14 +122,9 @@ public class QueryServiceImpl implements QueryService {
         @Override
         public void run() {
             // set gRPC server port todo modify
-//            String targetPreProcessor = "116.85.66.200:50053";
-//            String targetPreProcessor = "localhost:50053";
             ManagedChannel preProcessorChannel = ManagedChannelBuilder.forTarget(targetPreProcessor)
                     .usePlaintext()
                     .build();
-
-//            String targetCalculator = "116.85.66.200:50051";
-//            String target = "localhost:50051";
             // Create a communication channel to the server, known as a Channel. Channels are thread-safe
             // and reusable. It is common to create channels at the beginning of your application and reuse
             // them until the application shuts down.
@@ -141,6 +137,8 @@ public class QueryServiceImpl implements QueryService {
 
             try {
                 PreProcessorClient preProcessorClient = new PreProcessorClient(preProcessorChannel);
+                //todo 异步调用
+//                preProcessorClient.preprocessAsync(codeDir,preProcessorChannel,fileScoreList,reportPath + bugReportFileName, codeDir);
                 int res = preProcessorClient.preprocess(codeDir);
                 logger.info("preprocess finish");
                 if (res != 1) {
@@ -148,6 +146,7 @@ public class QueryServiceImpl implements QueryService {
                 }
                 CalcClient calcClient = new CalcClient(calcChannel);
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
+
             } catch (Exception e){
                 e.printStackTrace();
             }finally {
