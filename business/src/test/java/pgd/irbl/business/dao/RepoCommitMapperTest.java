@@ -31,7 +31,7 @@ public class RepoCommitMapperTest {
     @Test
     public void Test1insert(){
         RepoCommit repoCommit = new RepoCommit();
-        repoCommit.setGitUrl("https://github.com/pppppkun/TuringMachine");
+        repoCommit.setGitUrl("https://github.com/pppppkun/TuringMachine.git");
         repoCommit.setCommit("0517be452016737b942e0fe337c87ccde97f3f21");
         int i = repoCommitMapper.insertRepoCommit(repoCommit);
         Assert.assertEquals(1, i);

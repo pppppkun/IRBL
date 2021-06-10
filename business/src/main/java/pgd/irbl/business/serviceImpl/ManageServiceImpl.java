@@ -148,9 +148,13 @@ public class ManageServiceImpl implements ManageService {
             }
         } catch (GitAPIException | IOException ignored) { }
         log.info(repoCommit.toString());
-        int i = repoCommitMapper.insertRepoCommit(repoCommit);
-        log.debug(i+"");
-        if(i==0) return ResponseVO.buildFailure("webhook fails");
+        try{
+            int i = repoCommitMapper.insertRepoCommit(repoCommit);
+            log.debug(i+"");
+            if(i==0) return ResponseVO.buildFailure("webhook fails");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
         return ResponseVO.buildSuccess();
     }
 
