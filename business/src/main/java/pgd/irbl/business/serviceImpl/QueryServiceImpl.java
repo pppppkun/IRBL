@@ -88,7 +88,7 @@ public class QueryServiceImpl implements QueryService {
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
 
         try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + "LambdaInterpreter" + " " + "e13e6419c96489f4ead6332a0e740c29e267a189");
+            Process process = Runtime.getRuntime().exec("./reset.sh " + "LambdaInterpreter" + " " + commitId);
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
