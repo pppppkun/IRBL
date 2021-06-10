@@ -1,7 +1,9 @@
 package pgd.irbl.business.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.util.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -136,7 +138,16 @@ public class ManageServiceImpl implements ManageService {
         RepoCommit repoCommit = new RepoCommit();
         repoCommit.setGitUrl(webhookVO.getGitUrl());
         repoCommit.setCommit(webhookVO.getCommitId());
-        //TODO
+        String gitUrl = webhookVO.getGitUrl();
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        File file = new File(REPO_DIRECTION + repoName + "/.git");
+        try {
+            org.eclipse.jgit.lib.Repository repository = new FileRepository(file);
+            try (Git git = new Git(repository)) {
+                git.pull().call();
+            }
+        } catch (GitAPIException | IOException ignored) { }
+
         repoCommitMapper.insertRepoCommit(repoCommit);
         return ResponseVO.buildSuccess();
     }
