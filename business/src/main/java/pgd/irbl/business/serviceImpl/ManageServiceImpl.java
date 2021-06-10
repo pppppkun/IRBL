@@ -1,7 +1,6 @@
 package pgd.irbl.business.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -137,6 +136,7 @@ public class ManageServiceImpl implements ManageService {
         RepoCommit repoCommit = new RepoCommit();
         repoCommit.setGitUrl(webhookVO.getGitUrl());
         repoCommit.setCommit(webhookVO.getCommitId());
+        //TODO
         repoCommitMapper.insertRepoCommit(repoCommit);
         return ResponseVO.buildSuccess();
     }

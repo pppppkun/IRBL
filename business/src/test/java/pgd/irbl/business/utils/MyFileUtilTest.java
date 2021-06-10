@@ -1,14 +1,9 @@
 package pgd.irbl.business.utils;
 
-import org.apache.http.entity.ContentType;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 

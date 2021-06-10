@@ -6,6 +6,10 @@
         select gitUrl from RepoCommit where commit like concat(#{commit}, '%') limit 1
     </select>
 
+    <select id="findHoleCommitId" resultType="java.lang.String">
+        select commit from RepoCommit where commit like concat(#{commit}, '%') limit 1
+    </select>
+
     <insert id="insertRepoCommit" useGeneratedKeys="true" keyProperty="id">
         insert into RepoCommit(gitUrl, commit) VALUES (#{gitUrl}, #{commit})
     </insert>

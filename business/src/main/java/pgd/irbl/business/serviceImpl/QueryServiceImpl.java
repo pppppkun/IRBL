@@ -2,6 +2,13 @@ package pgd.irbl.business.serviceImpl;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryBuilder;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +24,7 @@ import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
 import pgd.irbl.business.grpcClient.PreProcessorClient;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +60,16 @@ public class QueryServiceImpl implements QueryService {
     @Value("${target.calculator}")
     String targetCalculator;
 
+    @Value("${repo_direction}")
+    private String REPO_DIRECTION;
+
     RepoCommitMapper repoCommitMapper;
+
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
-        this.repoCommitMapper =repoCommitMapper;
+        this.repoCommitMapper = repoCommitMapper;
     }
+
     @Value("${target.preProcessor}")
     String targetPreProcessor;
 
@@ -72,11 +85,14 @@ public class QueryServiceImpl implements QueryService {
         String recordId = recordService.insertQueryRecord(userId);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
-        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/")+1, gitUrl.lastIndexOf(".git"));
+        String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        String curDir = System.getProperty("user.dir");
+        System.out.println("你当前的工作目录为 :" + curDir);
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
-        if(System.getProperty ("os.name").toLowerCase().contains("win")){
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
             repoDirection = "E:\\4_work_dir\\source-code\\";
         }
         String bugReportFileName = null;
@@ -96,7 +112,7 @@ public class QueryServiceImpl implements QueryService {
         logger.info(bugReportFileName + " bugReport save finish");
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, repoName) );
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, repoName));
         logger.info(" new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
         return ResponseVO.buildSuccess(recordId);
@@ -130,7 +146,7 @@ public class QueryServiceImpl implements QueryService {
 
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir) );
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
         // 暴力了
 //        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
 //        t.setName(recordId);
@@ -185,9 +201,9 @@ public class QueryServiceImpl implements QueryService {
                 CalcClient calcClient = new CalcClient(calcChannel);
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
                 // resources the channel should be shut down when it will no longer be used. If it may be used
                 // again leave it running.

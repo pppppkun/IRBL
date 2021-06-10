@@ -13,6 +13,7 @@ import java.util.List;
 public interface RepoCommitMapper {
 
     String findGitUrlByCommitId(String commit);
+    String findHoleCommitId(String commit);
     int insertRepoCommit(RepoCommit repoCommit);
     int insertRepoCommitByList(List<RepoCommit> repoCommitList);
 
