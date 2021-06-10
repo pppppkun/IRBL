@@ -24,6 +24,12 @@
         where gitUrl = #{gitUrl}
     </select>
 
+    <select id="findGitUrlByRepoId" resultType="java.lang.String">
+        select gitUrl
+        from Repo
+        where id=#{repoId}
+    </select>
+
     <update id="updateDescription">
         update Repo
         set description=#{description}

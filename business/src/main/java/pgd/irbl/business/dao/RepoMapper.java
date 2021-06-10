@@ -14,6 +14,7 @@ public interface RepoMapper {
 
     List<Repository> selectAllRepo();
     int deleteRepo(Long repoId);
+    String findGitUrlByRepoId(Long repoId);
     int insertRepo(Repository repository);
     Long findRepoIdByGitUrl(String gitUrl);
     int updateDescription(Long repoId, String description);

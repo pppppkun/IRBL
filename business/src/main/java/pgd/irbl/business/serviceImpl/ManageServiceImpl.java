@@ -1,6 +1,7 @@
 package pgd.irbl.business.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +52,7 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO registerRepo(RegisterRepoVO registerRepoVO) {
-        if(System.getProperty ("os.name").toLowerCase().contains("win")){
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
             REPO_DIRECTION = "E:\\4_work_dir\\source-code\\";
         }
         if (repoMapper.findRepoIdByGitUrl(registerRepoVO.getGitUrl()) != null)
@@ -67,8 +68,8 @@ public class ManageServiceImpl implements ManageService {
         try {
             try {
                 String gitUrl = repository.getGitUrl();
-                String repoName = gitUrl.substring(gitUrl.lastIndexOf("/")+1, gitUrl.lastIndexOf(".git"));
-                File f = new File(REPO_DIRECTION+repoName);
+                String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+                File f = new File(REPO_DIRECTION + repoName);
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
@@ -86,8 +87,10 @@ public class ManageServiceImpl implements ManageService {
                 }
                 log.info("begin insert commit about " + gitUrl);
                 repoCommitMapper.insertRepoCommitByList(repoCommits);
-            } catch (GitAPIException ignored) { }
-        } catch (IOException ignored) { }
+            } catch (GitAPIException ignored) {
+            }
+        } catch (IOException ignored) {
+        }
 
         if (ret == 0) {
             log.error(repository.getGitUrl());
@@ -114,7 +117,17 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO) {
+        String gitUrl = repoMapper.findGitUrlByRepoId(deleteRepoVO.getRepoId());
+        if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
+        try{
+            Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + repoName);
+            process.waitFor();
+            process.destroy();
+        }catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(DELETE_SUCCESS);
     }
