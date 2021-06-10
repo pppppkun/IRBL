@@ -29,11 +29,10 @@ public class QueryController {
 
     @PostMapping("/uploadRegister")
     @ApiOperation(value = "上传的报告属于已注册的项目", response = QueryRecord.class, notes = "这个方法的返回值是 recordId")
-    public ResponseVO uploadRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("commitID") String commitID, HttpServletRequest httpServletRequest){
-        ResponseVO responseVO;
+    public ResponseVO uploadRegister(@ApiParam(value = "这个参数是MultipartFile类型") @RequestParam("bugReport") MultipartFile bugReport, @RequestParam("commitId") String commitId, HttpServletRequest httpServletRequest){
         Long userId = JwtUtil.verifyTokenAndGetUserId(httpServletRequest.getHeader(JwtUtil.TOKEN_NAME));
         if(userId == null) return ResponseVO.buildFailure("未授权的用户");
-        return queryService.queryRegister(bugReport, commitID, userId);
+        return queryService.queryRegister(bugReport, commitId, userId);
     }
 
     @PostMapping("/uploadUnRegister")
