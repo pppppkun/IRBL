@@ -13,17 +13,17 @@ spring:
 #    report: "/Users/pkun/IdeaProjects/backend-irbl/data/report/"
 #    python-cache: "/Users/pkun/IdeaProjects/backend-irbl/data/python-cache/"
 
-#file:
-#  path:
-#    code: "/data/source-code/"
-#    report: "/data/report/"
-#    python-cache: "/data/python-cache/"
-
 file:
   path:
-    code: "E:\\4_work_dir\\source-code\\"
-    report: "E:\\4_work_dir\\report\\"
-    python-cache: "E:\\4_work_dir\\python-cache\\"
+    code: "/data/source-code/"
+    report: "/data/report/"
+    python-cache: "/data/python-cache/"
+
+#file:
+#  path:
+#    code: "E:\\4_work_dir\\source-code\\"
+#    report: "E:\\4_work_dir\\report\\"
+#    python-cache: "E:\\4_work_dir\\python-cache\\"
 
 cpu:
   core: 2
