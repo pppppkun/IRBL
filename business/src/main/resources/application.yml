@@ -29,10 +29,10 @@ cpu:
   core: 2
 
 # 配置 gRPC 地址
-#target:
-#  calculator: "116.85.66.200:50051"
-#  preProcessor: "116.85.66.200:50053"
-
 target:
-  calculator: "localhost:50051"
-  preProcessor: "localhost:50053"
+  calculator: "116.85.66.200:50051"
+  preProcessor: "116.85.66.200:50053"
+
+#target:
+#  calculator: "localhost:50051"
+#  preProcessor: "localhost:50053"
