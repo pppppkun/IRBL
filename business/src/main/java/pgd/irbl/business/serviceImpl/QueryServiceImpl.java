@@ -24,8 +24,7 @@ import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
 import pgd.irbl.business.grpcClient.PreProcessorClient;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,8 +88,12 @@ public class QueryServiceImpl implements QueryService {
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
 
         try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
+            Process process = Runtime.getRuntime().exec("./reset.sh " + "LambdaInterpreter" + " " + "e13e6419c96489f4ead6332a0e740c29e267a189");
+            InputStream inputStream = process.getInputStream();
             process.waitFor();
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                bufferedReader.lines().forEach(System.out::println);
+            }
             process.destroy();
         }catch (IOException | InterruptedException e) {
             e.printStackTrace();
