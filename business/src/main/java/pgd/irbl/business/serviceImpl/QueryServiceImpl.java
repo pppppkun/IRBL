@@ -87,8 +87,15 @@ public class QueryServiceImpl implements QueryService {
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        String curDir = System.getProperty("user.dir");
-        System.out.println("你当前的工作目录为 :" + curDir);
+
+        try{
+            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
+            process.waitFor();
+            process.destroy();
+        }catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
