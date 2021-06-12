@@ -40,13 +40,15 @@ class DifferentialEvolutionLearner(BaseLearnEvaluate):
         MRR = []
         mean_avgp = []
 
-        for i, (report_idx, report_value) in enumerate(self.bug_reports.items()):
+        for i, report in enumerate(self.bug_reports.items()):
+            # report是一个二元组，分别是key和value
+
             # 对source codes根据score进行排序，将score高的文件排在前面
             src_ranks, _ = zip(*sorted(zip(self.source_codes.keys(), final_scores[i]),
                                        key=operator.itemgetter(1), reverse=True))
 
             # Getting reported fixed files
-            fixed_files = report_value.fixed_files
+            fixed_files = report[1].fixed_files
 
             # Getting the ranks of reported fixed files
             relevant_ranks = sorted(src_ranks.index(fixed) + 1
@@ -61,28 +63,23 @@ class DifferentialEvolutionLearner(BaseLearnEvaluate):
 
         return -1 * (np.mean(MRR) + np.mean(mean_avgp))
 
+
     def estimate_params(self):
 
         res = optimize.differential_evolution(
             self.cost, bounds=[(0, 1)] * len(self.rank_scores),
-            args=(), strategy='randtobest1exp', polish=True, seed=458711526, workers=-1)
+            args=(), strategy='randtobest1exp', polish=True, seed=458711526)
 
         return res.x.tolist()
 
     def learn(self):
         params = self.estimate_params()
         self.final_scores = self.combine_rank_scores(params)
-        self.params = params
-
-    def load_params(self, params):
-        params = np.array(params)
-        self.final_scores = self.combine_rank_scores(params)
-        self.params = params
 
 
 def do_and_save(path, scores_needed=SCORES_NEEDED_TO_LEARN,
                 evaluation_result_file_name="",
-                result_info="", params=None):
+                result_info=""):
     evaluation_result_file_name = evaluation_result_file_name.split(".")[0] + "-by-DE.txt"
     result_info = "Learn by Differential Evolution\nscores: " + str(scores_needed) + "\n\n" + result_info
 
@@ -117,14 +114,8 @@ def do_and_save(path, scores_needed=SCORES_NEEDED_TO_LEARN,
             rank_scores.append(stack_trace_score)
 
     model = DifferentialEvolutionLearner(small_source_codes, small_bug_reports, rank_scores)
-    if params is None:
-        model.learn()
-    else:
-        model.load_params(params)
-
+    model.learn()
     results = model.evaluate()
-
-    result_info += "parmas: {}\n".format(model.params)
 
     bug_reports_num = len(small_bug_reports)
     string = "Top@1:\t{}/{} ({:.2f}%)\nTop@5:\t{}/{} ({:.2f}%)\nTop@10:\t{}/{} ({:.2f}%)\n" \
@@ -140,4 +131,4 @@ def do_and_save(path, scores_needed=SCORES_NEEDED_TO_LEARN,
 
 
 if __name__ == '__main__':
-    do_and_save(path=ECLIPSE_PATH)
+    do_and_save(path=NORMAL_SWT_PATH)

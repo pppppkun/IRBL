@@ -6,7 +6,7 @@ import inflection
 import nltk
 from nltk.stem.porter import PorterStemmer
 from constant import *
-from data_loader import DefaultDataLoader, SmallSourceFile, SmallBugReport
+from data_loader import DataLoader
 from collections import OrderedDict
 
 
@@ -14,7 +14,7 @@ class Preprocessor:
     def _split_camelcase(self, tokens):
         # 识别并处理camelcase风格的变量名
 
-        returning_tokens = tokens[:]        # 拷贝
+        returning_tokens = tokens[:]  # 拷贝
 
         for token in tokens:
             # string.punctuation是英语中所有的标点字符组成的集合
@@ -73,6 +73,7 @@ class Preprocessor:
             if token not in JAVA_KEYWORDS:
                 returning_tokens.append(token)
         return returning_tokens
+
 
 class BugReportPreprocessor(Preprocessor):
 
@@ -210,60 +211,30 @@ class SourceCodePreprocessor(Preprocessor):
         self.stem()
 
 
-def do_and_save(path=SWT_PATH):
-    loader = DefaultDataLoader(path, n_jobs=-1)
+def load_preprocess_save(project_path, source_code_path=DEPLOY_DATA_PATH + "source-code",
+                         python_cache_path=DEPLOY_DATA_PATH + "python-cache"):
+    load_path = os.path.join(source_code_path, project_path)
+    loader = DataLoader(load_path)
 
-    run_time_data_path = os.path.join(path, "run-time-data")
-    os.makedirs(run_time_data_path, exist_ok=True)
-    preprocessed_source_code_path = os.path.join(run_time_data_path, "preprocessed-source-code.pickle")
-    preprocessed_bug_report_path = os.path.join(run_time_data_path, "preprocessed-bug-report.pickle")
-    small_source_code_path = os.path.join(run_time_data_path, "small-source-code.pickle")
-    small_bug_report_path = os.path.join(run_time_data_path, "small-bug-report.pickle")
-
-    # 处理bug report
-    bug_reports = loader.load_xml_file()
-    bug_report_preprocessor = BugReportPreprocessor(bug_reports)
-    bug_report_preprocessor.preprocess()
-    preprocessed_bug_reports = bug_report_preprocessor.bug_reports
-
-    # 处理source code
     source_codes = loader.load_source_code()
-    source_code_preprocessor = SourceCodePreprocessor(source_codes)
-    source_code_preprocessor.preprocess()
-    preprocessed_source_codes = source_code_preprocessor.source_codes
+    preprocessor = SourceCodePreprocessor(source_codes)
+    preprocessor.preprocess()
 
-    # 删除不存在于source code的bug report
-    report_ids = list(preprocessed_bug_reports.keys())
-    for report_id in report_ids:
-        buggy_files = preprocessed_bug_reports[report_id].fixed_files
-        for file in buggy_files:
-            if file not in preprocessed_source_codes:
-                del preprocessed_bug_reports[report_id]
-                break
-
-    with open(preprocessed_bug_report_path, 'wb') as file:
-        pickle.dump(preprocessed_bug_reports, file, protocol=pickle.HIGHEST_PROTOCOL)
-    with open(preprocessed_source_code_path, 'wb') as file:
-        pickle.dump(preprocessed_source_codes, file, protocol=pickle.HIGHEST_PROTOCOL)
-
-    small_source_codes = OrderedDict()
-    small_bug_reports = OrderedDict()
-
-    for key in preprocessed_source_codes.keys():
-        small_source_codes[key] = SmallSourceFile()
-    for key in preprocessed_bug_reports.keys():
-        small_bug_reports[key] = SmallBugReport(preprocessed_bug_reports[key].fixed_files)
-
-    with open(small_source_code_path, 'wb') as file:
-        pickle.dump(small_source_codes, file, protocol=pickle.HIGHEST_PROTOCOL)
-    with open(small_bug_report_path, 'wb') as file:
-        pickle.dump(small_bug_reports, file, protocol=pickle.HIGHEST_PROTOCOL)
+    for key in preprocessor.source_codes.keys():
+        file_path = os.path.join(python_cache_path, project_path, key.split('.')[0] + ".pkl")
+        dirname = os.path.split(file_path)[0]
+        os.makedirs(dirname, exist_ok=True)
+        with open(file_path, "wb") as f:
+            pickle.dump(preprocessor.source_codes[key], f)
 
 
 if __name__ == '__main__':
-    print("preprocessing ECLIPSE dataset...")
-    begin_time = time.time()
-    do_and_save(ECLIPSE_PATH)
-    end_time = time.time()
-    print("taking {:.2f}s".format(end_time - begin_time))
-    # taking 60.24s
+    load_preprocess_save(r"swt")
+
+    # begin_time = time.time()
+    # print("preprocessing large swt dataset...")
+    # do_and_save(LARGE_SWT_PATH)
+    # end_time = time.time()
+    # print("taking {:.2f}s".format(end_time - begin_time))
+    # # taking 11654.39s
+    # print("preprocessing finish!")
