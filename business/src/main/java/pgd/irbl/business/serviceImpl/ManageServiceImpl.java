@@ -65,7 +65,7 @@ public class ManageServiceImpl implements ManageService {
         repository.setDescription(registerRepoVO.getDescription());
         repository.setGitUrl(registerRepoVO.getGitUrl());
         int ret = repoMapper.insertRepo(repository);
-
+        log.info(repository.toString());
         try {
             try {
                 String gitUrl = repository.getGitUrl();
