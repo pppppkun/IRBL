@@ -53,7 +53,7 @@ public class ManageServiceTest {
     @Test
     public void Test2deleteRepo(){
         DeleteRepoVO deleteRepoVO = new DeleteRepoVO();
-        deleteRepoVO.setRepoId(4L);
+        deleteRepoVO.setRepoId(5L);
         Assert.assertEquals(DELETE_SUCCESS, manageService.deleteRepo(deleteRepoVO).getContent());
         Assert.assertEquals(REPO_NO_EXISTS, manageService.deleteRepo(deleteRepoVO).getMessage());
     }
