@@ -78,7 +78,7 @@ public class ManageServiceTest {
         modifyRepoVO.setRepoId(2L);
         modifyRepoVO.setDescription("TestTest");
         Assert.assertEquals(MODIFY_SUCCESS, manageService.modifyRepo(modifyRepoVO).getContent());
-        modifyRepoVO.setRepoId(4L);
+        modifyRepoVO.setRepoId(5L);
         Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
     }
 

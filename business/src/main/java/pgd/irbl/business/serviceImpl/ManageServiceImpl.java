@@ -121,6 +121,7 @@ public class ManageServiceImpl implements ManageService {
     public ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO) {
         String gitUrl = repoMapper.findGitUrlByRepoId(deleteRepoVO.getRepoId());
         if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
+        log.info(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         try{
