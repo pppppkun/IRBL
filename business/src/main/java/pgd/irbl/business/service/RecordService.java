@@ -15,7 +15,7 @@ public interface RecordService {
 
     ResponseVO getUserAllRecord(Long userId);
     QueryRecord getQueryRecordById(QueryRecordVO queryRecordVO);
-    String insertQueryRecord(Long userId);
+    String insertQueryRecord(Long userId, String gitUrl, String commitId, String name);
     int setQueryRecordQuerying(String recordId);
     int setQueryRecordFail(String recordId);
     int setQueryRecordComplete(String recordId, List<FileScore> fileScoreList);

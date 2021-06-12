@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 public class RecordWithTime {
     String recordId;
     Timestamp queryTime;
+    String name;
 
     public RecordWithTime() {
     }
@@ -20,5 +21,6 @@ public class RecordWithTime {
     public RecordWithTime(Document document) {
         recordId = document.getObjectId("_id").toString();
         queryTime = new Timestamp(((Number) document.get("queryTime")).longValue());
+        name = document.getString("name");
     }
 }

@@ -86,12 +86,13 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
-        String recordId = recordService.insertQueryRecord(userId);
-        Integer resCode = recordService.setQueryRecordQuerying(recordId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
-        repoMapper.updateQueryNum(gitUrl);
+        int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum);
+        Integer resCode = recordService.setQueryRecordQuerying(recordId);
+        repoMapper.updateQueryNum(gitUrl);
 
         try{
             Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
@@ -136,7 +137,7 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId) {
-        String recordId = recordService.insertQueryRecord(userId);
+        String recordId = recordService.insertQueryRecord(userId, "未设置gitUrl", "未设置commitId", sourceCode.getOriginalFilename());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);

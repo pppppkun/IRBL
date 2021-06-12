@@ -39,7 +39,7 @@ public class RecordServiceImpl implements RecordService {
     public ResponseVO getUserAllRecord(Long userId) {
         MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
         List<RecordWithTime> result = new ArrayList<>();
-        queryRecord.find(eq("userId", userId)).projection(Projections.include("_id", "queryTime")).forEach(document -> result.add(new RecordWithTime(document)));
+        queryRecord.find(eq("userId", userId)).projection(Projections.include("_id", "queryTime", "name")).forEach(document -> result.add(new RecordWithTime(document)));
         return ResponseVO.buildSuccess(result);
     }
 
@@ -58,10 +58,13 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public String insertQueryRecord(Long userId) {
+    public String insertQueryRecord(Long userId, String gitUrl, String commitId, String name) {
         QueryRecord queryRecord = new QueryRecord();
         queryRecord.setUserId(userId);
         queryRecord.setQueryTime(new Timestamp(System.currentTimeMillis()));
+        queryRecord.setGitUrl(gitUrl);
+        queryRecord.setRepoCommitId(commitId);
+        queryRecord.setName(name);
 //        queryRecord.setRepoCommitId("未设置commitId");
 //        queryRecord.setGitUrl("未设置gitUrl");
         queryRecord.setQueryRecordState(QueryRecordState.preprocessing);

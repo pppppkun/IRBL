@@ -46,7 +46,7 @@ public class RecordServiceTest {
     InsertOneResult twoResult;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         mongoTemplate.dropCollection("queryRecord");
         mongoTemplate.createCollection("queryRecord");
         QueryRecord queryRecord = new QueryRecord();
@@ -60,20 +60,21 @@ public class RecordServiceTest {
         BeanUtils.copyProperties(queryRecord, queryRecord1);
         queryRecord1.setQueryTime(new Timestamp(System.currentTimeMillis()));
         queryRecord1.setQueryRecordState(QueryRecordState.complete);
+        queryRecord1.setName("123");
         oneResult = mongoTemplate.getCollection("queryRecord").insertOne(Document.parse(JSONObject.toJSONString(queryRecord)));
         twoResult = mongoTemplate.getCollection("queryRecord").insertOne(Document.parse(JSONObject.toJSONString(queryRecord1)));
     }
 
     @Test
-    public void Test1getUserAllRecord(){
+    public void Test1getUserAllRecord() {
         ResponseVO responseVO = recordService.getUserAllRecord(2L);
         Assert.assertTrue(responseVO.getSuccess());
-        Assert.assertEquals(2, ((List)responseVO.getContent()).size());
+        Assert.assertEquals(2, ((List) responseVO.getContent()).size());
     }
 
 
     @Test
-    public void Test2queryRecord(){
+    public void Test2queryRecord() {
         QueryRecordVO queryRecordVO = new QueryRecordVO();
         queryRecordVO.setRecordId(oneResult.getInsertedId().asObjectId().getValue().toString());
         QueryRecord record = recordService.getQueryRecordById(queryRecordVO);
@@ -82,7 +83,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void Test3queryRecord(){
+    public void Test3queryRecord() {
         QueryRecordVO queryRecordVO = new QueryRecordVO();
         queryRecordVO.setRecordId("alksdjk");
         QueryRecord record = recordService.getQueryRecordById(queryRecordVO);
@@ -90,7 +91,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void Test4setQueryState(){
+    public void Test4setQueryState() {
         recordService.setQueryRecordQuerying(Objects.requireNonNull(oneResult.getInsertedId()).asObjectId().getValue().toString());
         QueryRecordVO queryRecordVO = new QueryRecordVO();
         queryRecordVO.setRecordId(oneResult.getInsertedId().asObjectId().getValue().toString());
@@ -98,7 +99,7 @@ public class RecordServiceTest {
         Assert.assertEquals(QueryRecordState.querying, record.getQueryRecordState());
         List<FileScore> fileScoreList = new ArrayList<>();
         Faker faker = new Faker(new Locale("en-US"));
-        for(int i = 0;i<10;i++) {
+        for (int i = 0; i < 10; i++) {
             FileScore fileScore = new FileScore();
             fileScore.setFilePath(faker.file().fileName());
             fileScore.setScore(faker.number().randomDouble(100, 0, 10));
@@ -111,12 +112,14 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void Test5insertRecord(){
-        String recordId = recordService.insertQueryRecord(123123L);
-        QueryRecordVO queryRecordVO = new QueryRecordVO(); queryRecordVO.setRecordId(recordId);
+    public void Test5insertRecord() {
+        String recordId = recordService.insertQueryRecord(123123L, "1", "2", "www.baidu.com.git#12");
+        QueryRecordVO queryRecordVO = new QueryRecordVO();
+        queryRecordVO.setRecordId(recordId);
         QueryRecord queryRecord = recordService.getQueryRecordById(queryRecordVO);
         Assert.assertNotNull(queryRecord);
         Assert.assertEquals(Long.valueOf(123123L), queryRecord.getUserId());
+        Assert.assertEquals("www.baidu.com.git#12", queryRecord.getName());
     }
 
 }
