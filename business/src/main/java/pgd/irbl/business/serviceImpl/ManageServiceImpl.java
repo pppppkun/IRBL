@@ -87,7 +87,8 @@ public class ManageServiceImpl implements ManageService {
                     repoCommits.add(repoCommit);
                 }
                 log.info("begin insert commit about " + gitUrl);
-                repoCommitMapper.insertRepoCommitByList(repoCommits);
+                int i = repoCommitMapper.insertRepoCommitByList(repoCommits);
+                if(i != repoCommits.size()) return ResponseVO.buildFailure(REGISTER_FAIL);
             } catch (GitAPIException ignored) {
             }
         } catch (IOException ignored) {

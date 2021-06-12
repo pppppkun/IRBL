@@ -63,11 +63,6 @@ class Similarity:
         simis = self.calculate_similarity(src_tfidf, reports_tfidf)
         return simis
 
-def calculating_vsm_similarity(source_codes, bug_reports):
-    sm = Similarity(source_codes)
-    similarity = sm.find_similars(bug_reports)
-    return similarity
-
 
 def do_and_save(path):
     run_time_data_path = os.path.join(path, "run-time-data")
@@ -90,4 +85,4 @@ def do_and_save(path):
 
 
 if __name__ == '__main__':
-    do_and_save(NORMAL_SWT_PATH)
+    do_and_save(SWT_PATH)

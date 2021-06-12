@@ -1,5 +1,6 @@
 import json
 import operator
+from tqdm import tqdm
 import pickle
 import os
 import numpy as np
@@ -13,10 +14,11 @@ class BaseLearnEvaluate:
         self.bug_reports = bug_reports
         self.rank_scores = rank_scores
         self.final_scores = None
+        self.params = None
 
 
     def evaluate(self):
-        assert self.final_scores is not None, "final_scores should be learn first"
+        assert self.final_scores is not None, "final_scores should be learn or set first"
 
         top_n = (1, 5, 10)
         top_n_rank = [0] * len(top_n)
@@ -27,8 +29,8 @@ class BaseLearnEvaluate:
         recall_at_n = [[] for _ in top_n]
         f_measure_at_n = [[] for _ in top_n]
 
-        for i, (bug_id, report) in enumerate(self.bug_reports.items()):
-
+        for i, (bug_id, report) in tqdm(enumerate(self.bug_reports.items()), desc="evaluate",
+                                        total=len(self.bug_reports)):
             # Finding source codes from the simis indices
             source_code_ranks, _ = zip(*sorted(zip(self.source_codes.keys(), self.final_scores[i]),
                                                key=operator.itemgetter(1), reverse=True))

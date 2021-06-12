@@ -34,6 +34,7 @@ class LogisticRegressionLearner(BaseLearnEvaluate):
         lr = LogisticRegression(random_state=0)
         lr.fit(x, y)
         self.final_scores = self.combine_rank_scores(lr.coef_[0], lr.intercept_)
+        self.params = [lr.coef_[0], lr.intercept_]
 
 
 def do_and_save(path, scores_needed=SCORES_NEEDED_TO_LEARN,
@@ -76,6 +77,8 @@ def do_and_save(path, scores_needed=SCORES_NEEDED_TO_LEARN,
     model.learn()
     results = model.evaluate()
 
+    result_info += "parmas: {}\n".format(model.params)
+
     bug_reports_num = len(small_bug_reports)
     string = "Top@1:\t{}/{} ({:.2f}%)\nTop@5:\t{}/{} ({:.2f}%)\nTop@10:\t{}/{} ({:.2f}%)\n" \
              "MRR:\t{:.2f}\nMAP:\t{:.2f}".format(results[0][0], bug_reports_num, results[1][0],
@@ -90,4 +93,4 @@ def do_and_save(path, scores_needed=SCORES_NEEDED_TO_LEARN,
 
 
 if __name__ == '__main__':
-    do_and_save(path=NORMAL_SWT_PATH)
+    do_and_save(path=SWT_PATH)

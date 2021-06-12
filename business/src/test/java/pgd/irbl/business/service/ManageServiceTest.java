@@ -54,7 +54,7 @@ public class ManageServiceTest {
     public void Test1registerRepo(){
         RegisterRepoVO registerRepoVO = new RegisterRepoVO();
         registerRepoVO.setDescription("xxxxxxx");
-        registerRepoVO.setGitUrl("https://github.com/pppppkun/cloudNativePractice.git");
+        registerRepoVO.setGitUrl("https://gitee.com/dromara/hutool.git");
         Assert.assertEquals(REGISTER_SUCCESS, manageService.registerRepo(registerRepoVO).getContent());
         Assert.assertEquals(REPO_EXISTS, manageService.registerRepo(registerRepoVO).getMessage());
     }
