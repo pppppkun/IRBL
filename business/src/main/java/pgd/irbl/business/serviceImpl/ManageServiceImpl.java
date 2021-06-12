@@ -121,7 +121,10 @@ public class ManageServiceImpl implements ManageService {
     public ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO) {
         String gitUrl = repoMapper.findGitUrlByRepoId(deleteRepoVO.getRepoId());
         if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
+        log.info("why bug");
         log.info(gitUrl);
+        log.info("why bug");
+        if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         try{
@@ -161,6 +164,7 @@ public class ManageServiceImpl implements ManageService {
     }
 
     private static class SimpleProgressMonitor implements ProgressMonitor {
+        int completed = 0;
         @Override
         public void start(int totalTasks) {
             System.out.println("Starting work on " + totalTasks + " tasks");
@@ -173,7 +177,11 @@ public class ManageServiceImpl implements ManageService {
 
         @Override
         public void update(int completed) {
-            System.out.print(completed + "-");
+            this.completed += completed;
+            if(this.completed > 10) {
+                System.out.print("-");
+                this.completed = 0;
+            }
         }
 
         @Override
