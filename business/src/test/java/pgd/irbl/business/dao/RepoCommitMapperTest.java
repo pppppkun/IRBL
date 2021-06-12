@@ -40,7 +40,7 @@ public class RepoCommitMapperTest {
     @Test
     public void Test2find(){
         String gitUrl = repoCommitMapper.findGitUrlByCommitId("0517be45");
-        Assert.assertEquals("https://github.com/pppppkun/TuringMachine", gitUrl);
+        Assert.assertEquals("https://github.com/pppppkun/TuringMachine.git", gitUrl);
     }
 
 }
