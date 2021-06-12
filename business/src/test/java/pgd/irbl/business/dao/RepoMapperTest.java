@@ -71,4 +71,11 @@ public class RepoMapperTest {
         Assert.assertEquals("AfterUpdate", repoMapper.findRepoById(2L).getDescription());
     }
 
+    @Test
+    public void Test6UpdateQueryNum(){
+        int i = repoMapper.updateQueryNum("ssh://git@212.129.149.40:222/pgd/frontend-irbl.git");
+        Assert.assertEquals(1, i);
+        Assert.assertEquals(24, repoMapper.findQueryNumByGitUrl("ssh://git@212.129.149.40:222/pgd/frontend-irbl.git"));
+    }
+
 }

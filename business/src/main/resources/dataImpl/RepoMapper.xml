@@ -36,6 +36,16 @@
         where id = #{repoId}
     </update>
 
+    <update id="updateQueryNum">
+        update Repo
+        set queryNum=queryNum+1
+        where gitUrl=#{gitUrl}
+    </update>
+
+    <select id="findQueryNumByGitUrl" resultType="java.lang.Integer">
+        select queryNum from Repo where gitUrl=#{gitUrl}
+    </select>
+
     <select id="findRepoById" resultMap="Repo">
         select *
         from Repo

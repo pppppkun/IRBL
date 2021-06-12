@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.dao.RepoCommitMapper;
+import pgd.irbl.business.dao.RepoMapper;
 import pgd.irbl.business.po.User;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
@@ -63,11 +64,15 @@ public class QueryServiceImpl implements QueryService {
     private String REPO_DIRECTION;
 
     RepoCommitMapper repoCommitMapper;
+    RepoMapper repoMapper;
 
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
+    @Autowired
+    public void setRepoMapper(RepoMapper repoMapper) {this.repoMapper = repoMapper;}
+
 
     @Value("${target.preProcessor}")
     String targetPreProcessor;
@@ -85,6 +90,7 @@ public class QueryServiceImpl implements QueryService {
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
+        repoMapper.updateQueryNum(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
 
         try{

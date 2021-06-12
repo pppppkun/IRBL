@@ -19,5 +19,7 @@ public interface RepoMapper {
     Long findRepoIdByGitUrl(String gitUrl);
     int updateDescription(Long repoId, String description);
     Repository findRepoById(Long repoId);
+    int updateQueryNum(String gitUrl);
+    int findQueryNumByGitUrl(String gitUrl);
 
 }
