@@ -40,15 +40,6 @@ public class ManageServiceTest {
      *     List<Repository> getAllRepo();
      *     ResponseVO modifyRepo(ModifyRepoVO modifyRepoVO);
      */
-    @Before
-    public void setUp(){
-        repository = new Repository();
-        repository.setStartTime(new Date(System.currentTimeMillis()));
-        repository.setGitUrl("xxx.xxx.xxx");
-        repository.setQueryNum(12);
-        repository.setDescription("Test");
-        repository.setState(RepoState.Dev);
-    }
 
     @Test
     public void Test1registerRepo(){
