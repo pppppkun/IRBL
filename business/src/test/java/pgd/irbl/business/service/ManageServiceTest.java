@@ -76,7 +76,7 @@ public class ManageServiceTest {
     public void Test5getAllSimpleRepo(){
         List<SimpleRepoVo> simpleRepoVos = manageService.getAllSimpleRepo();
         Assert.assertEquals(3, simpleRepoVos.size());
-        Assert.assertEquals("ssh://git@212.129.149.40:222/pgd/backend-irbl.git", simpleRepoVos.get(0).getGitUrl());
+        Assert.assertEquals("ssh://git@212.129.149.40:222/pgd/frontend-irbl.git", simpleRepoVos.get(0).getGitUrl());
     }
 
 }
