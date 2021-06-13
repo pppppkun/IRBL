@@ -22,6 +22,7 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -128,7 +129,7 @@ public class ManageServiceImpl implements ManageService {
                     SimpleCommitMessageVO simpleCommitMessageVO = new SimpleCommitMessageVO();
                     simpleCommitMessageVO.setCommitId(commit.getName());
                     simpleCommitMessageVO.setMessage(commit.getShortMessage());
-                    simpleCommitMessageVO.setTime(new Timestamp(commit.getCommitTime()).toString());
+                    simpleCommitMessageVO.setTime(new java.util.Date(commit.getCommitTime()*1000L).toString());
                     commitMessageVOS.add(simpleCommitMessageVO);
                     log.info("add " + commit.getName());
                 }
