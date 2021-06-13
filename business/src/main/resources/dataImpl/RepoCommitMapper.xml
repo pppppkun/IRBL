@@ -21,6 +21,10 @@
         </foreach>
     </insert>
 
+    <select id="getAllCommitIdByGitUrl" resultType="java.lang.String" >
+        select commit from RepoCommit where gitUrl=#{gitUrl}
+    </select>
+
     <resultMap id="RepoCommit" type="pgd.irbl.business.po.RepoCommit">
         <id column="id" property="id"/>
         <result column="commit" property="commit"/>

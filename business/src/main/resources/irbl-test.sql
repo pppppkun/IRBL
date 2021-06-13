@@ -61,3 +61,8 @@ create table `RepoCommit`
     primary key (`id`)
 ) engine = InnoDB
   default charset = utf8;
+
+insert into `RepoCommit`(id, gitUrl, commit)
+VALUES (1, 'ssh://git@212.129.149.40:222/pgd/backend-irbl.git', '123'),
+       (2, 'ssh://git@212.129.149.40:222/pgd/backend-irbl.git', '456'),
+       (3, 'ssh://git@212.129.149.40:222/pgd/backend-irbl.git', '789');

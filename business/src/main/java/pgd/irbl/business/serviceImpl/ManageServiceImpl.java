@@ -1,9 +1,10 @@
 package pgd.irbl.business.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.revwalk.DepthWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.util.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
 
@@ -104,6 +105,41 @@ public class ManageServiceImpl implements ManageService {
     public List<Repository> getAllRepo() {
         try {
             return repoMapper.selectAllRepo();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public ResponseVO getRepoCommit(Long repoId) {
+        String gitUrl = repoMapper.findGitUrlByRepoId(repoId);
+        if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
+        Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        File gitDir = new File(REPO_DIRECTION + repoName+"/.git");
+        List<SimpleCommitMessageVO> commitMessageVOS = new LinkedList<>();
+        try (org.eclipse.jgit.lib.Repository repository = new FileRepository(gitDir)) {
+            Git git = new Git(repository);
+            Iterable<RevCommit> gitCommits = git.log().all().call();
+            for (RevCommit commit : gitCommits) {
+                if(commits.contains(commit.getName())){
+                    SimpleCommitMessageVO simpleCommitMessageVO = new SimpleCommitMessageVO();
+                    simpleCommitMessageVO.setCommitId(commit.getName());
+                    simpleCommitMessageVO.setMessage(commit.getShortMessage());
+                    simpleCommitMessageVO.setTime(new Timestamp(commit.getCommitTime()).toString());
+                }
+            }
+        } catch (IOException | GitAPIException e) {
+            e.printStackTrace();
+        }
+        return ResponseVO.buildSuccess(commitMessageVOS);
+    }
+
+    @Override
+    public List<SimpleRepoVo> getAllSimpleRepo(){
+        try {
+            return repoMapper.getAllSimpleRepo();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

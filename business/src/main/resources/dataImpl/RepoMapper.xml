@@ -27,7 +27,7 @@
     <select id="findGitUrlByRepoId" resultType="java.lang.String">
         select gitUrl
         from Repo
-        where id=#{repoId}
+        where id = #{repoId}
     </select>
 
     <update id="updateDescription">
@@ -38,18 +38,25 @@
 
     <update id="updateQueryNum">
         update Repo
-        set queryNum=queryNum+1
-        where gitUrl=#{gitUrl}
+        set queryNum=queryNum + 1
+        where gitUrl = #{gitUrl}
     </update>
 
     <select id="findQueryNumByGitUrl" resultType="java.lang.Integer">
-        select queryNum from Repo where gitUrl=#{gitUrl}
+        select queryNum
+        from Repo
+        where gitUrl = #{gitUrl}
     </select>
 
     <select id="findRepoById" resultMap="Repo">
         select *
         from Repo
         where id = #{repoId}
+    </select>
+
+    <select id="getAllSimpleRepo" resultMap="SimpleRepo">
+        select id, gitUrl
+        from Repo;
     </select>
 
     <resultMap id="Repo" type="pgd.irbl.business.po.Repository">
@@ -60,6 +67,11 @@
         <result column="queryNum" property="queryNum"/>
         <result column="startTime" property="startTime"/>
         <result column="endTime" property="endTime"/>
+    </resultMap>
+
+    <resultMap id="SimpleRepo" type="pgd.irbl.business.vo.SimpleRepoVo">
+        <id column="id" property="id"/>
+        <result column="gitUrl" property="gitUrl"/>
     </resultMap>
 
 </mapper>

@@ -16,5 +16,5 @@ public interface RepoCommitMapper {
     String findHoleCommitId(String commit);
     int insertRepoCommit(RepoCommit repoCommit);
     int insertRepoCommitByList(List<RepoCommit> repoCommitList);
-
+    List<String> getAllCommitIdByGitUrl(String gitUrl);
 }

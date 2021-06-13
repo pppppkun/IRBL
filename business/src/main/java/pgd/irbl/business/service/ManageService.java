@@ -16,5 +16,7 @@ public interface ManageService {
     List<Repository> getAllRepo();
     ResponseVO modifyRepo(ModifyRepoVO modifyRepoVO);
     ResponseVO dealWebhook(WebhookVO webhookVO);
+    List<SimpleRepoVo> getAllSimpleRepo();
+    ResponseVO getRepoCommit(Long repoId);
 
 }

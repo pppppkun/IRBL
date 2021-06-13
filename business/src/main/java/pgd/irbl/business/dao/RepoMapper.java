@@ -2,6 +2,7 @@ package pgd.irbl.business.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import pgd.irbl.business.po.Repository;
+import pgd.irbl.business.vo.SimpleRepoVo;
 
 import java.util.List;
 
@@ -21,5 +22,6 @@ public interface RepoMapper {
     Repository findRepoById(Long repoId);
     int updateQueryNum(String gitUrl);
     int findQueryNumByGitUrl(String gitUrl);
+    List<SimpleRepoVo> getAllSimpleRepo();
 
 }

@@ -11,15 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pgd.irbl.business.po.Repository;
-import pgd.irbl.business.vo.DeleteRepoVO;
-import pgd.irbl.business.vo.ModifyRepoVO;
-import pgd.irbl.business.vo.RegisterRepoVO;
+import pgd.irbl.business.vo.*;
 import pgd.irbl.business.enums.RepoState;
-import pgd.irbl.business.vo.ResponseVO;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
 
 import java.sql.Date;
+import java.util.List;
 
 /**
  * @Author: pkun
@@ -73,5 +71,12 @@ public class ManageServiceTest {
         Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
     }
 
+
+    @Test
+    public void Test5getAllSimpleRepo(){
+        List<SimpleRepoVo> simpleRepoVos = manageService.getAllSimpleRepo();
+        Assert.assertEquals(3, simpleRepoVos.size());
+        Assert.assertEquals("ssh://git@212.129.149.40:222/pgd/backend-irbl.git", simpleRepoVos.get(0).getGitUrl());
+    }
 
 }
