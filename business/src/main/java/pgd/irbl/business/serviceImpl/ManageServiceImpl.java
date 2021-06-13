@@ -117,6 +117,7 @@ public class ManageServiceImpl implements ManageService {
         if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        log.info(repoName);
         File gitDir = new File(REPO_DIRECTION + repoName+"/.git");
         List<SimpleCommitMessageVO> commitMessageVOS = new LinkedList<>();
         try (org.eclipse.jgit.lib.Repository repository = new FileRepository(gitDir)) {
@@ -128,6 +129,7 @@ public class ManageServiceImpl implements ManageService {
                     simpleCommitMessageVO.setCommitId(commit.getName());
                     simpleCommitMessageVO.setMessage(commit.getShortMessage());
                     simpleCommitMessageVO.setTime(new Timestamp(commit.getCommitTime()).toString());
+                    log.info("add" + commit.getName());
                 }
             }
         } catch (IOException | GitAPIException e) {
