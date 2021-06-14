@@ -1,29 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="pgd.irbl.business.Dao.RepoMapper">
+<mapper namespace="pgd.irbl.business.dao.RepoMapper">
 
     <select id="selectAllRepo" resultMap="Repo">
-        select * from Repo;
+        select *
+        from Repo;
     </select>
 
-    <insert id="insertRepo" useGeneratedKeys="true" keyProperty="Id">
-        insert into Repo(description, gitUrl, status, startTime, endTime) VALUES
-            (#{description}, #{gitUrl}, #{status}, #{startTime}, #{endTime})
+    <insert id="insertRepo" useGeneratedKeys="true" keyProperty="id">
+        insert into Repo(description, gitUrl, state, startTime, endTime, queryNum)
+        VALUES (#{description}, #{gitUrl}, #{state}, #{startTime}, #{endTime}, #{queryNum})
     </insert>
 
     <delete id="deleteRepo">
-        delete from Repo where id=#{repoId}
+        delete
+        from Repo
+        where id = #{repoId}
     </delete>
 
+    <select id="findRepoIdByGitUrl" resultType="java.lang.Long">
+        select id
+        from Repo
+        where gitUrl = #{gitUrl}
+    </select>
 
-    <resultMap id="Repo" type="pgd.irbl.business.PO.Repository">
+    <select id="findGitUrlByRepoId" resultType="java.lang.String">
+        select gitUrl
+        from Repo
+        where id = #{repoId}
+    </select>
+
+    <update id="updateDescription">
+        update Repo
+        set description=#{description}
+        where id = #{repoId}
+    </update>
+
+    <update id="updateQueryNum">
+        update Repo
+        set queryNum=queryNum + 1
+        where gitUrl = #{gitUrl}
+    </update>
+
+    <select id="findQueryNumByGitUrl" resultType="java.lang.Integer">
+        select queryNum
+        from Repo
+        where gitUrl = #{gitUrl}
+    </select>
+
+    <select id="findRepoById" resultMap="Repo">
+        select *
+        from Repo
+        where id = #{repoId}
+    </select>
+
+    <select id="getAllSimpleRepo" resultMap="SimpleRepo">
+        select id, gitUrl
+        from Repo;
+    </select>
+
+    <resultMap id="Repo" type="pgd.irbl.business.po.Repository">
         <id column="id" property="id"/>
         <result column="gitUrl" property="gitUrl"/>
         <result column="description" property="description"/>
-        <result column="status" property="status"/>
+        <result column="state" property="state"/>
         <result column="queryNum" property="queryNum"/>
         <result column="startTime" property="startTime"/>
         <result column="endTime" property="endTime"/>
+    </resultMap>
+
+    <resultMap id="SimpleRepo" type="pgd.irbl.business.vo.SimpleRepoVo">
+        <id column="id" property="id"/>
+        <result column="gitUrl" property="gitUrl"/>
     </resultMap>
 
 </mapper>

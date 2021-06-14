@@ -1,6 +1,7 @@
-FROM openjdk:8u262-jre-slim-buster
+FROM registry.cn-hangzhou.aliyuncs.com/irbl/irbl-business-env:latest
 ADD ./target/irbl-business.jar /app/irbl-business.jar
 ADD runboot.sh /app/
+ADD reset.sh /app/
 WORKDIR /app
 RUN chmod a+x runboot.sh
 CMD /app/runboot.sh

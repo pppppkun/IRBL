@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "pgd.irbl.business.serviceImpl";
+option java_outer_classname = "CalcMsgProto";
+
+package serviceImpl;
+
+// 缺陷报告查询服务定义
+service Calculator {
+  // Sends a greeting
+  rpc calculate (CalcRequest) returns (CalcReply) {}
+}
+
+// 请求计算时的参数
+message CalcRequest {
+  string file_path = 1;         // project root file path
+  string bug_report_path = 2;   // bug report path
+}
+
+// 文件得分
+message FileScore{
+    string file_path = 1;
+    double score = 2;
+}
+
+// 计算后返回的参数
+message CalcReply {
+  int32 succeed = 1;
+  repeated FileScore evaluation = 2;
+}
+

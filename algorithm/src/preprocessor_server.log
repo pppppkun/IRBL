@@ -1,0 +1,19 @@
+irbl
+irbl
+irbl1
+Traceback (most recent call last):
+  File "preprocessor_server.py", line 29, in <module>
+    serve()
+  File "preprocessor_server.py", line 24, in serve
+    server.wait_for_termination()
+  File "/Users/pkun/opt/anaconda3/lib/python3.8/site-packages/grpc/_server.py", line 977, in wait_for_termination
+    return _common.wait(self._state.termination_event.wait,
+  File "/Users/pkun/opt/anaconda3/lib/python3.8/site-packages/grpc/_common.py", line 141, in wait
+    _wait_once(wait_fn, MAXIMUM_WAIT_TIMEOUT, spin_cb)
+  File "/Users/pkun/opt/anaconda3/lib/python3.8/site-packages/grpc/_common.py", line 106, in _wait_once
+    wait_fn(timeout=timeout)
+  File "/Users/pkun/opt/anaconda3/lib/python3.8/threading.py", line 558, in wait
+    signaled = self._cond.wait(timeout)
+  File "/Users/pkun/opt/anaconda3/lib/python3.8/threading.py", line 306, in wait
+    gotit = waiter.acquire(True, timeout)
+KeyboardInterrupt

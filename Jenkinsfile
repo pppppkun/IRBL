@@ -10,7 +10,7 @@ pipeline {
     options {
         timestamps()    //设置在项目打印日志时带上对应时间
         disableConcurrentBuilds()   //不允许同时执行流水线，被用来防止同时访问共享资源等
-        timeout(time: 10, unit: 'MINUTES')   // 设置流水线运行超过n分钟，Jenkins将中止流水线
+//         timeout(time: 10, unit: 'MINUTES')   // 设置流水线运行超过n分钟，Jenkins将中止流水线
 //         buildDiscarder(logRotator(numToKeepStr: '20'))   // 表示保留n次构建历史
     }
 
@@ -23,6 +23,19 @@ pipeline {
                 echo "image_repository: ${registryUrl}"
                 echo "${branch}"
            }
+        }
+        stage('algorithm Build') {
+            when {
+                environment name: 'branch', value: 'dev'
+            }
+            agent{
+                label 'master'
+            }
+            steps{
+                echo 'Build Algorithm Module'
+                sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
+                sh "cd algorithm && docker build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
+            }
         }
         stage('Maven Build and Test') {
             when {
@@ -38,7 +51,6 @@ pipeline {
                 echo 'Business Module Test And Build'
                 sh 'mvn -pl business clean package jacoco:report -Dmaven.test.failure.ignore=true'
                 jacoco()
-//                 sh 'mvn -pl business package -Dmaven.test.skip=true'
             }
 	    }
         stage('Image Build'){
@@ -70,6 +82,7 @@ pipeline {
                 echo 'Image Push Stage'
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh "docker push ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
+                sh "docker push ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
         }
         stage('deploy'){
@@ -85,8 +98,12 @@ pipeline {
             steps{
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
                 sh 'docker pull ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}'
-                sh "if (ps -ef| grep java|grep irbl-business) then (docker container stop irbl-business && docker container rm irbl-business) fi"
-                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
+                sh 'docker pull ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}'
+                sh "if ( docker ps | grep irbl-business ) then (docker container stop irbl-business && docker container rm irbl-business) fi"
+//                 sh "if (ps -ef| grep python | grep irbl-algorithm) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
+                sh "if ( docker ps | grep irbl-algorithm ) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
+                sh "docker run -p 50053:50053 -p 50051:50051 --name irbl-algorithm -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
+                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
             }
         }
     }

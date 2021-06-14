@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "pgd.irbl.business.serviceImpl";
+option java_outer_classname = "PreProcessProto";
+
+package serviceImpl;
+
+// 预处理服务定义
+service PreProcessor {
+  // preprocess
+  rpc proto_preprocess (PreProcessRequest) returns (PreProcessReply) {}
+}
+
+// 请求预处理时的参数
+message PreProcessRequest {
+  string file_path = 1;         // project root file path
+}
+
+// 预处理后返回的参数
+message PreProcessReply {
+  int32 succeed = 1;
+}
+
