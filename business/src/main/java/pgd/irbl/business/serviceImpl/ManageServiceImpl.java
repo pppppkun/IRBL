@@ -165,7 +165,9 @@ public class ManageServiceImpl implements ManageService {
         log.info(filepath);
         log.info(commitId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
+        log.info(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        log.info(repoName);
         try{
             Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
             InputStream inputStream = process.getInputStream();
