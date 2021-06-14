@@ -1,11 +1,9 @@
 package pgd.irbl.business.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pgd.irbl.business.service.ManageService;
+import pgd.irbl.business.vo.FilePath;
 import pgd.irbl.business.vo.ResponseVO;
 
 /**
@@ -27,6 +25,11 @@ public class RepositoryController {
     @PostMapping("/{id}/commit/list")
     public ResponseVO getRepoCommit(@PathVariable("id") Long id){
         return manageService.getRepoCommit(id);
+    }
+
+    @PostMapping("/commit/{commitId}/file")
+    public ResponseVO getFileByCommitId(@RequestBody FilePath filePath, @PathVariable("commitId") String commitId){
+        return manageService.getFileByCommit(filePath.getPath(), commitId);
     }
 
 }

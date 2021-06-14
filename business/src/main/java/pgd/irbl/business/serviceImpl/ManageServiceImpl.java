@@ -19,8 +19,11 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -155,6 +158,27 @@ public class ManageServiceImpl implements ManageService {
         int ret = repoMapper.updateDescription(modifyRepoVO.getRepoId(), modifyRepoVO.getDescription());
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(MODIFY_SUCCESS);
+    }
+
+    @Override
+    public ResponseVO getFileByCommit(String filepath, String commitId) {
+        String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+        try{
+            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
+            InputStream inputStream = process.getInputStream();
+            process.waitFor();
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                bufferedReader.lines().forEach(System.out::println);
+            }
+            process.destroy();
+            Path path = Paths.get(REPO_DIRECTION + repoName + "/" + filepath);
+            String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+            return ResponseVO.buildSuccess(s);
+        }catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ResponseVO.buildFailure("文件不存在");
     }
 
     @Override

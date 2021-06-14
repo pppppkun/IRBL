@@ -18,5 +18,6 @@ public interface ManageService {
     ResponseVO dealWebhook(WebhookVO webhookVO);
     List<SimpleRepoVo> getAllSimpleRepo();
     ResponseVO getRepoCommit(Long repoId);
+    ResponseVO getFileByCommit(String filepath, String commitId);
 
 }
