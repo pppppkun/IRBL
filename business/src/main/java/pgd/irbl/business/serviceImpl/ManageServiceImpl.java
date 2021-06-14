@@ -162,6 +162,8 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO getFileByCommit(String filepath, String commitId) {
+        log.info(filepath);
+        log.info(commitId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         try{
