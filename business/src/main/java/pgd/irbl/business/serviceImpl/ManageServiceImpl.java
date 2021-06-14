@@ -177,6 +177,7 @@ public class ManageServiceImpl implements ManageService {
             }
             process.destroy();
             Path path = Paths.get(REPO_DIRECTION + repoName + "/" + filepath);
+            log.info(REPO_DIRECTION + repoName + "/" + filepath);
             String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             return ResponseVO.buildSuccess(s);
         }catch (IOException | InterruptedException e) {
