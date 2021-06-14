@@ -8,8 +8,8 @@
     </select>
 
     <insert id="insertRepo" useGeneratedKeys="true" keyProperty="id">
-        insert into Repo(description, gitUrl, state, startTime, endTime)
-        VALUES (#{description}, #{gitUrl}, #{state}, #{startTime}, #{endTime})
+        insert into Repo(description, gitUrl, state, startTime, endTime, queryNum)
+        VALUES (#{description}, #{gitUrl}, #{state}, #{startTime}, #{endTime}, #{queryNum})
     </insert>
 
     <delete id="deleteRepo">
