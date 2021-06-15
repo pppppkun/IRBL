@@ -25,6 +25,7 @@ public class RecordController {
     public ResponseVO getUserAllRecord(HttpServletRequest request){
         String token = request.getHeader("irbl-token");
         Long userId = JwtUtil.verifyTokenAndGetUserId(token);
+        if(userId == null) return ResponseVO.buildFailure("登录过期，请重新登陆");
         return recordService.getUserAllRecord(userId);
     }
     @PostMapping("/queryRecord")
