@@ -137,7 +137,7 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId) {
-        String recordId = recordService.insertQueryRecord(userId, "未设置gitUrl", "未设置commitId", sourceCode.getOriginalFilename());
+        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
