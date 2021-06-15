@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @ApiOperation(value = "注册")
+    @ApiOperation(value = "注 册")
     public ResponseVO register(@RequestBody LoginRegisterVO registerVO){
         return userService.register(registerVO);
     }
