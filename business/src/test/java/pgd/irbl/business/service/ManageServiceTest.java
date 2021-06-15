@@ -71,12 +71,24 @@ public class ManageServiceTest {
         Assert.assertEquals(REPO_NO_EXISTS, manageService.modifyRepo(modifyRepoVO).getMessage());
     }
 
-
     @Test
     public void Test5getAllSimpleRepo(){
         List<SimpleRepoVo> simpleRepoVos = manageService.getAllSimpleRepo();
         Assert.assertEquals(3, simpleRepoVos.size());
         Assert.assertEquals("ssh://git@212.129.149.40:222/pgd/frontend-irbl.git", simpleRepoVos.get(0).getGitUrl());
+    }
+
+    @Test
+    public void Test6getCommit(){
+        RegisterRepoVO registerRepoVO = new RegisterRepoVO();
+        registerRepoVO.setDescription("xxxxxxx");
+        registerRepoVO.setGitUrl("https://gitee.com/dromara/hutool.git");
+        Assert.assertEquals(REGISTER_SUCCESS, manageService.registerRepo(registerRepoVO).getContent());
+        manageService.getRepoCommit(6L);
+        manageService.getFileByCommit("hutool-bom/pom.xml", "39269f0c9e7b38c2668bffbaba6a817d4c0779f0");
+        DeleteRepoVO deleteRepoVO = new DeleteRepoVO();
+        deleteRepoVO.setRepoId(6L);
+        Assert.assertEquals(DELETE_SUCCESS, manageService.deleteRepo(deleteRepoVO).getContent());
     }
 
 }

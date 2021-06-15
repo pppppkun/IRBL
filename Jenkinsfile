@@ -27,6 +27,7 @@ pipeline {
         stage('algorithm Build') {
             when {
                 environment name: 'branch', value: 'dev'
+                environment name: 'branch', value: 'master'
             }
             agent{
                 label 'master'
