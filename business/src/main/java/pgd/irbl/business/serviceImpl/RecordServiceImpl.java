@@ -128,6 +128,7 @@ public class RecordServiceImpl implements RecordService {
         Document document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
         assert document != null;
         String name = document.getString("name");
+        name = name.substring(0, name.length()-4);
         try{
             Path path = Paths.get(REPO_DIRECTION + name + "/" + filepath);
             log.info(REPO_DIRECTION + name + "/" + filepath);
