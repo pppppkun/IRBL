@@ -1,12 +1,10 @@
 package pgd.irbl.business.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.utils.JwtUtil;
+import pgd.irbl.business.vo.FilePath;
 import pgd.irbl.business.vo.QueryRecordVO;
 import pgd.irbl.business.vo.ResponseVO;
 
@@ -29,12 +27,16 @@ public class RecordController {
         Long userId = JwtUtil.verifyTokenAndGetUserId(token);
         return recordService.getUserAllRecord(userId);
     }
-
     @PostMapping("/queryRecord")
     public ResponseVO queryRecord(@RequestBody QueryRecordVO queryRecordVO){
         Object o = recordService.getQueryRecordById(queryRecordVO);
         if(o==null) return ResponseVO.buildFailure("_id不存在");
         else return ResponseVO.buildSuccess(o);
+    }
+
+    @PostMapping("/{id}/file")
+    public ResponseVO getQueryFile(@PathVariable("id") Long id, @RequestBody FilePath filePath){
+        return ResponseVO.buildSuccess();
     }
 
 }

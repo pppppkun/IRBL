@@ -8,9 +8,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.InsertOneResult;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.dto.RecordWithTime;
@@ -21,6 +23,10 @@ import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.vo.QueryRecordVO;
 import pgd.irbl.business.vo.ResponseVO;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +36,15 @@ import java.util.List;
  * @CreateTime: 2021-04-05 22:46
  */
 @Service
+@Slf4j
 public class RecordServiceImpl implements RecordService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Value("${repo_direction}")
+    private String REPO_DIRECTION;
+
 
     @Override
     public ResponseVO getUserAllRecord(Long userId) {
@@ -111,4 +122,20 @@ public class RecordServiceImpl implements RecordService {
         return NOT_MEET_EXPECTATIONS;
     }
 
+    @Override
+    public ResponseVO getFile(String filepath, String recordId) {
+        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+        Document document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
+        assert document != null;
+        String name = document.getString("name");
+        try{
+            Path path = Paths.get(REPO_DIRECTION + name + "/" + filepath);
+            log.info(REPO_DIRECTION + name + "/" + filepath);
+            String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+            return ResponseVO.buildSuccess(s);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseVO.buildFailure("文件不存在");
+    }
 }
