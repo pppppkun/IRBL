@@ -34,7 +34,6 @@ pipeline {
             steps{
                 echo 'Build Algorithm Module'
                 sh 'docker login  --username=${registry_user} --password=${registry_pass} ${registryUrl}'
-                sh "cd algorithm && docker build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
         }
         stage('Maven Build and Test') {
@@ -66,6 +65,7 @@ pipeline {
             steps{
                 echo 'Image Build Stage'
                 sh "cd business && docker build . -t ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
+                sh "cd algorithm && docker build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
         }
         stage('Image Push'){
