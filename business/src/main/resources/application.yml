@@ -6,6 +6,17 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+  mail:
+    host: smtp.exmail.qq.com #发送邮件服务器
+    username: 181250068@smail.nju.edu.cn #发送邮件的邮箱地址
+    password: li2000chuN@ #客户端授权码，不是邮箱密码,网易的是自己设置的
+    port: 465
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
 
 #file:
 #  path:

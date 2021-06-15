@@ -7,6 +7,8 @@ import org.eclipse.jgit.revwalk.DepthWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.dao.RepoCommitMapper;
 import pgd.irbl.business.dao.RepoMapper;
@@ -45,6 +47,12 @@ public class ManageServiceImpl implements ManageService {
 
     @Value("${repo_direction}")
     private String REPO_DIRECTION;
+
+    @Value("${spring.mail.username}")
+    private String from;
+
+    @Autowired
+    JavaMailSender javaMailSender;
 
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {
@@ -229,8 +237,36 @@ public class ManageServiceImpl implements ManageService {
         }catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            sendSimpleMail(webhookVO.getEmail(),"There is a webhook is been trigger! COME FROM PGD-IRBL","PGD-IRBL注意到已注册的仓库"+repoName+"收到一个WebHook，我们已经拉取最新的commit"+"("+webhookVO.getCommitId().substring(0,8)+")到我们的仓库中，欢迎进行Bug查询~");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
         return ResponseVO.buildSuccess();
     }
+
+    /**
+     * 发送简单的邮件
+     * @param to
+     * @param subject
+     * @param content
+     */
+    public void sendSimpleMail(String to, String subject, String content) {
+        //创建SimpleMailMessage对象
+        SimpleMailMessage message = new SimpleMailMessage();
+        //邮件发送人
+        message.setFrom(from);
+        //邮件接收人
+        message.setTo(to);
+        //邮件主题
+        message.setSubject(subject);
+        //邮件内容
+        message.setText(content);
+        //发送邮件
+        message.setSentDate(new Date(System.currentTimeMillis()));
+        javaMailSender.send(message);
+    }
+
 
     private static class SimpleProgressMonitor implements ProgressMonitor {
         int completed = 0;

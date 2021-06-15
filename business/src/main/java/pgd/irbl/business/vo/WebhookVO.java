@@ -11,5 +11,6 @@ public class WebhookVO {
 
     String commitId;
     String gitUrl;
+    String email;
 
 }
