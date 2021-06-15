@@ -35,8 +35,8 @@ public class RecordController {
     }
 
     @PostMapping("/{id}/file")
-    public ResponseVO getQueryFile(@PathVariable("id") Long id, @RequestBody FilePath filePath){
-        return ResponseVO.buildSuccess();
+    public ResponseVO getQueryFile(@PathVariable("id") String id, @RequestBody FilePath filePath){
+        return recordService.getFile(filePath.getPath(), id);
     }
 
 }
