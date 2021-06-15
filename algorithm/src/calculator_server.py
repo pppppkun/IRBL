@@ -19,6 +19,7 @@ class Calculator(calc_msg_pb2_grpc.CalculatorServicer):
         # return calc_msg_pb2.CalcReply(succeed=1, evaluation=[singleFileScore])
         fileScoreList_tuple = file_retrieval(request.bug_report_path, request.file_path)
         fileScores = []
+
         for fileScore in fileScoreList_tuple:
             fileScores.append(calc_msg_pb2.FileScore(file_path=fileScore[0], score=fileScore[1]))
         return calc_msg_pb2.CalcReply(succeed=1, evaluation=fileScores)
