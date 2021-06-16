@@ -34,7 +34,7 @@ public class JwtUtil {
             Map<String, Object> map = new HashMap<>();
             Date nowDate = new Date();
             // 过期时间 30min
-            Date expireDate = getAfterDate(nowDate, 0, 0, 0, 0, expireMin, 0);
+            Date expireDate = getAfterDate(nowDate, 0, 0, expireMin, 0, 0, 0);
             map.put("alg", "HS256");
             map.put("typ", "JWT");
             return JWT.create()
