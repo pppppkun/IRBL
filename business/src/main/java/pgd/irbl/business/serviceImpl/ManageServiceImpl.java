@@ -238,7 +238,7 @@ public class ManageServiceImpl implements ManageService {
             e.printStackTrace();
         }
         try {
-            sendSimpleMail(webhookVO.getEmail(),"There is a webhook is been trigger! COME FROM PGD-IRBL","PGD-IRBL注意到已注册的仓库"+repoName+"收到一个WebHook，我们已经拉取最新的commit"+"("+webhookVO.getCommitId().substring(0,8)+")到我们的仓库中，欢迎进行Bug查询~");
+            sendSimpleMail(webhookVO.getEmail(),"There's a webhook that's triggered! COME FROM PGD-IRBL","PGD-IRBL注意到已注册的仓库"+repoName+"发出了一个WebHook，我们已经拉取最新的commit"+"("+webhookVO.getCommitId().substring(0,8)+")到我们的仓库中，欢迎进行缺陷定位~");
         } catch (Exception e) {
             log.error(e.getMessage());
         }
