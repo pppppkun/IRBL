@@ -92,7 +92,8 @@ public class QueryServiceImpl implements QueryService {
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
         int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum);
+        //TODO ADD PATH HERE
+        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,null);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
 
@@ -139,7 +140,8 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId) {
-        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename());
+        //TODO ADD PATH HERE
+        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), null);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
