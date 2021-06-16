@@ -103,7 +103,7 @@ pipeline {
 //                 sh "if (ps -ef| grep python | grep irbl-algorithm) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
 //                 sh "if ( docker ps | grep irbl-algorithm ) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
                 sh 'sed -i "s#0.0.0#${BUILD_ID}#g" docker/dev/docker-compose.yml'
-                sh 'cd docker && cd dev && docker-compose stop && docker-compose up'
+                sh 'cd docker && cd dev && docker-compose down && docker-compose up'
             }
         }
     }
