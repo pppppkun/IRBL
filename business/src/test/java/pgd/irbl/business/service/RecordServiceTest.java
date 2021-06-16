@@ -113,7 +113,7 @@ public class RecordServiceTest {
 
     @Test
     public void Test5insertRecord() {
-        String recordId = recordService.insertQueryRecord(123123L, "1", "2", "www.baidu.com.git#12");
+        String recordId = recordService.insertQueryRecord(123123L, "1", "2", "www.baidu.com.git#12", "/data/source-code/");
         QueryRecordVO queryRecordVO = new QueryRecordVO();
         queryRecordVO.setRecordId(recordId);
         QueryRecord queryRecord = recordService.getQueryRecordById(queryRecordVO);
