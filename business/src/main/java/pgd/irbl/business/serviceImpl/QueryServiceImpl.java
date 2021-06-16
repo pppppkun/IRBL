@@ -219,6 +219,7 @@ public class QueryServiceImpl implements QueryService {
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
 
             } catch (Exception e) {
+                recordService.setQueryRecordFail(recordId);
                 e.printStackTrace();
             } finally {
                 // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
