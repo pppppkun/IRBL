@@ -2,6 +2,7 @@ package pgd.irbl.business.serviceImpl;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -39,6 +40,7 @@ import static pgd.irbl.business.constant.ManageConstant.*;
  * @CreateTime: 2021-04-06 20:20
  */
 @Service
+@Slf4j
 public class QueryServiceImpl implements QueryService {
 
     private static final Logger logger = Logger.getLogger(QueryServiceImpl.class.getName());
@@ -219,7 +221,6 @@ public class QueryServiceImpl implements QueryService {
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
 
             } catch (Exception e) {
-                recordService.setQueryRecordFail(recordId);
                 e.printStackTrace();
             } finally {
                 // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
@@ -228,6 +229,7 @@ public class QueryServiceImpl implements QueryService {
                 calcChannel.shutdownNow();
                 preProcessorChannel.shutdownNow();
             }
+            if(fileScoreList == null) recordService.setQueryRecordFail(recordId);
             List<pgd.irbl.business.vo.FileScore> voFileScoreList = new ArrayList<>();
             for (FileScore filescore : fileScoreList) {
                 pgd.irbl.business.vo.FileScore tmpVOFileScore = new pgd.irbl.business.vo.FileScore();
