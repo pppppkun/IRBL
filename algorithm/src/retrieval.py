@@ -39,7 +39,8 @@ def file_retrieval(report_path, project_path, python_cache_path=DEPLOY_DATA_PATH
     vsm_similarity_score = calculating_vsm_similarity(source_codes, bug_reports)[0]
 
     final_score = PARMAS[0] * np.array(token_match_score) + PARMAS[1] * np.array(vsm_similarity_score)
-    final_score = final_score / final_score.max()
+    if final_score.max() != 0:
+        final_score = final_score / final_score.max()
     return [(item[0][len(python_cache_path):-4] + ".java", item[1]) for item in
             sorted(zip(list(source_codes.keys()), final_score), key=lambda x: x[1], reverse=True)]
     # return list(sorted(zip(list(source_codes.keys()), final_score), key=lambda x: x[1], reverse=True))
