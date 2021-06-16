@@ -201,12 +201,12 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO) {
-        int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         String gitUrl = repoMapper.findGitUrlByRepoId(deleteRepoVO.getRepoId());
         if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         log.info("why bug");
         log.info(gitUrl);
         log.info("why bug");
+        int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         try{
