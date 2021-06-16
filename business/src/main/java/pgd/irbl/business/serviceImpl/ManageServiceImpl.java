@@ -30,6 +30,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static pgd.irbl.business.constant.ManageConstant.*;
 
@@ -71,6 +72,11 @@ public class ManageServiceImpl implements ManageService {
         }
         if (repoMapper.findRepoIdByGitUrl(registerRepoVO.getGitUrl()) != null)
             return ResponseVO.buildFailure(REPO_EXISTS);
+        // ([A-Za-z0-9]+@|http(|s)\:\/\/)([A-Za-z0-9.]+)(:|/)([A-Za-z0-9\/]+)(\.git)
+        String gitUrl = registerRepoVO.getGitUrl();
+        String pattern = "([A-Za-z0-9]+@|http(|s)\\:\\/\\/)([A-Za-z0-9.]+)(:|/)([A-Za-z0-9\\/]+)(\\.git)";
+        boolean isMatch = Pattern.matches(pattern, gitUrl);
+        if(!isMatch) return ResponseVO.buildFailure("Git地址不正确~");
         Repository repository = new Repository();
         repository.setStartTime(new Date(System.currentTimeMillis()));
         repository.setQueryNum(0);
@@ -81,7 +87,6 @@ public class ManageServiceImpl implements ManageService {
         log.info(repository.toString());
         try {
             try {
-                String gitUrl = repository.getGitUrl();
                 String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
                 File f = new File(REPO_DIRECTION + repoName);
                 Git result = Git.cloneRepository()
