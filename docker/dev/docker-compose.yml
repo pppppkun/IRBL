@@ -12,3 +12,6 @@ services:
      ports:
          - 50053:50053
          - 50051:50051
+     volumes:
+         - /log:/log
+         - /data:/data
