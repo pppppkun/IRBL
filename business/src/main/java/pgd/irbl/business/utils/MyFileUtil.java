@@ -17,15 +17,13 @@ import java.util.zip.ZipFile;
 /**
  * @author qin
  * @description save file
- * @date 2021-04-06
+ * @CreateDate 2021-04-06
+ * @ModifyDate 2021-06-16
  */
 @Slf4j
 public class MyFileUtil {
 
-//    private static String savePath;
-
     public static String saveFile(String rootPath, MultipartFile multipartFile) throws IOException {
-//        return saveFile(rootPath, multipartFile, multipartFile.getName() + System.currentTimeMillis()%1000 );
         return saveFile(rootPath, multipartFile, multipartFile.getName());
     }
 
@@ -53,27 +51,21 @@ public class MyFileUtil {
         return fileName.substring(0, fileName.length() - 4);
     }
 
-//    public static void unZip(String destinationDir, String jarPath) throws IOException {
-//        File file = new File(jarPath);
-//        ZipFile zipFile = new ZipFile(file);
-
-    public static void unZip(String descDir, String zipPath) throws IOException {
+    public static void unZip(String destDir, String zipPath) throws IOException {
         File fileZip = new File(zipPath);
         ZipFile zip = new ZipFile(fileZip);
 //            ZipFile zip = new ZipFile(file, Charset.forName("GBK"));//解决中文文件夹乱码
         String name = zip.getName().substring(zip.getName().lastIndexOf(File.separatorChar) + 1, zip.getName().lastIndexOf('.'));
-
-        File pathFile = new File(descDir + name);
+        File pathFile = new File(destDir + name);
         if (!pathFile.exists()) {
             pathFile.mkdirs();
         }
-
         for (Enumeration<? extends ZipEntry> entries = zip.entries(); entries.hasMoreElements(); ) {
             ZipEntry entry = entries.nextElement();
             String zipEntryName = entry.getName();
             InputStream in = zip.getInputStream(entry);
-//            String outPath = (descDir + name + File.separatorChar + zipEntryName).replaceAll("\\*", "/");
-            String outPath = (descDir + name + File.separatorChar + zipEntryName).replaceAll("/", Matcher.quoteReplacement(File.separator));
+//            String outPath = (destDir + name + File.separatorChar + zipEntryName).replaceAll("\\*", "/");
+            String outPath = (destDir + name + File.separatorChar + zipEntryName).replaceAll("/", Matcher.quoteReplacement(File.separator));
 
             // 判断路径是否存在,不存在则创建文件路径
             File file = new File(outPath.substring(0, outPath.lastIndexOf(File.separatorChar)));
@@ -86,7 +78,6 @@ public class MyFileUtil {
             }
             // 输出文件路径信息
 //			System.out.println(outPath);
-
             FileOutputStream out = new FileOutputStream(outPath);
             byte[] buf1 = new byte[1024];
             int len;
@@ -100,13 +91,4 @@ public class MyFileUtil {
         return;
     }
 
-
-//    public static void setSavePath(String savePath) {
-//        MyFileUtil.savePath = savePath;
-//    }
-//
-//    public static String getSavePath() {
-//        System.out.println(savePath);
-//        return savePath;
-//    }
 }

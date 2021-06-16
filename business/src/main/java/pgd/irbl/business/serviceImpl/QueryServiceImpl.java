@@ -38,6 +38,7 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 /**
  * @Author: qin
  * @CreateTime: 2021-04-06 20:20
+ * @ModifyTime: 2021-06-16 23:20
  */
 @Service
 @Slf4j
@@ -75,14 +76,12 @@ public class QueryServiceImpl implements QueryService {
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {this.repoMapper = repoMapper;}
 
-
     @Value("${target.preProcessor}")
     String targetPreProcessor;
 
     @Value("${repo_direction}")
     String repoDirection;
 
-    Thread t;
     @Autowired
     ExecutorService executor;
 
@@ -146,7 +145,7 @@ public class QueryServiceImpl implements QueryService {
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
-        // save file  20210418 18:24
+        // save file
         String bugReportFileName = null, codeDir = null;
         try {
             logger.info(bugReport.getOriginalFilename());
@@ -164,17 +163,12 @@ public class QueryServiceImpl implements QueryService {
             recordService.setQueryRecordFail(recordId);
             return ResponseVO.buildFailure(QUERY_FAIL);
         }
-
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
         executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
-        // 暴力了
-//        t = new Thread(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
-//        t.setName(recordId);
-//        t.start();
         logger.info(" new PreprocessAndCalc thread submit");
-
         assert resCode.equals(0);
+
         return ResponseVO.buildSuccess(recordId);
     }
 
