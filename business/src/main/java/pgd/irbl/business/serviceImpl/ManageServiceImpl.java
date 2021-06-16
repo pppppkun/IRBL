@@ -142,9 +142,9 @@ public class ManageServiceImpl implements ManageService {
                     simpleCommitMessageVO.setMessage(commit.getShortMessage());
                     simpleCommitMessageVO.setTime(new java.util.Date(commit.getCommitTime()*1000L).toString());
                     commitMessageVOS.add(simpleCommitMessageVO);
-                    log.info("add " + commit.getName());
                 }
             }
+            log.info("add commit into databases");
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
