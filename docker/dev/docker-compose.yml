@@ -1,10 +1,10 @@
-version: '1'
+version: '2'
 services:
   irbl-business:
      image:     registry.cn-hangzhou.aliyuncs.com/irbl/irbl-business:0.0.0
      ports:
          - 8080:8080
-     volumns:
+     volumes:
          - /log:/log
          - /data:/data
   irbl-algorithm:
