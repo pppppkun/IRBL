@@ -139,8 +139,10 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId) {
+        String currentTime = String.valueOf(System.currentTimeMillis());
         //TODO ADD PATH HERE
-        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), null);
+        String zipFileName = currentTime+".zip";
+        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), zipFileName);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
@@ -149,9 +151,9 @@ public class QueryServiceImpl implements QueryService {
         String bugReportFileName = null, codeDir = null;
         try {
             logger.info(bugReport.getOriginalFilename());
-            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport" + System.currentTimeMillis());
+            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport-" + currentTime );
             logger.info(bugReportFileName + " bugReport save finish");
-            codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode);
+            codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode, zipFileName);
             logger.info(codeDir + " codeDir unzip finish");
         } catch (IOException e) {
             e.printStackTrace();

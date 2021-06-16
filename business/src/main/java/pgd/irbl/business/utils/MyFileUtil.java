@@ -42,9 +42,9 @@ public class MyFileUtil {
         return fileName;
     }
 
-    public static String unZipAndSaveDir(String codePath, MultipartFile multipartFile) throws IOException {
+    public static String unZipAndSaveDir(String codePath, MultipartFile multipartFile, String fileName) throws IOException {
         // 有重名的可能会出现 bug
-        String fileName = multipartFile.getOriginalFilename();
+//        String fileName = multipartFile.getOriginalFilename();
         File file = new File(codePath + fileName);
         multipartFile.transferTo(file);
         unZip(codePath, codePath + fileName);
