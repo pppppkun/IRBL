@@ -102,8 +102,8 @@ pipeline {
                 sh "if ( docker ps | grep irbl-business ) then (docker container stop irbl-business && docker container rm irbl-business) fi"
 //                 sh "if (ps -ef| grep python | grep irbl-algorithm) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
                 sh "if ( docker ps | grep irbl-algorithm ) then (docker container stop irbl-algorithm && docker container rm irbl-algorithm) fi"
-                sh "docker run -p 50053:50053 -p 50051:50051 --name irbl-algorithm -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
-                sh "docker run -p 8080:8080 --name irbl-business -v /log:/log -v /data:/data -d ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
+                sh 'sed -i "s#0.0.0#${BUILD_ID}#g" docker/dev/docker-compose.yml'
+                sh 'cd docker && cd dev && docker-compose up'
             }
         }
     }
