@@ -1,9 +1,7 @@
 package pgd.irbl.business.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
-import org.eclipse.jgit.revwalk.DepthWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -88,7 +84,7 @@ public class ManageServiceImpl implements ManageService {
         try {
             try {
                 String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-                File f = new File(REPO_DIRECTION + repoName);
+                File f = new File(REPO_DIRECTION + gitUrl.hashCode());
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
@@ -135,7 +131,7 @@ public class ManageServiceImpl implements ManageService {
         Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
-        File gitDir = new File(REPO_DIRECTION + repoName+"/.git");
+        File gitDir = new File(REPO_DIRECTION + gitUrl.hashCode()+"/.git");
         List<SimpleCommitMessageVO> commitMessageVOS = new LinkedList<>();
         try (org.eclipse.jgit.lib.Repository repository = new FileRepository(gitDir)) {
             Git git = new Git(repository);
@@ -182,15 +178,15 @@ public class ManageServiceImpl implements ManageService {
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
         try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
+            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + gitUrl.hashCode() + " " + commitId);
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
                 bufferedReader.lines().forEach(System.out::println);
             }
             process.destroy();
-            Path path = Paths.get(REPO_DIRECTION + repoName + "/" + filepath);
-            log.info(REPO_DIRECTION + repoName + "/" + filepath);
+            Path path = Paths.get(REPO_DIRECTION + gitUrl.hashCode() + filepath);
+            log.info(REPO_DIRECTION + gitUrl.hashCode() + filepath);
             String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             return ResponseVO.buildSuccess(s);
         }catch (IOException | InterruptedException e) {
@@ -210,7 +206,7 @@ public class ManageServiceImpl implements ManageService {
         if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         try{
-            Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + repoName);
+            Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + gitUrl.hashCode());
             process.waitFor();
             process.destroy();
         }catch (IOException | InterruptedException e) {

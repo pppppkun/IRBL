@@ -3,24 +3,15 @@ package pgd.irbl.business.serviceImpl;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryBuilder;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pgd.irbl.business.dao.RepoCommitMapper;
 import pgd.irbl.business.dao.RepoMapper;
-import pgd.irbl.business.po.User;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
-import pgd.irbl.business.serviceImpl.protobuf.PreProcessRequest;
 import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
@@ -92,12 +83,12 @@ public class QueryServiceImpl implements QueryService {
         int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         //TODO ADD PATH HERE
-        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,null);
+        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,gitUrl.hashCode()+"");
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
 
         try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + repoName + " " + commitId);
+            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + gitUrl.hashCode() + " " + commitId);
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -131,7 +122,7 @@ public class QueryServiceImpl implements QueryService {
         logger.info(bugReportFileName + " bugReport save finish");
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, repoName));
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, gitUrl.hashCode()+""));
         logger.info(" new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
         return ResponseVO.buildSuccess(recordId);
