@@ -1,14 +1,14 @@
-version: 0.0.0
+version: '1'
 services:
   irbl-business:
-     image: registry.cn-hangzhou.aliyuncs.com/irbl/irbl-business:0.0.0
+     image:     registry.cn-hangzhou.aliyuncs.com/irbl/irbl-business:0.0.0
      ports:
-         - "8080:8080"
+         - 8080:8080
      volumns:
          - /log:/log
          - /data:/data
   irbl-algorithm:
-     image: registry.cn-hangzhou.aliyuncs.com/irbl/irbl-algorithm:0.0.0
+     image:     registry.cn-hangzhou.aliyuncs.com/irbl/irbl-algorithm:0.0.0
      ports:
-         - "50053:50053"
-         - "50051:50051"
+         - 50053:50053
+         - 50051:50051
