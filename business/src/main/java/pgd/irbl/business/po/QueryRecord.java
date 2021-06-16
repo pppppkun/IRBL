@@ -34,6 +34,7 @@ public class QueryRecord {
     @ApiModelProperty("queryRecord的状态，目前有三种")
     QueryRecordState queryRecordState;
     String name;
+    String path;
 
     public QueryRecord() {
     }
@@ -51,6 +52,7 @@ public class QueryRecord {
         queryTime = new Timestamp(((Number) document.get("queryTime")).longValue());
         queryRecordState = QueryRecordState.valueOf(document.getString("queryRecordState"));
         name = document.getString("name");
+        path = document.getString("path");
     }
 
 }

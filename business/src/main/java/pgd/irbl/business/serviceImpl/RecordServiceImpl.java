@@ -69,14 +69,14 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public String insertQueryRecord(Long userId, String gitUrl, String commitId, String name) {
+    public String insertQueryRecord(Long userId, String gitUrl, String commitId, String name, String path) {
         QueryRecord queryRecord = new QueryRecord();
         queryRecord.setUserId(userId);
         queryRecord.setQueryTime(new Timestamp(System.currentTimeMillis()));
         queryRecord.setGitUrl(gitUrl);
         queryRecord.setRepoCommitId(commitId);
         queryRecord.setName(name);
-//        queryRecord.setRepoCommitId("未设置commitId");
+        queryRecord.setPath(path);//        queryRecord.setRepoCommitId("未设置commitId");
 //        queryRecord.setGitUrl("未设置gitUrl");
         queryRecord.setQueryRecordState(QueryRecordState.preprocessing);
         InsertOneResult oneResult =  mongoTemplate.getCollection("queryRecord").insertOne(Document.parse(JSONObject.toJSONString(queryRecord)));
