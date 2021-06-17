@@ -46,8 +46,8 @@ drop table if exists `RepoCommit`;
 create table `RepoCommit`
 (
     `id`          int(11) not null auto_increment,
-    `gitUrl`      varchar(255) default null,
-    `commit`      varchar(255) default null,
+    `gitUrl`      varchar(255) not null,
+    `commit`      varchar(255) not null,
     primary key (`id`)
 ) engine = InnoDB
   default charset = utf8;

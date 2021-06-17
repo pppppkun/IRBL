@@ -70,17 +70,10 @@ public class ManageServiceImpl implements ManageService {
             return ResponseVO.buildFailure(REPO_EXISTS);
         // ([A-Za-z0-9]+@|http(|s)\:\/\/)([A-Za-z0-9.]+)(:|/)([A-Za-z0-9\/]+)(\.git)
         String gitUrl = registerRepoVO.getGitUrl();
-        String pattern = "([A-Za-z0-9]+@|http(|s)\\:\\/\\/)([A-Za-z0-9.]+)(:|/)([A-Za-z0-9\\/]+)(\\.git)";
+        String pattern = "((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
         boolean isMatch = Pattern.matches(pattern, gitUrl);
         if(!isMatch) return ResponseVO.buildFailure("Git地址不正确~");
-        Repository repository = new Repository();
-        repository.setStartTime(new Date(System.currentTimeMillis()));
-        repository.setQueryNum(0);
-        repository.setState(RepoState.Dev);
-        repository.setDescription(registerRepoVO.getDescription());
-        repository.setGitUrl(registerRepoVO.getGitUrl());
-        int ret = repoMapper.insertRepo(repository);
-        log.info(repository.toString());
+
         try {
             try {
                 String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
@@ -103,11 +96,20 @@ public class ManageServiceImpl implements ManageService {
                 log.info("begin insert commit about " + gitUrl);
                 int i = repoCommitMapper.insertRepoCommitByList(repoCommits);
                 if(i != repoCommits.size()) return ResponseVO.buildFailure(REGISTER_FAIL);
-            } catch (GitAPIException ignored) {
+            } catch (GitAPIException e) {
+                e.printStackTrace();
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
+        Repository repository = new Repository();
+        repository.setStartTime(new Date(System.currentTimeMillis()));
+        repository.setQueryNum(0);
+        repository.setState(RepoState.Dev);
+        repository.setDescription(registerRepoVO.getDescription());
+        repository.setGitUrl(registerRepoVO.getGitUrl());
+        int ret = repoMapper.insertRepo(repository);
+        log.info(repository.toString());
         if (ret == 0) {
             log.error(repository.getGitUrl());
             return ResponseVO.buildFailure(REGISTER_FAIL);
