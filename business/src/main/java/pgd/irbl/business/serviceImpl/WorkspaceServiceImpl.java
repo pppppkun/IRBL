@@ -1,7 +1,6 @@
 package pgd.irbl.business.serviceImpl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Projections;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -10,13 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.dao.RepoMapper;
-import pgd.irbl.business.dto.RecordWithTime;
-import pgd.irbl.business.po.QueryRecord;
 import pgd.irbl.business.service.WorkspaceService;
-import pgd.irbl.business.vo.ResponseVO;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
