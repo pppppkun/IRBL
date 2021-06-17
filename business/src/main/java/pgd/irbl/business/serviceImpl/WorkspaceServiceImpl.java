@@ -45,8 +45,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     private String getRepoWorkspacePath(Long repositoryId){
         String gitUrl = repoMapper.findGitUrlByRepoId(repositoryId);
+        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(gitUrl);
-        return gitUrl.hashCode()+"";
+        return repoName + gitUrl.hashCode();
     }
 
     private String getRecordWorkspacePath(String recordId){

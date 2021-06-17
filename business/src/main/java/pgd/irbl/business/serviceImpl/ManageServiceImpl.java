@@ -77,7 +77,7 @@ public class ManageServiceImpl implements ManageService {
         try {
             try {
                 String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-                File f = new File(REPO_DIRECTION + gitUrl.hashCode());
+                File f = new File(REPO_DIRECTION + repoName + gitUrl.hashCode());
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
@@ -180,15 +180,15 @@ public class ManageServiceImpl implements ManageService {
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
         try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + gitUrl.hashCode() + " " + commitId);
+            Process process = Runtime.getRuntime().exec("./getFile.sh " + REPO_DIRECTION + repoName + gitUrl.hashCode() + " " + commitId + " " + filepath);
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
                 bufferedReader.lines().forEach(System.out::println);
             }
             process.destroy();
-            Path path = Paths.get(REPO_DIRECTION + gitUrl.hashCode() + filepath);
-            log.info(REPO_DIRECTION + gitUrl.hashCode() + filepath);
+            Path path = Paths.get(REPO_DIRECTION + filepath);
+            log.info(REPO_DIRECTION + filepath);
             String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             return ResponseVO.buildSuccess(s);
         }catch (IOException | InterruptedException e) {
@@ -207,7 +207,8 @@ public class ManageServiceImpl implements ManageService {
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
         try{
-            Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + gitUrl.hashCode());
+            String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
+            Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + repoName + gitUrl.hashCode());
             process.waitFor();
             process.destroy();
         }catch (IOException | InterruptedException e) {

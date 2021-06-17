@@ -88,7 +88,7 @@ public class QueryServiceImpl implements QueryService {
         repoMapper.updateQueryNum(gitUrl);
 
         try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + gitUrl.hashCode() + " " + commitId);
+            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -122,7 +122,7 @@ public class QueryServiceImpl implements QueryService {
         logger.info(bugReportFileName + " bugReport save finish");
         //create new Thread and run
         logger.info(" new PreprocessAndCalc thread creat");
-        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, gitUrl.hashCode()+""));
+        executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, recordId));
         logger.info(" new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
         return ResponseVO.buildSuccess(recordId);
