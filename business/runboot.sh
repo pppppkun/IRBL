@@ -1,1 +1,1 @@
-java -Duser.timezone=Asia/Shanghai -Djava.security.egd=file:/dev/./urandom -jar /app/irbl-business.jar > /log/irbl-business.jar
+java -Duser.timezone=Asia/Shanghai -Djava.security.egd=file:/dev/./urandom -jar /app/irbl-business.jar > /log/irbl-business.log

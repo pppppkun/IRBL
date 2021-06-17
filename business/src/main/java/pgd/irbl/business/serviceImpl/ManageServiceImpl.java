@@ -182,7 +182,7 @@ public class ManageServiceImpl implements ManageService {
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
         try{
-            Process process = Runtime.getRuntime().exec("./getFile.sh " + REPO_DIRECTION + repoName + gitUrl.hashCode() + " " + commitId + " " + filepath);
+            Process process = Runtime.getRuntime().exec("./getFile.sh " + REPO_DIRECTION + repoName + gitUrl.hashCode() + " " + commitId + " " + filepath.substring(1));
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
