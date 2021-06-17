@@ -26,7 +26,7 @@ public class WorkspaceController {
         if (recordId.equals("null")) flag = 0;
         String path = workspaceService.getWorkspacePath(repositoryId, flag);
         response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-        response.setHeader("Location", "http://116.85.66.200:9001/?folder=/root/project/" + path);
+        response.setHeader("Location", "http://116.85.66.200:9001/?folder=/root/project" + path + "/");
     }
 
 }
