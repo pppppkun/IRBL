@@ -127,12 +127,12 @@ public class RecordServiceImpl implements RecordService {
         MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
         Document document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
         assert document != null;
-        String name = document.getString("name");
-        name = name.substring(0, name.length()-4);
+        String path = document.getString("path");
+        path = path.substring(0, path.length()-4);
         try{
-            Path path = Paths.get(REPO_DIRECTION + name + "/" + filepath);
-            log.info(REPO_DIRECTION + name + "/" + filepath);
-            String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+            Path path_ = Paths.get(REPO_DIRECTION + path + "/" + filepath);
+            log.info(REPO_DIRECTION + path + "/" + filepath);
+            String s = new String(Files.readAllBytes(path_), StandardCharsets.UTF_8);
             return ResponseVO.buildSuccess(s);
         }catch (Exception e) {
             e.printStackTrace();
