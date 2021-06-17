@@ -204,7 +204,6 @@ public class ManageServiceImpl implements ManageService {
         log.info("why bug");
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
-        String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         try{
             Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + gitUrl.hashCode());
             process.waitFor();
@@ -212,7 +211,8 @@ public class ManageServiceImpl implements ManageService {
         }catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        repoCommitMapper.deleteByGitUrl(gitUrl);
+        int i = repoCommitMapper.deleteByGitUrl(gitUrl);
+        log.info("delete " + i + " commit message");
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(DELETE_SUCCESS);
     }

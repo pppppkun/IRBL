@@ -223,7 +223,9 @@ public class QueryServiceImpl implements QueryService {
             for (FileScore filescore : fileScoreList) {
                 pgd.irbl.business.vo.FileScore tmpVOFileScore = new pgd.irbl.business.vo.FileScore();
                 tmpVOFileScore.setScore(filescore.getScore());
-                tmpVOFileScore.setFilePath(filescore.getFilePath());
+                String presentedFileName = filescore.getFilePath().substring(1);
+                presentedFileName = presentedFileName.substring(presentedFileName.indexOf("/"));
+                tmpVOFileScore.setFilePath(presentedFileName);
                 voFileScoreList.add(tmpVOFileScore);
             }
             if (voFileScoreList.size() == 0) {
