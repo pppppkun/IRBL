@@ -25,7 +25,7 @@ public class WorkspaceController {
         int flag = 1;
         if(recordId.equals("null")) flag = 0;
         String path = workspaceService.getWorkspacePath(repositoryId, flag);
-        response.sendRedirect(path);
+        response.sendRedirect("http://116.85.66.200:9001/?folder=/root/project/"+path);
     }
 
 }
