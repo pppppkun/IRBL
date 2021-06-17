@@ -64,6 +64,7 @@ pipeline {
             }
             steps{
                 echo 'Image Build Stage'
+                sh 'mvn -pl business package -Dmaven.test.skip=true'
                 sh "cd business && docker build . -t ${registryUrl}/${repo_url}/irbl-business:${BUILD_ID}"
                 sh "cd algorithm && docker build . -t ${registryUrl}/${repo_url}/irbl-algorithm:${BUILD_ID}"
             }
