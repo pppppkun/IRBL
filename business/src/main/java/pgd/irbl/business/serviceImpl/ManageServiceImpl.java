@@ -135,7 +135,7 @@ public class ManageServiceImpl implements ManageService {
         Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
-        File gitDir = new File(REPO_DIRECTION + gitUrl.hashCode()+"/.git");
+        File gitDir = new File(REPO_DIRECTION + repoName + gitUrl.hashCode()+"/.git");
         List<SimpleCommitMessageVO> commitMessageVOS = new LinkedList<>();
         try (org.eclipse.jgit.lib.Repository repository = new FileRepository(gitDir)) {
             Git git = new Git(repository);
