@@ -228,7 +228,7 @@ public class ManageServiceImpl implements ManageService {
         repoCommit.setCommit(webhookVO.getCommitId());
         String gitUrl = webhookVO.getGitUrl();
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        File file = new File(REPO_DIRECTION + repoName + "/.git");
+        File file = new File(REPO_DIRECTION + repoName + gitUrl.hashCode() + "/.git");
         try {
             org.eclipse.jgit.lib.Repository repository = new FileRepository(file);
             try (Git git = new Git(repository)) {
