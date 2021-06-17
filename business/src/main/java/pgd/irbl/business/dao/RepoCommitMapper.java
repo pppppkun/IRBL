@@ -17,4 +17,5 @@ public interface RepoCommitMapper {
     int insertRepoCommit(RepoCommit repoCommit);
     int insertRepoCommitByList(List<RepoCommit> repoCommitList);
     List<String> getAllCommitIdByGitUrl(String gitUrl);
+    int deleteByGitUrl(String gitUrl);
 }

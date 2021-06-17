@@ -212,6 +212,7 @@ public class ManageServiceImpl implements ManageService {
         }catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+        repoCommitMapper.deleteByGitUrl(gitUrl);
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         else return ResponseVO.buildSuccess(DELETE_SUCCESS);
     }

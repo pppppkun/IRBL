@@ -14,6 +14,10 @@
         insert into RepoCommit(gitUrl, commit) VALUES (#{gitUrl}, #{commit})
     </insert>
 
+    <delete id="deleteByGitUrl">
+        delete from RepoCommit where gitUrl=#{gitUrl}
+    </delete>
+
     <insert id="insertRepoCommitByList" parameterType="java.util.List">
         insert into RepoCommit(gitUrl, commit) VALUES
         <foreach collection="list" item="repoCommit" separator="," close=";">
