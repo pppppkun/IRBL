@@ -189,7 +189,7 @@ public class ManageServiceImpl implements ManageService {
                 bufferedReader.lines().forEach(System.out::println);
             }
             process.destroy();
-            Path path = Paths.get(REPO_DIRECTION + filepath);
+            Path path = Paths.get(REPO_DIRECTION + "result.txt");
             log.info(REPO_DIRECTION + filepath);
             String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             return ResponseVO.buildSuccess(s);

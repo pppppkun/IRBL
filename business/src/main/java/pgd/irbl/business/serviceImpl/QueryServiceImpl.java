@@ -83,7 +83,7 @@ public class QueryServiceImpl implements QueryService {
         int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         //TODO ADD PATH HERE
-        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,gitUrl.hashCode()+"");
+        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,repoName + gitUrl.hashCode());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
 

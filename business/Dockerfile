@@ -4,5 +4,7 @@ ADD runboot.sh /app/
 ADD reset.sh /app/
 ADD getFile.sh /app/
 WORKDIR /app
+RUN chmod a+x reset.sh
+RUN chmod a+x getFile.sh
 RUN chmod a+x runboot.sh
 CMD /app/runboot.sh
