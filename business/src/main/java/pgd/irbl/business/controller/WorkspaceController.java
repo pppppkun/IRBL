@@ -1,5 +1,6 @@
 package pgd.irbl.business.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @CreateTime: 2021-06-17 10:53
  */
 @RestController
+@Slf4j
 public class WorkspaceController {
 
     @Autowired
@@ -25,6 +27,7 @@ public class WorkspaceController {
         int flag = 1;
         if (recordId.equals("null")) flag = 0;
         String path = workspaceService.getWorkspacePath(repositoryId, flag);
+        log.info(path);
         response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
         response.setHeader("Location", "http://116.85.66.200:9001/?folder=/root/project/" + path);
     }

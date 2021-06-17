@@ -2,6 +2,7 @@ package pgd.irbl.business.serviceImpl;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import static com.mongodb.client.model.Filters.eq;
  * @CreateTime: 2021-06-17 13:25
  */
 @Service
+@Slf4j
 public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Autowired
@@ -43,6 +45,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     private String getRepoWorkspacePath(Long repositoryId){
         String gitUrl = repoMapper.findGitUrlByRepoId(repositoryId);
+        log.info(gitUrl);
         return gitUrl.hashCode()+"";
     }
 
@@ -56,6 +59,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             return null;
         }
         if(document == null) return null;
+        log.info(recordId);
+        log.info(document.toString());
         return document.getString("path");
     }
 }
