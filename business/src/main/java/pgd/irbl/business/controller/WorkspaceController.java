@@ -23,9 +23,10 @@ public class WorkspaceController {
     @GetMapping("/workspace")
     public void smsJumpUrl(HttpServletResponse response, @RequestParam(required = false, defaultValue = "null") String recordId, @RequestParam(required = false, defaultValue = "null") String repositoryId) throws Exception {
         int flag = 1;
-        if(recordId.equals("null")) flag = 0;
+        if (recordId.equals("null")) flag = 0;
         String path = workspaceService.getWorkspacePath(repositoryId, flag);
-        response.sendRedirect("http://116.85.66.200:9001/?folder=/root/project/"+path);
+        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+        response.setHeader("Location", "http://116.85.66.200:9001/?folder=/root/project/" + path);
     }
 
 }
