@@ -78,6 +78,7 @@ public class ManageServiceImpl implements ManageService {
             try {
                 String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
                 File f = new File(REPO_DIRECTION + repoName + gitUrl.hashCode());
+                log.info(REPO_DIRECTION + repoName + gitUrl.hashCode());
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
