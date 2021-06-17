@@ -133,7 +133,7 @@ public class QueryServiceImpl implements QueryService {
         String currentTime = String.valueOf(System.currentTimeMillis());
         //TODO ADD PATH HERE
         String zipFileName = currentTime+".zip";
-        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), zipFileName);
+        String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), currentTime);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         if (bugReport == null || sourceCode == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);

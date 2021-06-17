@@ -43,7 +43,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     private String getRepoWorkspacePath(Long repositoryId){
         String gitUrl = repoMapper.findGitUrlByRepoId(repositoryId);
-        return REPO_DIRECTION + gitUrl.hashCode();
+        return gitUrl.hashCode()+"";
     }
 
     private String getRecordWorkspacePath(String recordId){
@@ -56,6 +56,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             return null;
         }
         if(document == null) return null;
-        return REPO_DIRECTION + document.getString("path");
+        return document.getString("path");
     }
 }

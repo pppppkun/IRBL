@@ -105,6 +105,11 @@ pipeline {
                 sh 'sed -i "s#0.0.0#${BUILD_ID}#g" docker/dev/docker-compose.yml'
                 sh 'cd docker && cd dev && docker-compose down && docker-compose up -d'
             }
+            post {
+                always {
+                    emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+                }
+            }
         }
     }
 }
