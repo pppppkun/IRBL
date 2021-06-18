@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import pgd.irbl.business.dao.RepoMapper;
@@ -20,11 +19,6 @@ import static com.mongodb.client.model.Filters.eq;
 @Service
 @Slf4j
 public class WorkspaceServiceImpl implements WorkspaceService {
-
-
-
-    @Value("${repo_direction}")
-    private String REPO_DIRECTION;
 
 
     RepoMapper repoMapper;

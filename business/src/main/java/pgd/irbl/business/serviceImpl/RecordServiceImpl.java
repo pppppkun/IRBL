@@ -41,7 +41,8 @@ public class RecordServiceImpl implements RecordService {
 
     @Value("${repo_direction}")
     private String REPO_DIRECTION;
-
+    private static final String QUERY_RECORD_COLLECTION ="queryRecord";
+    private static final String QUERY_RECORD_STATE = "queryRecordState";
     MongoTemplate mongoTemplate;
 
     @Autowired
@@ -49,7 +50,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public ResponseVO getUserAllRecord(Long userId) {
-        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+        MongoCollection<Document> queryRecord = mongoTemplate.getCollection(QUERY_RECORD_COLLECTION);
         List<RecordWithTime> result = new ArrayList<>();
         queryRecord.find(eq("userId", userId)).projection(Projections.include("_id", "queryTime", "name")).forEach(document -> result.add(new RecordWithTime(document)));
         return ResponseVO.buildSuccess(result);
@@ -57,7 +58,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public QueryRecord getQueryRecordById(QueryRecordVO queryRecordVO) {
-        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+        MongoCollection<Document> queryRecord = mongoTemplate.getCollection(QUERY_RECORD_COLLECTION);
         Document document = null;
         try{
             document = queryRecord.find(eq("_id", new ObjectId(queryRecordVO.getRecordId()))).first();
@@ -80,7 +81,7 @@ public class RecordServiceImpl implements RecordService {
         queryRecord.setPath(path);//        queryRecord.setRepoCommitId("未设置commitId");
 //        queryRecord.setGitUrl("未设置gitUrl");
         queryRecord.setQueryRecordState(QueryRecordState.preprocessing);
-        InsertOneResult oneResult =  mongoTemplate.getCollection("queryRecord").insertOne(Document.parse(JSONObject.toJSONString(queryRecord)));
+        InsertOneResult oneResult =  mongoTemplate.getCollection(QUERY_RECORD_COLLECTION).insertOne(Document.parse(JSONObject.toJSONString(queryRecord)));
         return oneResult.getInsertedId().asObjectId().getValue().toString();
     }
 
@@ -99,7 +100,7 @@ public class RecordServiceImpl implements RecordService {
         int ret = changeQueryRecordState(recordId, QueryRecordState.querying, QueryRecordState.complete);
         if(ret == SUCCESS_CHANGE_STATE)
         {
-            MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+            MongoCollection<Document> queryRecord = mongoTemplate.getCollection(QUERY_RECORD_COLLECTION);
             List<Document> documents = new ArrayList<>();
             for(FileScore fileScore : fileScoreList) documents.add(Document.parse(JSONObject.toJSONString(fileScore)));
             queryRecord.updateOne(eq("_id", new ObjectId(recordId)), set("fileScoreList", documents));
@@ -111,13 +112,13 @@ public class RecordServiceImpl implements RecordService {
     // 0表示成功，-1表示不存在这个数据，或者你要修改的那一项是不存在的
     public int changeQueryRecordState(String recordId, QueryRecordState from, QueryRecordState to)
     {
-        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+        MongoCollection<Document> queryRecord = mongoTemplate.getCollection(QUERY_RECORD_COLLECTION);
         Document document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
         if(document == null) return RECORD_NON_EXISTS;
-        if(document.get("queryRecordState") == null) return RECORD_NON_EXISTS;
-        if(from == null || QueryRecordState.valueOf(document.getString("queryRecordState")).equals(from))
+        if(document.get(QUERY_RECORD_STATE) == null) return RECORD_NON_EXISTS;
+        if(from == null || QueryRecordState.valueOf(document.getString(QUERY_RECORD_STATE)).equals(from))
         {
-            queryRecord.updateOne(eq("_id", new ObjectId(recordId)), set("queryRecordState", to.getValue()));
+            queryRecord.updateOne(eq("_id", new ObjectId(recordId)), set(QUERY_RECORD_STATE, to.getValue()));
             return SUCCESS_CHANGE_STATE;
         }
         return NOT_MEET_EXPECTATIONS;
@@ -125,7 +126,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public ResponseVO getFile(String filepath, String recordId) {
-        MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
+        MongoCollection<Document> queryRecord = mongoTemplate.getCollection(QUERY_RECORD_COLLECTION);
         Document document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
         assert document != null;
         String path = document.getString("path");

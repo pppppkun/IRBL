@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
             userVO.setUsername(user.getUsername());
             userVO.setRole(user.getRole());
             userVO.setQueryNum(user.getQueryNum());
-            userVO.setToken(JwtUtil.createToken(user.getId(), tokenTime));
+            userVO.setToken(JwtUtil.createToken(user.getId(), TOKEN_TIME));
             return ResponseVO.buildSuccess(userVO);
         }
         else return ResponseVO.buildFailure(PASSWORD_ERROR);

@@ -21,10 +21,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -51,14 +47,21 @@ public class ManageServiceImpl implements ManageService {
     public void setRepoMapper(RepoMapper repoMapper) {
         this.repoMapper = repoMapper;
     }
+
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
+
     @Autowired
-    public void setGitUtil(GitUtil gitUtil) {this.gitUtil = gitUtil;}
+    public void setGitUtil(GitUtil gitUtil) {
+        this.gitUtil = gitUtil;
+    }
+
     @Autowired
-    public void setJavaMailSender(JavaMailSender javaMailSender) {this.javaMailSender = javaMailSender;}
+    public void setJavaMailSender(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public ResponseVO registerRepo(RegisterRepoVO registerRepoVO) {
@@ -68,35 +71,31 @@ public class ManageServiceImpl implements ManageService {
         String gitUrl = registerRepoVO.getGitUrl();
         String pattern = "((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
         boolean isMatch = Pattern.matches(pattern, gitUrl);
-        if(!isMatch) return ResponseVO.buildFailure("Git地址不正确~");
+        if (!isMatch) return ResponseVO.buildFailure("Git地址不正确~");
         int ret = 0;
         Repository repository;
         try {
-            try {
-                File f = new File(gitUtil.getRegisterRepoPath(gitUrl));
-                log.info(gitUtil.getRegisterRepoPath(gitUrl));
-                Git result = Git.cloneRepository()
-                        .setURI(gitUrl)
-                        .setDirectory(f)
-                        .setProgressMonitor(new SimpleProgressMonitor())
-                        .call();
-                log.info("clone success!" + gitUrl);
-                // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
-                Iterable<RevCommit> commits = result.log().all().call();
-                List<RepoCommit> repoCommits = new ArrayList<>();
-                for (RevCommit commit : commits) {
-                    RepoCommit repoCommit = new RepoCommit();
-                    repoCommit.setGitUrl(gitUrl);
-                    repoCommit.setCommit(commit.getName());
-                    repoCommits.add(repoCommit);
-                }
-                log.info("begin insert commit about " + gitUrl);
-                int i = repoCommitMapper.insertRepoCommitByList(repoCommits);
-                if(i != repoCommits.size()) return ResponseVO.buildFailure(REGISTER_FAIL);
-            } catch (GitAPIException e) {
-                e.printStackTrace();
+            File f = new File(gitUtil.getRegisterRepoPath(gitUrl));
+            log.info(gitUtil.getRegisterRepoPath(gitUrl));
+            Git result = Git.cloneRepository()
+                    .setURI(gitUrl)
+                    .setDirectory(f)
+                    .setProgressMonitor(new SimpleProgressMonitor())
+                    .call();
+            log.info("clone success!" + gitUrl);
+            // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
+            Iterable<RevCommit> commits = result.log().all().call();
+            List<RepoCommit> repoCommits = new ArrayList<>();
+            for (RevCommit commit : commits) {
+                RepoCommit repoCommit = new RepoCommit();
+                repoCommit.setGitUrl(gitUrl);
+                repoCommit.setCommit(commit.getName());
+                repoCommits.add(repoCommit);
             }
-        } catch (IOException e) {
+            log.info("begin insert commit about " + gitUrl);
+            int i = repoCommitMapper.insertRepoCommitByList(repoCommits);
+            if (i != repoCommits.size()) return ResponseVO.buildFailure(REGISTER_FAIL);
+        } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
         repository = new Repository();
@@ -119,14 +118,14 @@ public class ManageServiceImpl implements ManageService {
             return repoMapper.selectAllRepo();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
     @Override
     public ResponseVO getRepoCommit(Long repoId) {
         String gitUrl = repoMapper.findGitUrlByRepoId(repoId);
-        if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
+        if (gitUrl == null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
@@ -136,11 +135,11 @@ public class ManageServiceImpl implements ManageService {
             Git git = new Git(repository);
             Iterable<RevCommit> gitCommits = git.log().all().call();
             for (RevCommit commit : gitCommits) {
-                if(commits.contains(commit.getName())){
+                if (commits.contains(commit.getName())) {
                     SimpleCommitMessageVO simpleCommitMessageVO = new SimpleCommitMessageVO();
                     simpleCommitMessageVO.setCommitId(commit.getName());
                     simpleCommitMessageVO.setMessage(commit.getShortMessage());
-                    simpleCommitMessageVO.setTime(new java.util.Date(commit.getCommitTime()*1000L).toString());
+                    simpleCommitMessageVO.setTime(new java.util.Date(commit.getCommitTime() * 1000L).toString());
                     commitMessageVOS.add(simpleCommitMessageVO);
                 }
             }
@@ -152,12 +151,12 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<SimpleRepoVo> getAllSimpleRepo(){
+    public List<SimpleRepoVo> getAllSimpleRepo() {
         try {
             return repoMapper.getAllSimpleRepo();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -176,35 +175,20 @@ public class ManageServiceImpl implements ManageService {
         log.info(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
-//        try{
-//            Process process = Runtime.getRuntime().exec("./getFile.sh " + REPO_DIRECTION + repoName + gitUrl.hashCode() + " " + commitId + " " + filePath.substring(1));
-//            InputStream inputStream = process.getInputStream();
-//            process.waitFor();
-//            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-//                bufferedReader.lines().forEach(System.out::println);
-//            }
-//            process.destroy();
-//            Path path = Paths.get(REPO_DIRECTION + "result.txt");
-//            log.info(REPO_DIRECTION + filePath);
-//            String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-//            return ResponseVO.buildSuccess(s);
-//        }catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
         String content = gitUtil.showFileSpecificCommit(gitUrl, commitId, filePath.substring(1));
-        if(content==null) return ResponseVO.buildFailure("文件不存在");
+        if (content == null) return ResponseVO.buildFailure("文件不存在");
         else return ResponseVO.buildSuccess(content);
     }
 
     @Override
     public ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO) {
         String gitUrl = repoMapper.findGitUrlByRepoId(deleteRepoVO.getRepoId());
-        if(gitUrl==null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
+        if (gitUrl == null) return ResponseVO.buildFailure(REPO_NO_EXISTS);
         log.info("why bug");
         log.info(gitUrl);
         log.info("why bug");
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
-        if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
+        if (gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
         gitUtil.deleteRepo(gitUrl);
         int i = repoCommitMapper.deleteByGitUrl(gitUrl);
         log.info("delete " + i + " commit message");
@@ -227,15 +211,15 @@ public class ManageServiceImpl implements ManageService {
             }
         } catch (GitAPIException | IOException ignored) { }
         log.info(repoCommit.toString());
-        try{
+        try {
             int i = repoCommitMapper.insertRepoCommit(repoCommit);
-            log.debug(i+"");
-            if(i==0) return ResponseVO.buildFailure("webhook fails");
-        }catch (Exception e) {
+            log.debug(i + "");
+            if (i == 0) return ResponseVO.buildFailure("webhook fails");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            sendSimpleMail(webhookVO.getEmail(),"There's a webhook that's triggered! COME FROM PGD-IRBL","PGD-IRBL注意到已注册的仓库"+repoName+"发出了一个WebHook，我们已经拉取最新的commit"+"("+webhookVO.getCommitId().substring(0,8)+")到我们的仓库中，欢迎进行缺陷定位~");
+            sendSimpleMail(webhookVO.getEmail(), "There's a webhook that's triggered! COME FROM PGD-IRBL", "PGD-IRBL注意到已注册的仓库" + repoName + "发出了一个WebHook，我们已经拉取最新的commit" + "(" + webhookVO.getCommitId().substring(0, 8) + ")到我们的仓库中，欢迎进行缺陷定位~");
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -244,6 +228,7 @@ public class ManageServiceImpl implements ManageService {
 
     /**
      * 发送简单的邮件
+     *
      * @param to
      * @param subject
      * @param content
@@ -267,6 +252,7 @@ public class ManageServiceImpl implements ManageService {
 
     private static class SimpleProgressMonitor implements ProgressMonitor {
         int completed = 0;
+
         @Override
         public void start(int totalTasks) {
             System.out.println("Starting work on " + totalTasks + " tasks");
@@ -280,7 +266,7 @@ public class ManageServiceImpl implements ManageService {
         @Override
         public void update(int completed) {
             this.completed += completed;
-            if(this.completed > 10) {
+            if (this.completed > 10) {
                 System.out.print("-");
                 this.completed = 0;
             }

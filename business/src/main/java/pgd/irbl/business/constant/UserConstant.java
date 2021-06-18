@@ -10,5 +10,8 @@ public class UserConstant {
     public static final String USER_EXISTS="该用户名已被使用";
     public static final String USER_NO_EXISTS="该用户不存在";
     public static final String PASSWORD_ERROR="密码错误";
-    public static final int tokenTime=20;
+    public static final int TOKEN_TIME =20;
+    private UserConstant() {
+        throw new IllegalStateException("Utility class");
+    }
 }

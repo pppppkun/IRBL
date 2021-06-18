@@ -114,11 +114,12 @@ public class QueryServiceImpl implements QueryService {
         String zipFileName = currentTime+".zip";
         String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), currentTime);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
-        if (bugReport == null || sourceCode == null) {
+        if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
         // save file
-        String bugReportFileName = null, codeDir = null;
+        String bugReportFileName = null;
+        String codeDir = null;
         try {
             logger.info(bugReport.getOriginalFilename());
             bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport-" + currentTime );

@@ -1,12 +1,10 @@
 package pgd.irbl.business.constant;
 
-import org.springframework.stereotype.Component;
 
 /**
  * @Author: pkun
  * @CreateTime: 2021-04-01 19:25
  */
-@Component
 public class ManageConstant {
     public static final String REPO_EXISTS = "仓库已经注册";
     public static final String REPO_NO_EXISTS = "仓库未注册";
@@ -17,5 +15,7 @@ public class ManageConstant {
     public static final String QUERY_FAIL = "查询失败";
     public static final String QUERY_NULL_FAIL = "查询失败";
     public static final String PREPROCESS_NULL_FAIL = "预处理失败";
-
+    private ManageConstant() {
+        throw new IllegalStateException("Utility class");
+    }
 }
