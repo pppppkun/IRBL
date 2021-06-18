@@ -12,6 +12,7 @@ import pgd.irbl.business.dao.RepoMapper;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
+import pgd.irbl.business.utils.GitUtil;
 import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
@@ -86,18 +87,18 @@ public class QueryServiceImpl implements QueryService {
         String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,repoName + gitUrl.hashCode());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
-
-        try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
-            InputStream inputStream = process.getInputStream();
-            process.waitFor();
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                bufferedReader.lines().forEach(System.out::println);
-            }
-            process.destroy();
-        }catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        GitUtil.copyAndReset(recordId, repoName+gitUrl.hashCode(), commitId);
+//        try{
+//            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
+//            InputStream inputStream = process.getInputStream();
+//            process.waitFor();
+//            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+//                bufferedReader.lines().forEach(System.out::println);
+//            }
+//            process.destroy();
+//        }catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
