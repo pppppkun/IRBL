@@ -1,5 +1,6 @@
 package pgd.irbl.business.serviceImpl;
 
+import com.oracle.tools.packager.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -249,32 +250,32 @@ public class ManageServiceImpl implements ManageService {
         javaMailSender.send(message);
     }
 
-
+    @Slf4j
     private static class SimpleProgressMonitor implements ProgressMonitor {
         int completed = 0;
 
         @Override
         public void start(int totalTasks) {
-            System.out.println("Starting work on " + totalTasks + " tasks");
+            Log.info("Starting work on " + totalTasks + " tasks");
         }
 
         @Override
         public void beginTask(String title, int totalWork) {
-            System.out.println("Start " + title + ": " + totalWork);
+            Log.info("Start " + title + ": " + totalWork);
         }
 
         @Override
         public void update(int completed) {
             this.completed += completed;
             if (this.completed > 10) {
-                System.out.print("-");
+                Log.info("-");
                 this.completed = 0;
             }
         }
 
         @Override
         public void endTask() {
-            System.out.println("Done");
+            Log.info("Done");
         }
 
         @Override

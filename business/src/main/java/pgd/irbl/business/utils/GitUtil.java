@@ -1,5 +1,7 @@
 package pgd.irbl.business.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
@@ -16,6 +18,7 @@ import java.nio.file.Paths;
  * @CreateTime: 2021-06-18 09:05
  */
 @Component
+@Slf4j
 public class GitUtil {
 
     @Value("${repo_direction}")
@@ -27,7 +30,7 @@ public class GitUtil {
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                bufferedReader.lines().forEach(System.out::println);
+                bufferedReader.lines().forEach(log::info);
             }
             process.destroy();
         } catch (IOException | InterruptedException e) {
@@ -51,7 +54,7 @@ public class GitUtil {
             InputStream inputStream = process.getInputStream();
             process.waitFor();
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                bufferedReader.lines().forEach(System.out::println);
+                bufferedReader.lines().forEach(log::info);
             }
             process.destroy();
             Path path = Paths.get(REPO_DIRECTION + "result.txt");

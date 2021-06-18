@@ -206,7 +206,7 @@ public class QueryServiceImpl implements QueryService {
                 tmpVOFileScore.setFilePath(presentedFileName);
                 voFileScoreList.add(tmpVOFileScore);
             }
-            if (voFileScoreList.size() == 0) {
+            if (voFileScoreList.isEmpty()) {
                 recordService.setQueryRecordFail(recordId);
             }
             recordService.setQueryRecordComplete(recordId, voFileScoreList);
