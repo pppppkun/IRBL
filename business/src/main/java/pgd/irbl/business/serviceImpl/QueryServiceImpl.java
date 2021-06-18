@@ -40,18 +40,20 @@ public class QueryServiceImpl implements QueryService {
 
     @Value("${file.path.code}")
     String codePath;
-
     @Value("${file.path.report}")
     String reportPath;
-
     @Value("${file.path.python-cache}")
     String pythonCachePath;
-
     @Value("${cpu.core}")
     static Integer cpuCoreNum;
-
     @Value("${target.calculator}")
     String targetCalculator;
+    @Value("${target.preProcessor}")
+    String targetPreProcessor;
+    @Value("${repo_direction}")
+    String repoDirection;
+    @Autowired
+    ExecutorService executor;
 
     GitUtil gitUtil;
     RepoCommitMapper repoCommitMapper;
@@ -69,15 +71,6 @@ public class QueryServiceImpl implements QueryService {
     @Autowired
     public void setRecordService(RecordService recordService) {this.recordService = recordService;}
 
-    @Value("${target.preProcessor}")
-    String targetPreProcessor;
-
-    @Value("${repo_direction}")
-    String repoDirection;
-
-    @Autowired
-    ExecutorService executor;
-
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
@@ -88,23 +81,9 @@ public class QueryServiceImpl implements QueryService {
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
         gitUtil.copyAndReset(recordId, repoName+gitUrl.hashCode(), commitId);
-//        try{
-//            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
-//            InputStream inputStream = process.getInputStream();
-//            process.waitFor();
-//            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-//                bufferedReader.lines().forEach(System.out::println);
-//            }
-//            process.destroy();
-//        }catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
-        }
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            repoDirection = "E:\\4_work_dir\\source-code\\";
         }
         String bugReportFileName = null;
         logger.info(bugReport.getOriginalFilename());
@@ -207,7 +186,6 @@ public class QueryServiceImpl implements QueryService {
                 }
                 CalcClient calcClient = new CalcClient(calcChannel);
                 fileScoreList = calcClient.calc(reportPath + bugReportFileName, codeDir);
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
