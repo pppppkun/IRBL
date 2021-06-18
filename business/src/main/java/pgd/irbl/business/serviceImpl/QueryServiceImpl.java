@@ -37,8 +37,6 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 public class QueryServiceImpl implements QueryService {
 
     private static final Logger logger = Logger.getLogger(QueryServiceImpl.class.getName());
-    @Autowired
-    RecordService recordService;
 
     @Value("${file.path.code}")
     String codePath;
@@ -55,11 +53,10 @@ public class QueryServiceImpl implements QueryService {
     @Value("${target.calculator}")
     String targetCalculator;
 
-    @Value("${repo_direction}")
-    private String REPO_DIRECTION;
-
+    GitUtil gitUtil;
     RepoCommitMapper repoCommitMapper;
     RepoMapper repoMapper;
+    RecordService recordService;
 
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
@@ -67,6 +64,10 @@ public class QueryServiceImpl implements QueryService {
     }
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {this.repoMapper = repoMapper;}
+    @Autowired
+    public void setGitUtil(GitUtil gitUtil) {this.gitUtil = gitUtil;}
+    @Autowired
+    public void setRecordService(RecordService recordService) {this.recordService = recordService;}
 
     @Value("${target.preProcessor}")
     String targetPreProcessor;
@@ -87,7 +88,7 @@ public class QueryServiceImpl implements QueryService {
         String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,repoName + gitUrl.hashCode());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
-        GitUtil.copyAndReset(recordId, repoName+gitUrl.hashCode(), commitId);
+        gitUtil.copyAndReset(recordId, repoName+gitUrl.hashCode(), commitId);
 //        try{
 //            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
 //            InputStream inputStream = process.getInputStream();

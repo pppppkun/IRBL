@@ -21,38 +21,46 @@ import static com.mongodb.client.model.Filters.eq;
 @Slf4j
 public class WorkspaceServiceImpl implements WorkspaceService {
 
-    @Autowired
-    RepoMapper repoMapper;
-
-    @Autowired
-    MongoTemplate mongoTemplate;
 
 
     @Value("${repo_direction}")
     private String REPO_DIRECTION;
 
-    @Override
-    public String getWorkspacePath(String id, int flag) {
-        return flag == 1? getRecordWorkspacePath(id) : getRepoWorkspacePath(Long.valueOf(id));
+
+    RepoMapper repoMapper;
+    MongoTemplate mongoTemplate;
+    @Autowired
+    public void setRepoMapper(RepoMapper repoMapper) {
+        this.repoMapper = repoMapper;
     }
 
-    private String getRepoWorkspacePath(Long repositoryId){
+    @Autowired
+    public void setMongoTemplate(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public String getWorkspacePath(String id, int flag) {
+        return flag == 1 ? getRecordWorkspacePath(id) : getRepoWorkspacePath(Long.valueOf(id));
+    }
+
+    private String getRepoWorkspacePath(Long repositoryId) {
         String gitUrl = repoMapper.findGitUrlByRepoId(repositoryId);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(gitUrl);
         return repoName + gitUrl.hashCode();
     }
 
-    private String getRecordWorkspacePath(String recordId){
+    private String getRecordWorkspacePath(String recordId) {
         MongoCollection<Document> queryRecord = mongoTemplate.getCollection("queryRecord");
         Document document = null;
-        try{
+        try {
             document = queryRecord.find(eq("_id", new ObjectId(recordId))).first();
-        }catch (IllegalArgumentException exception){
+        } catch (IllegalArgumentException exception) {
             exception.printStackTrace();
             return null;
         }
-        if(document == null) return null;
+        if (document == null) return null;
         log.info(recordId);
         log.info(document.toString());
         return document.getString("path");

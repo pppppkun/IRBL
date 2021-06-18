@@ -21,9 +21,9 @@ import java.nio.file.Paths;
 public class GitUtil {
 
     @Value("${repo_direction}")
-    private static String REPO_DIRECTION;
+    private String REPO_DIRECTION;
 
-    public static void copyAndReset(String source, String destination, String commitId) {
+    public void copyAndReset(String source, String destination, String commitId) {
         try {
             Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + source + " " + commitId + " " + REPO_DIRECTION + destination);
             InputStream inputStream = process.getInputStream();
@@ -37,7 +37,7 @@ public class GitUtil {
         }
     }
 
-    public static void deleteRepo(String gitUrl) {
+    public void deleteRepo(String gitUrl) {
         try{
             Process process = Runtime.getRuntime().exec("rm -rf " + getRegisterRepoPath(gitUrl));
             process.waitFor();
@@ -47,7 +47,7 @@ public class GitUtil {
         }
     }
 
-    public static String showFileSpecificCommit(String gitUrl, String commitId, String filePath) {
+    public String showFileSpecificCommit(String gitUrl, String commitId, String filePath) {
         try{
             Process process = Runtime.getRuntime().exec("./getFile.sh " + getRegisterRepoPath(gitUrl) + " " + commitId + " " + filePath);
             InputStream inputStream = process.getInputStream();
@@ -64,13 +64,13 @@ public class GitUtil {
         return null;
     }
 
-    public static String getRegisterRepoPath(String gitUrl){
+    public String getRegisterRepoPath(String gitUrl){
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         return REPO_DIRECTION + repoName + gitUrl.hashCode();
     }
 
 
-    public static String getRegisterRepoGitPath(String gitUrl){
+    public String getRegisterRepoGitPath(String gitUrl){
         return getRegisterRepoPath(gitUrl) + ".git";
     }
 

@@ -40,33 +40,34 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 public class ManageServiceImpl implements ManageService {
 
 
-    RepoMapper repoMapper;
-    RepoCommitMapper repoCommitMapper;
-
-    @Value("${repo_direction}")
-    private String REPO_DIRECTION;
 
     @Value("${spring.mail.username}")
     private String from;
 
-    @Autowired
+
+    RepoMapper repoMapper;
+    RepoCommitMapper repoCommitMapper;
     JavaMailSender javaMailSender;
+    GitUtil gitUtil;
 
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {
         this.repoMapper = repoMapper;
     }
-
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
+    @Autowired
+    public void setGitUtil(GitUtil gitUtil) {this.gitUtil = gitUtil;}
+    @Autowired
+    public void setJavaMailSender(JavaMailSender javaMailSender) {this.javaMailSender = javaMailSender;}
 
     @Override
     public ResponseVO registerRepo(RegisterRepoVO registerRepoVO) {
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            REPO_DIRECTION = "E:\\4_work_dir\\source-code\\";
-        }
+//        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+//            REPO_DIRECTION = "E:\\4_work_dir\\source-code\\";
+//        }
         if (repoMapper.findRepoIdByGitUrl(registerRepoVO.getGitUrl()) != null)
             return ResponseVO.buildFailure(REPO_EXISTS);
         // ([A-Za-z0-9]+@|http(|s)\:\/\/)([A-Za-z0-9.]+)(:|/)([A-Za-z0-9\/]+)(\.git)
@@ -78,8 +79,8 @@ public class ManageServiceImpl implements ManageService {
         Repository repository;
         try {
             try {
-                File f = new File(GitUtil.getRegisterRepoPath(gitUrl));
-                log.info(GitUtil.getRegisterRepoPath(gitUrl));
+                File f = new File(gitUtil.getRegisterRepoPath(gitUrl));
+                log.info(gitUtil.getRegisterRepoPath(gitUrl));
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
@@ -135,7 +136,7 @@ public class ManageServiceImpl implements ManageService {
         Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
-        File gitDir = new File(GitUtil.getRegisterRepoGitPath(gitUrl));
+        File gitDir = new File(gitUtil.getRegisterRepoGitPath(gitUrl));
         List<SimpleCommitMessageVO> commitMessageVOS = new LinkedList<>();
         try (org.eclipse.jgit.lib.Repository repository = new FileRepository(gitDir)) {
             Git git = new Git(repository);
@@ -196,7 +197,7 @@ public class ManageServiceImpl implements ManageService {
 //        }catch (IOException | InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        String content = GitUtil.showFileSpecificCommit(gitUrl, commitId, filePath.substring(1));
+        String content = gitUtil.showFileSpecificCommit(gitUrl, commitId, filePath.substring(1));
         if(content==null) return ResponseVO.buildFailure("文件不存在");
         else return ResponseVO.buildSuccess(content);
     }
@@ -210,7 +211,7 @@ public class ManageServiceImpl implements ManageService {
         log.info("why bug");
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
-        GitUtil.deleteRepo(gitUrl);
+        gitUtil.deleteRepo(gitUrl);
         int i = repoCommitMapper.deleteByGitUrl(gitUrl);
         log.info("delete " + i + " commit message");
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
@@ -224,7 +225,7 @@ public class ManageServiceImpl implements ManageService {
         repoCommit.setCommit(webhookVO.getCommitId());
         String gitUrl = webhookVO.getGitUrl();
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        File file = new File(GitUtil.getRegisterRepoGitPath(gitUrl));
+        File file = new File(gitUtil.getRegisterRepoGitPath(gitUrl));
         try {
             org.eclipse.jgit.lib.Repository repository = new FileRepository(file);
             try (Git git = new Git(repository)) {
