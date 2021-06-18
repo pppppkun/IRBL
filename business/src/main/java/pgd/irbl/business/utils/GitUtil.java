@@ -71,7 +71,7 @@ public class GitUtil {
 
 
     public String getRegisterRepoGitPath(String gitUrl){
-        return getRegisterRepoPath(gitUrl) + ".git";
+        return getRegisterRepoPath(gitUrl) + "/.git";
     }
 
 }
