@@ -7,9 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.jar.JarEntry;
 import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,10 +20,6 @@ import java.util.zip.ZipFile;
  */
 @Slf4j
 public class MyFileUtil {
-
-    public static String saveFile(String rootPath, MultipartFile multipartFile) throws IOException {
-        return saveFile(rootPath, multipartFile, multipartFile.getName());
-    }
 
     /**
      * @param rootPath
@@ -43,8 +37,6 @@ public class MyFileUtil {
     }
 
     public static String unZipAndSaveDir(String codePath, MultipartFile multipartFile, String fileName) throws IOException {
-        // 有重名的可能会出现 bug
-//        String fileName = multipartFile.getOriginalFilename();
         File file = new File(codePath + fileName);
         multipartFile.transferTo(file);
         unZip(codePath, codePath + fileName);
@@ -76,8 +68,6 @@ public class MyFileUtil {
             if (new File(outPath).isDirectory()) {
                 continue;
             }
-            // 输出文件路径信息
-//			System.out.println(outPath);
             FileOutputStream out = new FileOutputStream(outPath);
             byte[] buf1 = new byte[1024];
             int len;

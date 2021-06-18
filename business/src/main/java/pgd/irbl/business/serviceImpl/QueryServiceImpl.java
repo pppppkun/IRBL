@@ -12,6 +12,7 @@ import pgd.irbl.business.dao.RepoMapper;
 import pgd.irbl.business.service.QueryService;
 import pgd.irbl.business.service.RecordService;
 import pgd.irbl.business.serviceImpl.protobuf.FileScore;
+import pgd.irbl.business.utils.GitUtil;
 import pgd.irbl.business.utils.MyFileUtil;
 import pgd.irbl.business.vo.ResponseVO;
 import pgd.irbl.business.grpcClient.CalcClient;
@@ -29,7 +30,7 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 /**
  * @Author: qin
  * @CreateTime: 2021-04-06 20:20
- * @ModifyTime: 2021-06-18 9:20
+ * @ModifyTime: 2021-06-16 23:20
  */
 @Service
 @Slf4j
@@ -39,42 +40,43 @@ public class QueryServiceImpl implements QueryService {
 
     @Value("${file.path.code}")
     String codePath;
+
     @Value("${file.path.report}")
     String reportPath;
+
     @Value("${file.path.python-cache}")
     String pythonCachePath;
+
     @Value("${cpu.core}")
     static Integer cpuCoreNum;
+
     @Value("${target.calculator}")
     String targetCalculator;
-    @Value("${target.preProcessor}")
-    String targetPreProcessor;
-    @Value("${repo_direction}")
-    private String REPO_DIRECTION;
 
-    RecordService recordService;
+    GitUtil gitUtil;
     RepoCommitMapper repoCommitMapper;
     RepoMapper repoMapper;
-    // 线程池
-    ExecutorService executor;
+    RecordService recordService;
 
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
-
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {this.repoMapper = repoMapper;}
+    @Autowired
+    public void setGitUtil(GitUtil gitUtil) {this.gitUtil = gitUtil;}
+    @Autowired
+    public void setRecordService(RecordService recordService) {this.recordService = recordService;}
+
+    @Value("${target.preProcessor}")
+    String targetPreProcessor;
+
+    @Value("${repo_direction}")
+    String repoDirection;
 
     @Autowired
-    public void setRecordService(RecordService recordService) {
-        this.recordService = recordService;
-    }
-
-    @Autowired
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
-    }
+    ExecutorService executor;
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
@@ -82,24 +84,27 @@ public class QueryServiceImpl implements QueryService {
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
         int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,gitUrl.hashCode()+"");
+        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,repoName + gitUrl.hashCode());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
-
-        try{
-            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
-            InputStream inputStream = process.getInputStream();
-            process.waitFor();
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                bufferedReader.lines().forEach(System.out::println);
-            }
-            process.destroy();
-        }catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        gitUtil.copyAndReset(recordId, repoName+gitUrl.hashCode(), commitId);
+//        try{
+//            Process process = Runtime.getRuntime().exec("./reset.sh " + REPO_DIRECTION + recordId + " " + commitId + " " + REPO_DIRECTION + repoName + gitUrl.hashCode());
+//            InputStream inputStream = process.getInputStream();
+//            process.waitFor();
+//            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+//                bufferedReader.lines().forEach(System.out::println);
+//            }
+//            process.destroy();
+//        }catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
+        }
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            repoDirection = "E:\\4_work_dir\\source-code\\";
         }
         String bugReportFileName = null;
         logger.info(bugReport.getOriginalFilename());
@@ -117,9 +122,9 @@ public class QueryServiceImpl implements QueryService {
         }
         logger.info(bugReportFileName + " bugReport save finish");
         //create new Thread and run
-        logger.info("new PreprocessAndCalc thread creat");
+        logger.info(" new PreprocessAndCalc thread creat");
         executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, recordId));
-        logger.info("new PreprocessAndCalc thread submit");
+        logger.info(" new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
         return ResponseVO.buildSuccess(recordId);
     }
@@ -127,7 +132,6 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId) {
         String currentTime = String.valueOf(System.currentTimeMillis());
-        //TODO ADD PATH HERE
         String zipFileName = currentTime+".zip";
         String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), currentTime);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
@@ -153,13 +157,17 @@ public class QueryServiceImpl implements QueryService {
             return ResponseVO.buildFailure(QUERY_FAIL);
         }
         //create new Thread and run
-        logger.info("new PreprocessAndCalc thread creat");
+        logger.info(" new PreprocessAndCalc thread creat");
         executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
-        logger.info("new PreprocessAndCalc thread submit");
+        logger.info(" new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
+
         return ResponseVO.buildSuccess(recordId);
     }
 
+    /**
+     * description 预处理与计算 线程任务类
+     */
     class PreprocessAndCalc implements Runnable {
         private final Logger logger = Logger.getLogger(PreprocessAndCalc.class.getName());
         String recordId;
@@ -168,8 +176,6 @@ public class QueryServiceImpl implements QueryService {
         RecordService recordService;
 
         PreprocessAndCalc(RecordService recordService, String recordId, String bugReportFileName, String codeDir) {
-//            WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
-//            RecordService recordService=(RecordService)context.getBean("recordService");
             this.recordService = recordService;
             this.recordId = recordId;
             this.bugReportFileName = bugReportFileName;
@@ -178,7 +184,7 @@ public class QueryServiceImpl implements QueryService {
 
         @Override
         public void run() {
-            // set gRPC server port todo modify
+            // set gRPC server port
             ManagedChannel preProcessorChannel = ManagedChannelBuilder.forTarget(targetPreProcessor)
                     .usePlaintext()
                     .build();
@@ -194,8 +200,6 @@ public class QueryServiceImpl implements QueryService {
 
             try {
                 PreProcessorClient preProcessorClient = new PreProcessorClient(preProcessorChannel);
-                //todo 异步调用
-//                preProcessorClient.preprocessAsync(codeDir,preProcessorChannel,fileScoreList,reportPath + bugReportFileName, codeDir);
                 int res = preProcessorClient.preprocess(codeDir);
                 logger.info("preprocess finish");
                 if (res != 1) {

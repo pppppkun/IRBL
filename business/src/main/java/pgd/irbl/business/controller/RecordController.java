@@ -21,26 +21,27 @@ public class RecordController {
     RecordService recordService;
 
     @Autowired
-    public void setRecordService(RecordService recordService){
+    public void setRecordService(RecordService recordService) {
         this.recordService = recordService;
     }
 
     @PostMapping("/getUserAllRecord")
-    public ResponseVO getUserAllRecord(HttpServletRequest request){
+    public ResponseVO getUserAllRecord(HttpServletRequest request) {
         String token = request.getHeader("irbl-token");
         Long userId = JwtUtil.verifyTokenAndGetUserId(token);
-        if(userId == null) return ResponseVO.buildFailure("登录过期，请重新登陆");
+        if (userId == null) return ResponseVO.buildFailure("登录过期，请重新登陆");
         return recordService.getUserAllRecord(userId);
     }
+
     @PostMapping("/queryRecord")
-    public ResponseVO queryRecord(@RequestBody QueryRecordVO queryRecordVO){
+    public ResponseVO queryRecord(@RequestBody QueryRecordVO queryRecordVO) {
         Object o = recordService.getQueryRecordById(queryRecordVO);
-        if(o==null) return ResponseVO.buildFailure("_id不存在");
+        if (o == null) return ResponseVO.buildFailure("_id不存在");
         else return ResponseVO.buildSuccess(o);
     }
 
     @PostMapping("/{id}/file")
-    public ResponseVO getQueryFile(@PathVariable("id") String id, @RequestBody FilePath filePath){
+    public ResponseVO getQueryFile(@PathVariable("id") String id, @RequestBody FilePath filePath) {
         return recordService.getFile(filePath.getPath(), id);
     }
 

@@ -13,6 +13,7 @@ import pgd.irbl.business.dao.RepoMapper;
 import pgd.irbl.business.po.RepoCommit;
 import pgd.irbl.business.po.Repository;
 import pgd.irbl.business.service.ManageService;
+import pgd.irbl.business.utils.GitUtil;
 import pgd.irbl.business.vo.*;
 import pgd.irbl.business.enums.RepoState;
 import org.eclipse.jgit.api.Git;
@@ -38,27 +39,26 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 @Slf4j
 public class ManageServiceImpl implements ManageService {
 
-    RepoMapper repoMapper;
-    RepoCommitMapper repoCommitMapper;
-
-    @Value("${repo_direction}")
-    private String REPO_DIRECTION;
-
     @Value("${spring.mail.username}")
     private String from;
 
-    @Autowired
+    RepoMapper repoMapper;
+    RepoCommitMapper repoCommitMapper;
     JavaMailSender javaMailSender;
+    GitUtil gitUtil;
 
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {
         this.repoMapper = repoMapper;
     }
-
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
+    @Autowired
+    public void setGitUtil(GitUtil gitUtil) {this.gitUtil = gitUtil;}
+    @Autowired
+    public void setJavaMailSender(JavaMailSender javaMailSender) {this.javaMailSender = javaMailSender;}
 
     @Override
     public ResponseVO registerRepo(RegisterRepoVO registerRepoVO) {
@@ -69,12 +69,12 @@ public class ManageServiceImpl implements ManageService {
         String pattern = "((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
         boolean isMatch = Pattern.matches(pattern, gitUrl);
         if(!isMatch) return ResponseVO.buildFailure("Git地址不正确~");
-
+        int ret = 0;
+        Repository repository;
         try {
             try {
-                String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-                File f = new File(REPO_DIRECTION + repoName + gitUrl.hashCode());
-                log.info(REPO_DIRECTION + repoName + gitUrl.hashCode());
+                File f = new File(gitUtil.getRegisterRepoPath(gitUrl));
+                log.info(gitUtil.getRegisterRepoPath(gitUrl));
                 Git result = Git.cloneRepository()
                         .setURI(gitUrl)
                         .setDirectory(f)
@@ -99,13 +99,13 @@ public class ManageServiceImpl implements ManageService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Repository repository = new Repository();
+        repository = new Repository();
         repository.setStartTime(new Date(System.currentTimeMillis()));
         repository.setQueryNum(0);
         repository.setState(RepoState.Dev);
         repository.setDescription(registerRepoVO.getDescription());
         repository.setGitUrl(registerRepoVO.getGitUrl());
-        int ret = repoMapper.insertRepo(repository);
+        ret = repoMapper.insertRepo(repository);
         log.info(repository.toString());
         if (ret == 0) {
             log.error(repository.getGitUrl());
@@ -130,7 +130,7 @@ public class ManageServiceImpl implements ManageService {
         Set<String> commits = new HashSet<>(repoCommitMapper.getAllCommitIdByGitUrl(gitUrl));
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
-        File gitDir = new File(REPO_DIRECTION + gitUrl.hashCode()+"/.git");
+        File gitDir = new File(gitUtil.getRegisterRepoGitPath(gitUrl));
         List<SimpleCommitMessageVO> commitMessageVOS = new LinkedList<>();
         try (org.eclipse.jgit.lib.Repository repository = new FileRepository(gitDir)) {
             Git git = new Git(repository);
@@ -169,29 +169,31 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public ResponseVO getFileByCommit(String filepath, String commitId) {
-        log.info(filepath);
+    public ResponseVO getFileByCommit(String filePath, String commitId) {
+        log.info(filePath);
         log.info(commitId);
         String gitUrl = repoCommitMapper.findGitUrlByCommitId(commitId);
         log.info(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
         log.info(repoName);
-        try{
-            Process process = Runtime.getRuntime().exec("./getFile.sh " + REPO_DIRECTION + repoName + gitUrl.hashCode() + " " + commitId + " " + filepath);
-            InputStream inputStream = process.getInputStream();
-            process.waitFor();
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                bufferedReader.lines().forEach(System.out::println);
-            }
-            process.destroy();
-            Path path = Paths.get(REPO_DIRECTION + filepath);
-            log.info(REPO_DIRECTION + filepath);
-            String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-            return ResponseVO.buildSuccess(s);
-        }catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ResponseVO.buildFailure("文件不存在");
+//        try{
+//            Process process = Runtime.getRuntime().exec("./getFile.sh " + REPO_DIRECTION + repoName + gitUrl.hashCode() + " " + commitId + " " + filePath.substring(1));
+//            InputStream inputStream = process.getInputStream();
+//            process.waitFor();
+//            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+//                bufferedReader.lines().forEach(System.out::println);
+//            }
+//            process.destroy();
+//            Path path = Paths.get(REPO_DIRECTION + "result.txt");
+//            log.info(REPO_DIRECTION + filePath);
+//            String s = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+//            return ResponseVO.buildSuccess(s);
+//        }catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        String content = gitUtil.showFileSpecificCommit(gitUrl, commitId, filePath.substring(1));
+        if(content==null) return ResponseVO.buildFailure("文件不存在");
+        else return ResponseVO.buildSuccess(content);
     }
 
     @Override
@@ -203,14 +205,7 @@ public class ManageServiceImpl implements ManageService {
         log.info("why bug");
         int ret = repoMapper.deleteRepo(deleteRepoVO.getRepoId());
         if(gitUrl.lastIndexOf(".git") == -1) return ResponseVO.buildSuccess(DELETE_SUCCESS);
-        try{
-            String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-            Process process = Runtime.getRuntime().exec("rm -rf " + REPO_DIRECTION + repoName + gitUrl.hashCode());
-            process.waitFor();
-            process.destroy();
-        }catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        gitUtil.deleteRepo(gitUrl);
         int i = repoCommitMapper.deleteByGitUrl(gitUrl);
         log.info("delete " + i + " commit message");
         if (ret == 0) return ResponseVO.buildFailure(REPO_NO_EXISTS);
@@ -224,7 +219,7 @@ public class ManageServiceImpl implements ManageService {
         repoCommit.setCommit(webhookVO.getCommitId());
         String gitUrl = webhookVO.getGitUrl();
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        File file = new File(REPO_DIRECTION + repoName + "/.git");
+        File file = new File(gitUtil.getRegisterRepoGitPath(gitUrl));
         try {
             org.eclipse.jgit.lib.Repository repository = new FileRepository(file);
             try (Git git = new Git(repository)) {
