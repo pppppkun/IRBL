@@ -29,52 +29,52 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 /**
  * @Author: qin
  * @CreateTime: 2021-04-06 20:20
- * @ModifyTime: 2021-06-16 23:20
+ * @ModifyTime: 2021-06-18 9:20
  */
 @Service
 @Slf4j
 public class QueryServiceImpl implements QueryService {
 
     private static final Logger logger = Logger.getLogger(QueryServiceImpl.class.getName());
-    @Autowired
-    RecordService recordService;
 
     @Value("${file.path.code}")
     String codePath;
-
     @Value("${file.path.report}")
     String reportPath;
-
     @Value("${file.path.python-cache}")
     String pythonCachePath;
-
     @Value("${cpu.core}")
     static Integer cpuCoreNum;
-
     @Value("${target.calculator}")
     String targetCalculator;
-
+    @Value("${target.preProcessor}")
+    String targetPreProcessor;
     @Value("${repo_direction}")
     private String REPO_DIRECTION;
 
+    RecordService recordService;
     RepoCommitMapper repoCommitMapper;
     RepoMapper repoMapper;
+    // 线程池
+    ExecutorService executor;
 
     @Autowired
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
+
     @Autowired
     public void setRepoMapper(RepoMapper repoMapper) {this.repoMapper = repoMapper;}
 
-    @Value("${target.preProcessor}")
-    String targetPreProcessor;
-
-    @Value("${repo_direction}")
-    String repoDirection;
+    @Autowired
+    public void setRecordService(RecordService recordService) {
+        this.recordService = recordService;
+    }
 
     @Autowired
-    ExecutorService executor;
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
@@ -82,7 +82,6 @@ public class QueryServiceImpl implements QueryService {
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
         int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        //TODO ADD PATH HERE
         String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,gitUrl.hashCode()+"");
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
@@ -102,9 +101,6 @@ public class QueryServiceImpl implements QueryService {
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            repoDirection = "E:\\4_work_dir\\source-code\\";
-        }
         String bugReportFileName = null;
         logger.info(bugReport.getOriginalFilename());
         try {
@@ -121,9 +117,9 @@ public class QueryServiceImpl implements QueryService {
         }
         logger.info(bugReportFileName + " bugReport save finish");
         //create new Thread and run
-        logger.info(" new PreprocessAndCalc thread creat");
+        logger.info("new PreprocessAndCalc thread creat");
         executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, recordId));
-        logger.info(" new PreprocessAndCalc thread submit");
+        logger.info("new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
         return ResponseVO.buildSuccess(recordId);
     }
@@ -157,11 +153,10 @@ public class QueryServiceImpl implements QueryService {
             return ResponseVO.buildFailure(QUERY_FAIL);
         }
         //create new Thread and run
-        logger.info(" new PreprocessAndCalc thread creat");
+        logger.info("new PreprocessAndCalc thread creat");
         executor.execute(new PreprocessAndCalc(recordService, recordId, bugReportFileName, codeDir));
-        logger.info(" new PreprocessAndCalc thread submit");
+        logger.info("new PreprocessAndCalc thread submit");
         assert resCode.equals(0);
-
         return ResponseVO.buildSuccess(recordId);
     }
 

@@ -8,6 +8,9 @@ import pgd.irbl.business.vo.ResponseVO;
  * @CreateTime: 2021-03-30 15:31
  */
 public interface UserService {
+
     ResponseVO login(LoginRegisterVO loginVO);
+
     ResponseVO register(LoginRegisterVO registerVO);
+
 }

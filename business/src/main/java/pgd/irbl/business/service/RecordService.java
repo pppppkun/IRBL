@@ -14,11 +14,17 @@ import java.util.List;
 public interface RecordService {
 
     ResponseVO getUserAllRecord(Long userId);
+
     QueryRecord getQueryRecordById(QueryRecordVO queryRecordVO);
+
     String insertQueryRecord(Long userId, String gitUrl, String commitId, String name, String path);
+
     int setQueryRecordQuerying(String recordId);
+
     int setQueryRecordFail(String recordId);
+
     int setQueryRecordComplete(String recordId, List<FileScore> fileScoreList);
+
     ResponseVO getFile(String path, String recordId);
 
 }
