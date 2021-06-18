@@ -1,6 +1,5 @@
 package pgd.irbl.business.serviceImpl;
 
-import com.oracle.tools.packager.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -256,26 +255,26 @@ public class ManageServiceImpl implements ManageService {
 
         @Override
         public void start(int totalTasks) {
-            Log.info("Starting work on " + totalTasks + " tasks");
+            log.info("Starting work on " + totalTasks + " tasks");
         }
 
         @Override
         public void beginTask(String title, int totalWork) {
-            Log.info("Start " + title + ": " + totalWork);
+            log.info("Start " + title + ": " + totalWork);
         }
 
         @Override
         public void update(int completed) {
             this.completed += completed;
             if (this.completed > 10) {
-                Log.info("-");
+                log.info("-");
                 this.completed = 0;
             }
         }
 
         @Override
         public void endTask() {
-            Log.info("Done");
+            log.info("Done");
         }
 
         @Override
