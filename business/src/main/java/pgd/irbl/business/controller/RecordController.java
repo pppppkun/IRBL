@@ -18,8 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/record")
 public class RecordController {
 
-    @Autowired
     RecordService recordService;
+
+    @Autowired
+    public void setRecordService(RecordService recordService){
+        this.recordService = recordService;
+    }
 
     @PostMapping("/getUserAllRecord")
     public ResponseVO getUserAllRecord(HttpServletRequest request){

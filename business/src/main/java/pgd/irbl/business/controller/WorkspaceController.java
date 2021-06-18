@@ -19,8 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class WorkspaceController {
 
-    @Autowired
     WorkspaceService workspaceService;
+
+    @Autowired
+    public void setWorkspaceService( WorkspaceService workspaceService ){
+        this.workspaceService = workspaceService;
+    }
 
     @GetMapping("/workspace")
     public void smsJumpUrl(HttpServletResponse response, @RequestParam(required = false, defaultValue = "null") String recordId, @RequestParam(required = false, defaultValue = "null") String repositoryId) throws Exception {

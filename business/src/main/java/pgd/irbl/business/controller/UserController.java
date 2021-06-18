@@ -26,17 +26,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "登陆")
+    @ApiOperation(value = "登录")
     public ResponseVO login(@RequestBody LoginRegisterVO loginVO){
         return userService.login(loginVO);
     }
 
     @PostMapping("/register")
-    @ApiOperation(value = "注 册")
+    @ApiOperation(value = "注册")
     public ResponseVO register(@RequestBody LoginRegisterVO registerVO){
         return userService.register(registerVO);
     }
-
-
 
 }
