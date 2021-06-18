@@ -16,6 +16,7 @@ import pgd.irbl.business.vo.*;
 public class ManageController {
 
     ManageService manageService;
+
     @Autowired
     public void setManageService(ManageService manageService) {
         this.manageService = manageService;
@@ -52,4 +53,5 @@ public class ManageController {
     public ResponseVO webhooks(@RequestBody WebhookVO webhookVO){
         return manageService.dealWebhook(webhookVO);
     }
+
 }

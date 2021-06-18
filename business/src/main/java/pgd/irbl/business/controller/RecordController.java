@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/record")
 public class RecordController {
 
-
     RecordService recordService;
 
     @Autowired

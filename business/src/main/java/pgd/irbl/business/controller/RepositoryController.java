@@ -15,9 +15,11 @@ import pgd.irbl.business.vo.ResponseVO;
 public class RepositoryController {
 
     ManageService manageService;
-    @Autowired
-    public void setManageService(ManageService manageService) {this.manageService = manageService;}
 
+    @Autowired
+    public void setManageService(ManageService manageService){
+        this.manageService = manageService;
+    }
 
     @PostMapping("/list")
     public ResponseVO getAllRepo(){

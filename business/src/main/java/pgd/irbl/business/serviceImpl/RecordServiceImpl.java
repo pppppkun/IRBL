@@ -39,17 +39,13 @@ import java.util.List;
 @Slf4j
 public class RecordServiceImpl implements RecordService {
 
-
-
-
     @Value("${repo_direction}")
     private String REPO_DIRECTION;
 
-
     MongoTemplate mongoTemplate;
+
     @Autowired
     public void setMongoTemplate(MongoTemplate mongoTemplate) {this.mongoTemplate = mongoTemplate;}
-
 
     @Override
     public ResponseVO getUserAllRecord(Long userId) {

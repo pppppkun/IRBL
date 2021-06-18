@@ -39,11 +39,8 @@ import static pgd.irbl.business.constant.ManageConstant.*;
 @Slf4j
 public class ManageServiceImpl implements ManageService {
 
-
-
     @Value("${spring.mail.username}")
     private String from;
-
 
     RepoMapper repoMapper;
     RepoCommitMapper repoCommitMapper;
@@ -65,9 +62,6 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public ResponseVO registerRepo(RegisterRepoVO registerRepoVO) {
-//        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-//            REPO_DIRECTION = "E:\\4_work_dir\\source-code\\";
-//        }
         if (repoMapper.findRepoIdByGitUrl(registerRepoVO.getGitUrl()) != null)
             return ResponseVO.buildFailure(REPO_EXISTS);
         // ([A-Za-z0-9]+@|http(|s)\:\/\/)([A-Za-z0-9.]+)(:|/)([A-Za-z0-9\/]+)(\.git)

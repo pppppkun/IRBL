@@ -12,12 +12,19 @@ import java.util.List;
 public interface ManageService {
 
     ResponseVO registerRepo(RegisterRepoVO registerRepoVO);
+
     ResponseVO deleteRepo(DeleteRepoVO deleteRepoVO);
+
     List<Repository> getAllRepo();
+
     ResponseVO modifyRepo(ModifyRepoVO modifyRepoVO);
+
     ResponseVO dealWebhook(WebhookVO webhookVO);
+
     List<SimpleRepoVo> getAllSimpleRepo();
+
     ResponseVO getRepoCommit(Long repoId);
+
     ResponseVO getFileByCommit(String filepath, String commitId);
 
 }

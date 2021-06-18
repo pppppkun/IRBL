@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseVO login(LoginRegisterVO loginVO){
-//        if(MD5Encryption.encrypt(loginVO.getPassword()).equals(userMapper.login(loginVO.getUsername()))) return ResponseVO.buildSuccess();
         if(userMapper.findUserIdByUsername(loginVO.getUsername())==null) return ResponseVO.buildFailure(USER_NO_EXISTS);
         User user = userMapper.login(loginVO.getUsername());
         if(MD5Encryption.encrypt(loginVO.getPassword()).equals(user.getPassword())) {
