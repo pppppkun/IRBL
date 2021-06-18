@@ -267,7 +267,6 @@ public class ManageServiceImpl implements ManageService {
         public void update(int completed) {
             this.completed += completed;
             if (this.completed > 10) {
-                log.info("-");
                 this.completed = 0;
             }
         }
