@@ -14,19 +14,21 @@ import java.util.zip.ZipFile;
 
 /**
  * @author qin
- * @description save file
- * @CreateDate 2021-04-06
- * @ModifyDate 2021-06-16
+ * @description 文件工具类
+ * @createDate 2021-04-06
+ * @modifyDate 2021-06-16
  */
 @Slf4j
 public class MyFileUtil {
 
     /**
-     * @param rootPath
-     * @param multipartFile
-     * @param fileName
+     * 将 multipartFile 源文件 保存为 rootPath + fileName
+     *
+     * @param rootPath 文件路径前缀
+     * @param multipartFile 源文件
+     * @param fileName 指定文件名
      * @return 文件名
-     * @throws IOException
+     * @throws IOException 输入输出异常
      */
     public static String saveFile(String rootPath, MultipartFile multipartFile, String fileName) throws IOException {
         log.info("enter save file. root path: " + rootPath + " filename: " + fileName + " upload filename: " + multipartFile.getOriginalFilename());
@@ -36,6 +38,15 @@ public class MyFileUtil {
         return fileName;
     }
 
+    /**
+     * 将 multipartFile 源文件（.zip文件）保存到 codePath + fileName  并解压
+     *
+     * @param codePath 文件路径前缀
+     * @param multipartFile zip 源文件
+     * @param fileName 指定文件名
+     * @return 文件名
+     * @throws IOException 输入输出异常
+     */
     public static String unZipAndSaveDir(String codePath, MultipartFile multipartFile, String fileName) throws IOException {
         File file = new File(codePath + fileName);
         multipartFile.transferTo(file);
@@ -43,6 +54,14 @@ public class MyFileUtil {
         return fileName.substring(0, fileName.length() - 4);
     }
 
+    /**
+     * 将 zipPath 的 .zip文件 解压到 destDir 目的文件夹
+     *
+     * @param destDir 目的文件夹
+     * @param zipPath zip 文件路径
+     * @return 文件名
+     * @throws IOException 输入输出异常
+     */
     public static void unZip(String destDir, String zipPath) throws IOException {
         File fileZip = new File(zipPath);
         ZipFile zip = new ZipFile(fileZip);
@@ -58,7 +77,6 @@ public class MyFileUtil {
             InputStream in = zip.getInputStream(entry);
 //            String outPath = (destDir + name + File.separatorChar + zipEntryName).replaceAll("\\*", "/");
             String outPath = (destDir + name + File.separatorChar + zipEntryName).replaceAll("/", Matcher.quoteReplacement(File.separator));
-
             // 判断路径是否存在,不存在则创建文件路径
             File file = new File(outPath.substring(0, outPath.lastIndexOf(File.separatorChar)));
             if (!file.exists()) {
