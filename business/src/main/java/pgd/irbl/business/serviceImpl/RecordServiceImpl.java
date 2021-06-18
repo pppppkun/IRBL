@@ -40,7 +40,7 @@ import java.util.List;
 public class RecordServiceImpl implements RecordService {
 
     @Value("${repo_direction}")
-    private String REPO_DIRECTION;
+    private String repoDirection;
     private static final String QUERY_RECORD_COLLECTION ="queryRecord";
     private static final String QUERY_RECORD_STATE = "queryRecordState";
     MongoTemplate mongoTemplate;
@@ -131,9 +131,9 @@ public class RecordServiceImpl implements RecordService {
         assert document != null;
         String path = document.getString("path");
         try{
-            Path path_ = Paths.get(REPO_DIRECTION + path + "/" + filepath);
-            log.info(REPO_DIRECTION + path + "/" + filepath);
-            String s = new String(Files.readAllBytes(path_), StandardCharsets.UTF_8);
+            Path filePath = Paths.get(repoDirection + path + "/" + filepath);
+            log.info(repoDirection + path + "/" + filepath);
+            String s = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
             return ResponseVO.buildSuccess(s);
         }catch (Exception e) {
             e.printStackTrace();

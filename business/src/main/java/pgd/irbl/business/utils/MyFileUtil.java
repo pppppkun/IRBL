@@ -95,8 +95,7 @@ public class MyFileUtil {
             in.close();
             out.close();
         }
-        System.out.println("******************解压完毕********************");
-        return;
+        log.info("******************解压完毕********************");
     }
 
 }
