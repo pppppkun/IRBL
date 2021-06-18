@@ -64,12 +64,21 @@ public class QueryServiceImpl implements QueryService {
     public void setRepoCommitMapper(RepoCommitMapper repoCommitMapper) {
         this.repoCommitMapper = repoCommitMapper;
     }
+
     @Autowired
-    public void setRepoMapper(RepoMapper repoMapper) {this.repoMapper = repoMapper;}
+    public void setRepoMapper(RepoMapper repoMapper) {
+        this.repoMapper = repoMapper;
+    }
+
     @Autowired
-    public void setGitUtil(GitUtil gitUtil) {this.gitUtil = gitUtil;}
+    public void setGitUtil(GitUtil gitUtil) {
+        this.gitUtil = gitUtil;
+    }
+
     @Autowired
-    public void setRecordService(RecordService recordService) {this.recordService = recordService;}
+    public void setRecordService(RecordService recordService) {
+        this.recordService = recordService;
+    }
 
     @Override
     public ResponseVO queryRegister(MultipartFile bugReport, String commitId, Long userId) {
@@ -77,11 +86,10 @@ public class QueryServiceImpl implements QueryService {
         String holeCommitId = repoCommitMapper.findHoleCommitId(commitId);
         int queryNum = repoMapper.findQueryNumByGitUrl(gitUrl);
         String repoName = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf(".git"));
-        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName+"#"+queryNum,repoName + gitUrl.hashCode());
+        String recordId = recordService.insertQueryRecord(userId, gitUrl, holeCommitId, repoName + "#" + queryNum, repoName + gitUrl.hashCode());
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         repoMapper.updateQueryNum(gitUrl);
-        gitUtil.copyAndReset(recordId, repoName+gitUrl.hashCode(), commitId);
-
+        gitUtil.copyAndReset(repoName + gitUrl.hashCode(), recordId, commitId);
         if (bugReport == null) {
             return ResponseVO.buildFailure(QUERY_NULL_FAIL);
         }
@@ -111,7 +119,7 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public ResponseVO queryNotRegister(MultipartFile bugReport, MultipartFile sourceCode, Long userId) {
         String currentTime = String.valueOf(System.currentTimeMillis());
-        String zipFileName = currentTime+".zip";
+        String zipFileName = currentTime + ".zip";
         String recordId = recordService.insertQueryRecord(userId, null, null, sourceCode.getOriginalFilename(), currentTime);
         Integer resCode = recordService.setQueryRecordQuerying(recordId);
         if (bugReport == null) {
@@ -122,7 +130,7 @@ public class QueryServiceImpl implements QueryService {
         String codeDir = null;
         try {
             logger.info(bugReport.getOriginalFilename());
-            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport-" + currentTime );
+            bugReportFileName = MyFileUtil.saveFile(reportPath, bugReport, "bugReport-" + currentTime);
             logger.info(bugReportFileName + " bugReport save finish");
             codeDir = MyFileUtil.unZipAndSaveDir(codePath, sourceCode, zipFileName);
             logger.info(codeDir + " codeDir unzip finish");
@@ -196,7 +204,7 @@ public class QueryServiceImpl implements QueryService {
                 calcChannel.shutdownNow();
                 preProcessorChannel.shutdownNow();
             }
-            if(fileScoreList == null) recordService.setQueryRecordFail(recordId);
+            if (fileScoreList == null) recordService.setQueryRecordFail(recordId);
             List<pgd.irbl.business.vo.FileScore> voFileScoreList = new ArrayList<>();
             for (FileScore filescore : fileScoreList) {
                 pgd.irbl.business.vo.FileScore tmpVOFileScore = new pgd.irbl.business.vo.FileScore();
